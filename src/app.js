@@ -1,6 +1,5 @@
 import Chart from "chart.js/auto";
 import { getRelativePosition } from "chart.js/helpers";
-import { apiData } from "./api";
 
 let employeeFullName = [];
 let employeeSalaryData = [];
