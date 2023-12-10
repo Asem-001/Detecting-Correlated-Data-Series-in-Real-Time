@@ -91,7 +91,7 @@ async function drawChart() {
   const theChart = new Chart(ctx, chartConfig);
 
   setInterval(async function () {
-    await updateData();
+    updateData();
     updateLabels();
     updateTestLabels();
     updateTestData();
