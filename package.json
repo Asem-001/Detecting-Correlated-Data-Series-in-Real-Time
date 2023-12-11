@@ -2,18 +2,10 @@
   "name": "chartjs-example",
   "version": "1.0.0",
   "license": "MIT",
-  "source": "./views/index.html",
   "scripts": {
-    "dev": "parcel ./views/index.html",
-    "build": "parcel build ./views/index.html && rm -rf .parcel-cache && parcel build",
     "start": "node app.js"
   },
-  "devDependencies": {
-    "@parcel/transformer-sass": "^2.10.3",
-    "parcel": "^2.9.0"
-  },
   "dependencies": {
-    "@cubejs-client/core": "^0.31.0",
     "chart.js": "^4.4.1",
     "ejs": "^3.1.9",
     "express": "^4.18.2",
