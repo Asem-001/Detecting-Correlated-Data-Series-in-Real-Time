@@ -1,7 +1,52 @@
+function pearsonCorrelation(x, y) {
+  if (x.length !== y.length) {
+    throw new Error('Arrays must have the same length for correlation calculation.');
+  }
+
+  const n = x.length;
+
+  // Calculate the mean of x and y
+  const meanX = x.reduce((sum, value) => sum + value, 0) / n;
+  const meanY = y.reduce((sum, value) => sum + value, 0) / n;
+
+  // Calculate the numerator and denominators
+  let numerator = 0;
+  let denominatorX = 0;
+  let denominatorY = 0;
+
+  for (let i = 0; i < n; i++) {
+    const diffX = x[i] - meanX;
+    const diffY = y[i] - meanY;
+
+    numerator += diffX * diffY;
+    denominatorX += diffX ** 2;
+    denominatorY += diffY ** 2;
+  }
+
+  // Calculate the correlation coefficient
+  const correlation = numerator / Math.sqrt(denominatorX * denominatorY);
+
+  return correlation;
+}
+
 let employeeFullName = [];
 let employeeSalaryData = [];
 let testName = [];
 let testSalaryData = [];
+let counter = 0;
+
+function calc(){
+  const arr1 = employeeSalaryData.slice(0, 5);
+  const arr2 = testSalaryData.slice(0, 5);
+  // Ensure both arrays have the same length
+  if (arr1.length !== arr2.length) {
+    throw new Error('Arrays must have the same length for correlation calculation.');
+  }
+  
+  let correlation = pearsonCorrelation(arr1, arr2).toFixed(2)
+  document.getElementById('correlationValue').innerText = correlation
+  
+}
 
 function updateData() {
   if (employeeSalaryData.length < 15) {
@@ -92,7 +137,11 @@ async function drawChart() {
     updateLabels();
     updateTestLabels();
     updateTestData();
-
+    counter++
+    if(counter == 5){
+      calc()
+      counter = 0
+    }
     // Update chart data
     theChart.data.labels = employeeFullName.slice(); // create a copy
     theChart.data.datasets[0].data = employeeSalaryData.slice(); // create a copy
