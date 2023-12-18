@@ -36,13 +36,15 @@ let testSalaryData = [];
 let counter = 0;
 
 function calc(){
-  const arr1 = employeeSalaryData.slice(0, 5);
-  const arr2 = testSalaryData.slice(0, 5);
+  const arr1 = employeeSalaryData.slice(-5);
+  const arr2 = testSalaryData.slice(-5);
+  console.log(arr1);
   // Ensure both arrays have the same length
   if (arr1.length !== arr2.length) {
     throw new Error('Arrays must have the same length for correlation calculation.');
   }
-  
+  // [1,2,3,45,6,7,8,9,10,11,12,13,14,15,1,2,3,4]
+
   let correlation = pearsonCorrelation(arr1, arr2).toFixed(2)
   document.getElementById('correlationValue').innerText = correlation
   
@@ -137,11 +139,7 @@ async function drawChart() {
     updateLabels();
     updateTestLabels();
     updateTestData();
-    counter++
-    if(counter == 5){
-      calc()
-      counter = 0
-    }
+    calc()
     // Update chart data
     theChart.data.labels = employeeFullName.slice(); // create a copy
     theChart.data.datasets[0].data = employeeSalaryData.slice(); // create a copy
@@ -149,7 +147,11 @@ async function drawChart() {
     theChart.data.datasets[1].data = testSalaryData
     // Update the chart
     theChart.update();
-
+    
+  
+     
+    
+  
   
   }, 2300);
 }
