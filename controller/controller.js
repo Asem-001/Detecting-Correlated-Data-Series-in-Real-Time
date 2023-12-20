@@ -8,5 +8,26 @@ module.exports = {
     });
   },
 
+  reports: (req, res) => {
+
+    res.render("reports", {
+      title: "Reports",   
+      });
+  },
+
+  dashboard: (req, res) => {
+
+    res.render("dashboard", {
+      title: "Dashboard",   
+      });
+  },
+
+  profile: (req, res) => {
+
+    res.render("profile", {
+      title: "Profile",   
+      });
+  }
+
 
 };

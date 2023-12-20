@@ -3,77 +3,175 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title><%- title %></title>
+    <title><%- title %> - Correl8</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <link rel="stylesheet" href="../public/css/main.css" />
+    <link href="../public/img/logo2.png" rel="icon">
+
+    <link href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+  
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link href="../public/img/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  
+    <link href="../public/css/main.css" rel="stylesheet">
   </head>
   <body>
-    <div class="container-fluid position-relative">
-      <div class="d-flex justify-content-center mb-3">
-        <h1>Plotting Mockup</h1>
+
+    <header id="header" class="header fixed-top d-flex align-items-center">
+
+      <div class="d-flex align-items-center justify-content-between">
+        <i class="bi bi-list toggle-sidebar-btn"></i>
+        <a href="home.html" class="logo d-flex align-items-center">
+          <img src="../public/img/logo2.png" alt="">
+          <span class="d-none d-lg-block">Correl8</span>
+        </a>
       </div>
-      <div class="row mt-3">
-        <div class="col-md-9">
-          <canvas id="chart"></canvas>
-          <div class="d-flex justify-content-center mt-3">
-            <div id="correlationDisplay">Correlation: <span id="correlationValue">N/A</span></div>
-          </div>
-        </div>
-        <div class="col-md-3 mt-5">
-          <div class="d-flex flex-column">
-            <button class="btn btn-primary mb-5">Start/End</button>
-            <button class="btn btn-secondary mb-5" onclick="">Add Series</button>
-            <div class="d-flex justify-content-center">
-              <div class="mb-5 ">Series Number: <span id="seriesNumber">2</span></div>
-            </div>
-            <div class="mb-3 ">
-              <label>Threshold:</label>
-              <input type="number" placeholder="[-1 , 1]" class="form-control mb-2" id="thresholdValue">
-              <div class="d-flex justify-content-center">
-                <button class="btn btn-success me-2">Set</button>
-                <button class="btn btn-danger">Reset</button>
+  
+      <nav class="header-nav ms-auto">
+        <ul class="d-flex align-items-center">
+  
+          <li class="nav-item dropdown pe-3">
+  
+            <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+              <img src="../public/img/profile.jpg" alt="Profile" class="rounded-circle">
+              <span class="d-none d-md-block dropdown-toggle ps-2">Aziz Fahad</span>
+            </a>
+  
+            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+              <li class="dropdown-header">
+                <h6>Aziz Fahad</h6>
+                <span>Administrator</span>
+              </li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+  
+              <li>
+                <a class="dropdown-item d-flex align-items-center" href="profile.html">
+                  <i class="bi bi-person"></i>
+                  <span>My Profile</span>
+                </a>
+              </li>
+  
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+  
+              <li>
+                <a class="dropdown-item d-flex align-items-center" href="login.html">
+                  <i class="bi bi-box-arrow-right"></i>
+                  <span>Sign Out</span>
+                </a>
+              </li>
+  
+            </ul>
+          </li>
+  
+        </ul>
+      </nav>
+  
+    </header>
+
+    <aside id="sidebar" class="sidebar">
+  
+      <ul class="sidebar-nav" id="sidebar-nav">
+  
+        <li class="nav-item">
+          <a class="nav-link " href="home.html">
+            <i class="bi bi-house"></i>
+            <span>Home Page</span>
+          </a>
+        </li>
+  
+        <li class="nav-item">
+          <a class="nav-link collapsed" href="reports.html">
+            <i class="bi bi-file-earmark-text"></i>
+            <span>Reports</span>
+          </a>
+        </li>
+  
+        <li class="nav-item">
+          <a class="nav-link collapsed" href="dashboard.html">
+            <i class="bi bi-bar-chart-line"></i>
+            <span>Dashboard</span>
+          </a>
+        </li>
+  
+      </ul>
+  
+    </aside>
+
+    <main id="main" class="main">
+
+      <section class="section dashboard">
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-body" style="max-height: 700px;">
+                <h5 class="card-title">Chart</h5>
+                <canvas style="max-width: 2200px; max-height: 400px; margin-bottom: 30px; " id="chart" width="668" height="334" style="display: block; box-sizing: border-box; height: 334px; width: 668px;"></canvas>
+                <div id="correlationDisplay">
+                  Correlation: <span id="correlationValue">N/A</span>
+                </div>
               </div>
             </div>
-            <div class="mb-3">
-              <label>Threshold Window Width:</label>
-              <input type="number" placeholder="[5 , 15]" class="form-control mb-2" id="thresholdWidth">
-              <div class="d-flex justify-content-center">
-                <button class="btn btn-success me-2">Set</button>
-                <button class="btn btn-danger">Reset</button>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="card">
+              <div class="card-body">
+  
+                <h5 class="card-title">Messages</h5>
+    
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                  Correlation detected between PH2 and PH3!
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+      
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                  Correlation detected between PH2 and PH3!
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+  
+    
               </div>
-            </div>
-            <div class="mb-2">
-              <strong>Messages:</strong>
-            </div>
-            <div id="notificationBox" class="alert alert-info" role="alert" style="display: none;">
             </div>
           </div>
         </div>
+
+      </section>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="copyright">
+        &copy; Copyright <strong><span>Corell8</span></strong>. All Rights Reserved
       </div>
-    </div>
+    </footer>
 
   
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-    <script  src="../public/js/script.js"></script> 
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
-    <script>
-      function showMessage(message) {
-        var notificationBox = document.getElementById('notificationBox');
-        notificationBox.style.display = 'block';
-        notificationBox.textContent = message;
-      }
-
-      window.onload = function() {
-        setTimeout(function() {
-          showMessage('High correlation detected!');
-        }, 5000); 
-
-        setTimeout(function() {
-          showMessage('Correlation dropped below threshold.');
-        }, 10000); 
-      };
-    </script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+        <script  src="../public/js/script.js"></script> 
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+        <script>
+          function showMessage(message) {
+            var notificationBox = document.getElementById('notificationBox');
+            notificationBox.style.display = 'block';
+            notificationBox.textContent = message;
+          }
+    
+          window.onload = function() {
+            setTimeout(function() {
+              showMessage('High correlation detected!');
+            }, 5000); 
+    
+            setTimeout(function() {
+              showMessage('Correlation dropped below threshold.');
+            }, 10000); 
+          };
+        </script>
   </body>
 </html>
