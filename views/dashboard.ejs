@@ -57,6 +57,7 @@
                   <!-- Table with stripped rows -->
                   <table class="table datatable">
                     <thead>
+                      
                       <tr>
                         <th>ID</th>
                         <th>Name</th>
@@ -73,6 +74,13 @@
                         <td>Asim@imamu.com</td>
                         <td>A001</td>
                         <td>2023/12/19</td>
+                        <!-- EDIT DELETE buttons -->
+                        <td>
+                          <button class="btn btn-primary btn-sm bi bi-trash" id="deleteBtn1"></button>
+                        </td>
+                        <td>
+                          <button class="btn btn-primary btn-sm bi bi-pen" id="editBtn1"></button>
+                        </td>
                       </tr>
 
                       <tr>
@@ -81,6 +89,12 @@
                         <td>Asim@imamu.com</td>
                         <td>A001</td>
                         <td>2023/12/19</td>
+                        <td>
+                          <button class="btn btn-primary btn-sm bi bi-trash" id="deleteBtn1"></button>
+                        </td>
+                        <td>
+                          <button class="btn btn-primary btn-sm bi bi-pen" id="editBtn1"></button>
+                        </td>
                       </tr>
 
                       <tr>
@@ -103,8 +117,14 @@
 
                     </tbody>
                   </table>
+
+                  <!-- Add button -->
+                  <div class="row justify-content-center">
+                    <div class="col-auto">
+                      <button class="btn btn-primary btn-lg bi bi-person-add" id="addUserBtn"></button>
+                    </div>
+                  </div>
                   <!-- End Table with stripped rows -->
-    
                 </div>
 
             </div>
