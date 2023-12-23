@@ -7,11 +7,12 @@
   },
   "dependencies": {
     "chart.js": "^4.4.1",
-    "correlation": "^1.0.0",
+    "dotenv": "^16.3.1",
     "ejs": "^3.1.9",
     "express": "^4.18.2",
     "http-proxy-middleware": "^2.0.6",
-    "method-override": "^3.0.0"
+    "method-override": "^3.0.0",
+    "mysql2": "^3.6.5"
   },
   "devDependencies": {
     "nodemon": "^3.0.2"
