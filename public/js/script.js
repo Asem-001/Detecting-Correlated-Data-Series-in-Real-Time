@@ -1,63 +1,14 @@
-let employeeFullName = [];
-let employeeSalaryData = [];
-let testName = [];
-let testSalaryData = [];
-
-function updateData() {
-  if (employeeSalaryData.length < 15) {
-    number = Math.floor(Math.random() * 10000) + 1;
-    employeeSalaryData.push(number);
-  } else {
-    employeeSalaryData.shift();
-    number = Math.floor(Math.random() * 10000) + 1;
-    employeeSalaryData.push(number);
-  }
-}
-
-function updateLabels() {
-  let currentDate = new Date();
-
-  let hours = currentDate.getHours();
-  let minutes = currentDate.getMinutes();
-  let seconds = currentDate.getSeconds();
-
-  let formattedTime = `${hours}:${minutes}:${seconds}`;
-
-  if (testName.length < 15) {
-    testName.push(formattedTime);
-  } else {
-    testName.shift();
-    testName.push(formattedTime);
-  }
-}
-
-function updateTestData() {
-  if (testSalaryData.length < 15) {
-    number = Math.floor(Math.random() * 10000) + 1;
-    testSalaryData.push(number);
-  } else {
-    testSalaryData.shift();
-    number = Math.floor(Math.random() * 10000) + 1;
-    testSalaryData.push(number);
-  }
-}
-
-function updateTestLabels() {
-  let currentDate = new Date();
-
-  let hours = currentDate.getHours();
-  let minutes = currentDate.getMinutes();
-  let seconds = currentDate.getSeconds();
-
-  let formattedTime = `${hours}:${minutes}:${seconds}`;
-
-  if (employeeFullName.length < 15) {
-    employeeFullName.push(formattedTime);
-  } else {
-    employeeFullName.shift();
-    employeeFullName.push(formattedTime);
-  }
-}
+import {
+  updateTestLabels,
+  updateTestData,
+  updateLabels,
+  updateData,
+  employeeFullName,
+  employeeSalaryData,
+  calc,
+  testName,
+  testSalaryData
+} from './DataHandling.js'
 
 
 async function drawChart() {
@@ -92,7 +43,7 @@ async function drawChart() {
     updateLabels();
     updateTestLabels();
     updateTestData();
-
+    calc()
     // Update chart data
     theChart.data.labels = employeeFullName.slice(); // create a copy
     theChart.data.datasets[0].data = employeeSalaryData.slice(); // create a copy
@@ -100,7 +51,6 @@ async function drawChart() {
     theChart.data.datasets[1].data = testSalaryData
     // Update the chart
     theChart.update();
-
   
   }, 2300);
 }

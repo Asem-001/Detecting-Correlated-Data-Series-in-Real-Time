@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title><%- title %> - Correl8</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <link href="../public/img/logo2.png" rel="icon">
+
+  <link href="https://fonts.gstatic.com" rel="preconnect">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <link href="../public/img/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+
+  <link href="../public/css/main.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+  <%- include('./partials/header.ejs') %>
+
+  <%- include('./partials/adminsidebar.ejs') %>
+
+
+  <main id="main" class="main">
+
+    <div class="pagetitle mb-4">
+      <h1>Dashboard</h1>
+    </div>
+
+    <section class="section dashboard">
+
+      <div class="card">
+        <div class="card-body mt-5">
+
+          <!-- Default Tabs -->
+          <ul class="nav nav-tabs d-flex" id="myTabjustified" role="tablist">
+            <li class="nav-item flex-fill" role="presentation">
+              <button class="nav-link w-100 active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-justified" type="button" role="tab" aria-controls="home" aria-selected="true">Users</button>
+            </li>
+            <li class="nav-item flex-fill" role="presentation">
+              <button class="nav-link w-100" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-justified" type="button" role="tab" aria-controls="profile" aria-selected="false">Correlation Data</button>
+            </li>
+          </ul>
+          <div class="tab-content pt-2" id="myTabjustifiedContent">
+            <div class="tab-pane fade show active" id="home-justified" role="tabpanel" aria-labelledby="home-tab">
+
+                <div class="card-body" style="margin-top: 2%;">
+    
+                  <!-- Table with stripped rows -->
+                  <table class="table datatable">
+                    <thead>
+                      
+                      <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Admin ID</th>
+                        <th data-type="date" data-format="YYYY/DD/MM">Account Date</th>
+                        <th></th>
+                        <th></th>
+
+                      </tr>
+                    </thead>
+                    <tbody>
+
+                      <tr>
+                        <td>U001</td>
+                        <td>Asim Abdullah</td>
+                        <td>Asim@imamu.com</td>
+                        <td>A001</td>
+                        <td>2023/12/19</td>
+                        <!-- EDIT DELETE buttons -->
+                        <td>
+                          <button class="btn btn-primary btn-sm bi bi-trash" id="deleteBtn1"></button>
+                        </td>
+                        <td>
+                          <button class="btn btn-primary btn-sm bi bi-pen" id="editBtn1"></button>
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td>U001</td>
+                        <td>Asim Abdullah</td>
+                        <td>Asim@imamu.com</td>
+                        <td>A001</td>
+                        <td>2023/12/19</td>
+                        <td>
+                          <button class="btn btn-primary btn-sm bi bi-trash" id="deleteBtn1"></button>
+                        </td>
+                        <td>
+                          <button class="btn btn-primary btn-sm bi bi-pen" id="editBtn1"></button>
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td>U001</td>
+                        <td>Asim Abdullah</td>
+                        <td>Asim@imamu.com</td>
+                        <td>A001</td>
+                        <td>2023/12/19</td>
+                        <td>
+                          <button class="btn btn-primary btn-sm bi bi-trash" id="deleteBtn1"></button>
+                        </td>
+                        <td>
+                          <button class="btn btn-primary btn-sm bi bi-pen" id="editBtn1"></button>
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td>U001</td>
+                        <td>Asim Abdullah</td>
+                        <td>Asim@imamu.com</td>
+                        <td>A001</td>
+                        <td>2023/12/19</td>
+                        <td>
+                          <button class="btn btn-primary btn-sm bi bi-trash" id="deleteBtn1"></button>
+                        </td>
+                        <td>
+                          <button class="btn btn-primary btn-sm bi bi-pen" id="editBtn1"></button>
+                        </td>
+                      </tr>
+
+                      
+
+                    </tbody>
+                  </table>
+
+                  <!-- Add button -->
+                  <div class="row justify-content-center">
+                    <div class="col-auto">
+                      <button class="btn btn-primary btn-lg bi bi-person-add" id="addUserBtn"></button>
+                    </div>
+                  </div>
+                  <!-- End Table with stripped rows -->
+                </div>
+
+            </div>
+
+
+            <div class="tab-pane fade" id="profile-justified" role="tabpanel" aria-labelledby="profile-tab">
+              <div class="card-body" style="margin-top: 2%;">
+    
+                  <table class="table datatable">
+                    <thead>
+                      <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Threshold</th>
+                        <th>No. of Correlation</th>
+                        <th data-type="date" data-format="YYYY/DD/MM">Start Date</th>
+                        <th data-type="date" data-format="YYYY/DD/MM">End Date</th>
+                        <th>API Key</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+
+                      <tr>
+                        <td>C001</td>
+                        <td>Stock 1</td>
+                        <td>0.7</td>
+                        <td>N/A</td>
+                        <td>2023/12/01</td>
+                        <td>2023/12/31</td>
+                        <td>apikey_stock1</td>
+                      </tr>
+
+                      <tr>
+                        <td>C001</td>
+                        <td>Stock 1</td>
+                        <td>0.7</td>
+                        <td>N/A</td>
+                        <td>2023/12/01</td>
+                        <td>2023/12/31</td>
+                        <td>apikey_stock1</td>
+                      </tr>
+
+                      <tr>
+                        <td>C001</td>
+                        <td>Stock 1</td>
+                        <td>0.7</td>
+                        <td>N/A</td>
+                        <td>2023/12/01</td>
+                        <td>2023/12/31</td>
+                        <td>apikey_stock1</td>
+                      </tr>
+
+                      <tr>
+                        <td>C001</td>
+                        <td>Stock 1</td>
+                        <td>0.7</td>
+                        <td>N/A</td>
+                        <td>2023/12/01</td>
+                        <td>2023/12/31</td>
+                        <td>apikey_stock1</td>
+                      </tr>
+
+                    </tbody>
+                  </table>
+    
+                </div>            
+              </div>
+            </div>
+
+          </div>
+      </div>
+    </section>
+
+    
+
+  </main>
+
+  <footer id="footer" class="footer">
+    <div class="copyright">
+      &copy; Copyright <strong><span>Corell8</span></strong>. All Rights Reserved
+    </div>
+  </footer>
+
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+  <script src="../public/js/script.js"></script>
+  <script src="../public/js/uiscript.js"></script>
+
+
+</body>
+
+</html>
