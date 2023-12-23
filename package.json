@@ -1,5 +1,6 @@
 {
   "name": "chartjs-example",
+  "type": "commonjs",
   "version": "1.0.0",
   "license": "MIT",
   "scripts": {
@@ -16,5 +17,19 @@
   },
   "devDependencies": {
     "nodemon": "^3.0.2"
-  }
+  },
+  "description": "NodeJs must be downloaded",
+  "main": "app.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sbinsuwaylih/Detecting-Correlated-Data-Series-in-Real-Time.git"
+  },
+  "keywords": [],
+  "author": "",
+  "bugs": {
+    "url": "https://github.com/Sbinsuwaylih/Detecting-Correlated-Data-Series-in-Real-Time/issues"
+  },
+  "homepage": "https://github.com/Sbinsuwaylih/Detecting-Correlated-Data-Series-in-Real-Time#readme"
+  
+
 }
