@@ -15,6 +15,9 @@
     "method-override": "^3.0.0",
     "mysql2": "^3.6.5"
   },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  },
   "description": "NodeJs must be downloaded",
   "main": "app.js",
   "repository": {
@@ -27,4 +30,5 @@
     "url": "https://github.com/Sbinsuwaylih/Detecting-Correlated-Data-Series-in-Real-Time/issues"
   },
   "homepage": "https://github.com/Sbinsuwaylih/Detecting-Correlated-Data-Series-in-Real-Time#readme"
+  
 }
