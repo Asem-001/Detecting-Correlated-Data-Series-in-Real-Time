@@ -8,9 +8,9 @@ module.exports = {
     });
   },
 
-  reports: (req, res) => {
+  adminreports: (req, res) => {
 
-    res.render("reports", {
+    res.render("adminreports", {
       title: "Reports",   
       });
   },
