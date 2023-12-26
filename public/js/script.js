@@ -27,12 +27,11 @@ function pearsonCorrelation(arr1, arr2) {
 
 function updateData() {
     datasets.forEach(dataset => {
-        if (dataset.data.length >= 15) dataset.data.shift();
-        dataset.data.push(Math.floor(Math.random() * 10000) + 1);
+        if (dataset.data.length >= 15) dataset.data.pop(); // Remove oldest data
+        dataset.data.unshift(Math.floor(Math.random() * 10000) + 1); // Add new data at the beginning
     });
-    if (time.length >= 15) time.shift(); // Remove oldest timestamp
-    time.push(getCurrentTime()); // Add current time to the time array
-   
+    if (time.length >= 15) time.pop(); // Remove oldest timestamp
+    time.unshift(getCurrentTime()); // Add current time at the beginning
 }
 
 function updateChart(chart) {
@@ -73,11 +72,24 @@ function setupChart() {
         },
         options: {
             scales: {
-                y: { beginAtZero: true }
+                x: {
+                    ticks: {
+                        maxRotation: 30, // Cancel label rotation
+                        minRotation: 30, // Cancel label rotation
+                        font: {
+                            size: 10 // Set font size to 10 (or any desired value)
+                        }
+                    },
+                    reverse: true, // Keep this if you want the newest data on the right
+                },
+                y: { 
+                    beginAtZero: true 
+                }
             }
         }
     });
 }
+
 
 let chart;
 
