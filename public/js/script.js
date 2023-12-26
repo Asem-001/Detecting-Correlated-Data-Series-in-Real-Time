@@ -92,15 +92,31 @@ function setupChart() {
 
 
 let chart;
+let intervalId = null; // Variable to hold the interval reference
+
+function startDataUpdates() {
+    if (intervalId === null) {
+        intervalId = setInterval(async function () {
+            updateData();
+            updateChart(chart);
+            calculateAndUpdateCorrelation();
+        }, 2300);
+    }
+}
+
+function stopDataUpdates() {
+    if (intervalId !== null) {
+        clearInterval(intervalId);
+        intervalId = null;
+    }
+}
 
 document.addEventListener('DOMContentLoaded', () => {
     chart = setupChart();
 
-    setInterval(async function () {
-        updateData();
-        updateChart(chart);
-        calculateAndUpdateCorrelation();
-    }, 2300);
+    // Attach event listeners to buttons using their IDs
+    document.getElementById('startButton').addEventListener('click', startDataUpdates);
+    document.getElementById('stopButton').addEventListener('click', stopDataUpdates);
 
     document.getElementById('addSeriesButton').addEventListener('click', addSeries);
 });
