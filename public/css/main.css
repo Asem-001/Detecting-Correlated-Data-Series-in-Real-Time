@@ -809,3 +809,10 @@
 }
 
 /* Add more styles as needed to match your site's design */
+#correlationMatrixModal .modal-content {
+  background-color: #f8f9fa; /* Change according to your color scheme */
+}
+
+#correlationMatrixModal .table {
+  margin-bottom: 0; /* Remove margin for the table inside the modal */
+}

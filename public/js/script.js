@@ -102,8 +102,8 @@ function setupChart() {
             scales: {
                 x: {
                     ticks: {
-                        maxRotation: 30, // Cancel label rotation
-                        minRotation: 30, // Cancel label rotation
+                        maxRotation: 15, // Cancel label rotation
+                        minRotation: 15, // Cancel label rotation
                         font: {
                             size: 10 // Set font size to 10 (or any desired value)
                         }
@@ -139,12 +139,59 @@ function stopDataUpdates() {
     }
 }
 
+
+let correlationUpdateInterval;
+
+function showCorrelationMatrix() {
+    updateCorrelationMatrixInModal(); // Initial update
+    correlationUpdateInterval = setInterval(updateCorrelationMatrixInModal, 2000); // Update every 2 seconds
+
+    // Show the modal using Bootstrap's modal functionality
+    new bootstrap.Modal(document.getElementById('correlationMatrixModal')).show();
+}
+
+
+function updateCorrelationMatrixInModal() {
+    const correlationMatrix = calculateCorrelationMatrix();
+    let correlationHtml = '<table class="table"><thead><tr><th></th>';
+
+    // Add column headers (Series names)
+    datasets.forEach(dataset => {
+        correlationHtml += `<th>${dataset.label}</th>`;
+    });
+    correlationHtml += '</tr></thead><tbody>';
+
+    // Add rows with row headers (Series names)
+    correlationMatrix.forEach((row, rowIndex) => {
+        correlationHtml += `<tr><th>${datasets[rowIndex].label}</th>`;
+        row.forEach(value => {
+            correlationHtml += `<td>${value}</td>`;
+        });
+        correlationHtml += '</tr>';
+    });
+
+    correlationHtml += '</tbody></table>';
+
+    const modalBody = document.querySelector('#correlationMatrixModal .modal-body');
+    if (modalBody) {
+        modalBody.innerHTML = correlationHtml;
+    }
+}
+
+
+
 document.addEventListener('DOMContentLoaded', () => {
     chart = setupChart();
 
     // Attach event listeners to buttons using their IDs
     document.getElementById('startButton').addEventListener('click', startDataUpdates);
     document.getElementById('stopButton').addEventListener('click', stopDataUpdates);
-
     document.getElementById('addSeriesButton').addEventListener('click', addSeries);
+
+    // Event listener for the "Show Correlation" button
+    document.querySelector('.btn.btn-light').addEventListener('click', showCorrelationMatrix);
+    const correlationModal = document.getElementById('correlationMatrixModal');
+    correlationModal.addEventListener('hidden.bs.modal', function (event) {
+        clearInterval(correlationUpdateInterval); // Clear the interval when the modal is closed
+    });
 });
