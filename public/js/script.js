@@ -1,4 +1,9 @@
 let datasets = [];
+let time = [];
+
+function getCurrentTime() {
+    return new Date().toLocaleTimeString(); // Get current time as a string
+}
 
 function pearsonCorrelation(arr1, arr2) {
     let n = arr1.length;
@@ -25,6 +30,9 @@ function updateData() {
         if (dataset.data.length >= 15) dataset.data.shift();
         dataset.data.push(Math.floor(Math.random() * 10000) + 1);
     });
+    if (time.length >= 15) time.shift(); // Remove oldest timestamp
+    time.push(getCurrentTime()); // Add current time to the time array
+   
 }
 
 function updateChart(chart) {
@@ -42,6 +50,7 @@ function addSeries() {
     };
     datasets.push(newDataset);
     updateChart(chart);
+    
 }
 
 function calculateAndUpdateCorrelation() {
@@ -59,7 +68,7 @@ function setupChart() {
     return new Chart(ctx, {
         type: 'line',
         data: {
-            labels: Array.from({length: 15}, (_, i) => i + 1),
+            labels: time, // Use current time as x-axis labels
             datasets: datasets
         },
         options: {
@@ -74,8 +83,8 @@ let chart;
 
 document.addEventListener('DOMContentLoaded', () => {
     chart = setupChart();
-    
-    setInterval(() => {
+
+    setInterval(async function () {
         updateData();
         updateChart(chart);
         calculateAndUpdateCorrelation();
