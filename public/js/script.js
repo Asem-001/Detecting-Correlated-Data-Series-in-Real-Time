@@ -52,15 +52,43 @@ function addSeries() {
     
 }
 
-function calculateAndUpdateCorrelation() {
-    if (datasets.length >= 2) {
-        const correlation = pearsonCorrelation(
-            datasets[0].data.slice(-5), 
-            datasets[1].data.slice(-5)
-        ).toFixed(2);
-        document.getElementById('correlationValue').innerText = correlation;
+function calculateCorrelationMatrix() {
+    const correlationMatrix = [];
+    for (let i = 0; i < datasets.length; i++) {
+        const row = [];
+        for (let j = 0; j < datasets.length; j++) {
+            if (i === j) {
+                row.push(1); // Correlation of a dataset with itself is 1
+            } else {
+                const correlation = pearsonCorrelation(
+                    datasets[i].data.slice(-5),
+                    datasets[j].data.slice(-5)
+                ).toFixed(2);
+                row.push(correlation);
+            }
+        }
+        correlationMatrix.push(row);
     }
+    return correlationMatrix;
 }
+
+function updateCorrelationDisplay() {
+    const correlationMatrix = calculateCorrelationMatrix();
+    const correlationDisplay = document.getElementById('correlationDisplay');
+    let correlationText = 'Correlation Matrix:<br>';
+
+    // Generate the correlation matrix text
+    correlationMatrix.forEach(row => {
+        row.forEach(value => {
+            correlationText += `${value} | \t`;
+        });
+        correlationText += '<br>';
+    });
+
+    // Update the HTML element with the correlation matrix text
+    correlationDisplay.innerHTML = correlationText;
+}
+
 
 function setupChart() {
     const ctx = document.getElementById('chart').getContext('2d');
@@ -99,7 +127,7 @@ function startDataUpdates() {
         intervalId = setInterval(async function () {
             updateData();
             updateChart(chart);
-            calculateAndUpdateCorrelation();
+           updateCorrelationDisplay()();
         }, 2300);
     }
 }
