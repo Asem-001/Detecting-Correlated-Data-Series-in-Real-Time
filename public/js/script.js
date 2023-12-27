@@ -80,45 +80,30 @@ function addSeries() {
     datasets.push(newDataset); // Add new dataset to the array
     document.getElementById('seriesCount').innerText = datasets.length;
     updateChart(chart);
+
+    updateDatasetSelectOptions();
+
 }
 
-// Calculates and returns a correlation matrix for the current datasets
-function calculateCorrelationMatrix() {
-    const correlationMatrix = [];
-    for (let i = 0; i < datasets.length; i++) {
-        const row = [];
-        for (let j = 0; j < datasets.length; j++) {
-            if (i === j) {
-                row.push(1); // Correlation with itself is 1
-            } else if(i >= j){
-                // Calculate correlation for different series
-                const correlation = pearsonCorrelation(
-                    datasets[i].data.slice(-5),
-                    datasets[j].data.slice(-5)
-                ).toFixed(2);
-                row.push(correlation);
-            }
-        }
-        correlationMatrix.push(row);
-    }
-    return correlationMatrix;
-}
-
-// Updates the display to show the current correlation matrix
-function updateCorrelationDisplay() {
-    const correlationMatrix = calculateCorrelationMatrix();
-    const correlationDisplay = document.getElementById('correlationDisplay');
-    let correlationText = 'Correlation Matrix:<br>';
-
-    // Generate HTML for the correlation matrix
-    correlationMatrix.forEach(row => {
-        row.forEach(value => {
-            correlationText += `${value} | \t`;
-        });
-        correlationText += '<br>';
+function updateDatasetSelectOptions() {
+    const select = document.getElementById('datasetSelect');
+    select.innerHTML = '<option selected>Select Series</option>';
+    datasets.forEach((dataset, index) => {
+        const option = document.createElement('option');
+        option.value = index;
+        option.textContent = dataset.label;
+        select.appendChild(option);
     });
+}
 
-    correlationDisplay.innerHTML = correlationText; // Update the HTML element
+function deleteSeries() {
+    const select = document.getElementById('datasetSelect');
+    const selectedIndex = select.value;
+    if (selectedIndex >= 0 && datasets[selectedIndex]) {
+        datasets.splice(selectedIndex, 1); // Remove the selected dataset
+        updateChart(chart);
+        updateDatasetSelectOptions();
+    }
 }
 
 // Initializes and returns a Chart.js chart instance
@@ -172,6 +157,52 @@ function stopDataUpdates() {
     }
 }
 
+// Calculates and returns a correlation matrix for the current datasets
+function calculateCorrelationMatrix() {
+    const correlationMatrix = [];
+    for (let i = 0; i < datasets.length; i++) {
+        const row = [];
+        for (let j = 0; j < datasets.length; j++) {
+            if (i === j) {
+                row.push(1);
+            } else if (i >= j) {
+                const correlation = pearsonCorrelation(
+                    datasets[i].data.slice(-5),
+                    datasets[j].data.slice(-5)
+                ).toFixed(2);
+                row.push(correlation);
+            }
+        }
+        correlationMatrix.push(row);
+    }
+    return correlationMatrix;
+}
+
+// Updates the display to show the current correlation matrix
+function updateCorrelationDisplay() {
+    const correlationMatrix = calculateCorrelationMatrix();
+    const correlationDisplay = document.getElementById('correlationDisplay');
+    let correlationHTML = '<table class="correlation-table"><tr><th></th>';
+
+    // Add dataset labels as table headers
+    datasets.forEach(dataset => {
+        correlationHTML += `<th>${dataset.label}</th>`;
+    });
+
+    correlationHTML += '</tr>';
+
+    correlationMatrix.forEach((row, rowIndex) => {
+        correlationHTML += `<tr><th>${datasets[rowIndex].label}</th>`;
+        row.forEach(value => {
+            correlationHTML += `<td>${value}</td>`;
+        });
+        correlationHTML += '</tr>';
+    });
+
+    correlationHTML += '</table>';
+    correlationDisplay.innerHTML = correlationHTML;
+}
+
 let correlationUpdateInterval;
 
 // Displays the correlation matrix in a modal
@@ -183,42 +214,15 @@ function showCorrelationMatrix() {
     new bootstrap.Modal(document.getElementById('correlationMatrixModal')).show();
 }
 
-// Updates the correlation matrix in the modal
-function updateCorrelationMatrixInModal() {
-    const correlationMatrix = calculateCorrelationMatrix();
-    let correlationHtml = '<table class="table"><thead><tr><th></th>';
-
-    // Add column headers
-    datasets.forEach(dataset => {
-        correlationHtml += `<th>${dataset.label}</th>`;
-    });
-    correlationHtml += '</tr></thead><tbody>';
-
-    // Add rows
-    correlationMatrix.forEach((row, rowIndex) => {
-        correlationHtml += `<tr><th>${datasets[rowIndex].label}</th>`;
-        row.forEach(value => {
-            correlationHtml += `<td class="text-center">${value}</td>`;
-        });
-        correlationHtml += '</tr>';
-    });
-
-    correlationHtml += '</tbody></table>';
-
-    const modalBody = document.querySelector('#correlationMatrixModal .modal-body');
-    if (modalBody) {
-        modalBody.innerHTML = correlationHtml;
-    }
-}
-
 // Initialize and set event listeners when the DOM is fully loaded
 document.addEventListener('DOMContentLoaded', () => {
     chart = setupChart();
 
-    // Attach event listeners to buttons
     document.getElementById('startButton').addEventListener('click', startDataUpdates);
     document.getElementById('stopButton').addEventListener('click', stopDataUpdates);
     document.getElementById('addSeriesButton').addEventListener('click', addSeries);
+
+    document.getElementById('deleteSeriesButton').addEventListener('click', deleteSeries);
 
     document.querySelector('.btn.btn-light').addEventListener('click', showCorrelationMatrix);
     const correlationModal = document.getElementById('correlationMatrixModal');

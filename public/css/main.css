@@ -816,3 +816,82 @@
 #correlationMatrixModal .table {
   margin-bottom: 0; /* Remove margin for the table inside the modal */
 }
+
+
+/* This styles the scrollable area */
+.scrollable-content {
+  height: auto;
+  max-height: 400px; /* Adjust the max-height as needed */
+  overflow-y: auto;
+}
+
+/* This will style the scrollbar track */
+.scrollable-content::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Light grey track */
+}
+
+/* This will style the actual scrollbar itself */
+.scrollable-content::-webkit-scrollbar {
+  width: 5px; /* Makes the scrollbar 5 pixels wide */
+  border-radius: 10px; /* Adds rounded corners to the track */
+
+}
+
+/* This will style the handle */
+.scrollable-content::-webkit-scrollbar-thumb {
+  background: #012970; /* Here you can use any color you prefer */
+  border-radius: 10px; /* Adds rounded corners to the track */
+
+}
+
+/* Handle on hover */
+.scrollable-content::-webkit-scrollbar-thumb:hover {
+  background: darkblue; /* Darken the color a bit when hovering */
+  border-radius: 10px; /* Adds rounded corners to the track */
+
+}
+
+.correlation-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.correlation-table th, .correlation-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+  word-wrap: break-word;
+}
+
+.correlation-table th {
+  background-color: #f2f2f2;
+  font-size: 10px;
+}
+
+#correlationDisplay {
+  height: auto;
+  max-height: 400px; /* Adjust the max-height as needed */
+  overflow-y: auto;
+}
+
+/* Custom scrollbar styles */
+#correlationDisplay::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+#correlationDisplay::-webkit-scrollbar {
+  width: 5px;
+  border-radius: 10px;
+}
+
+#correlationDisplay::-webkit-scrollbar-thumb {
+  background: #012970;
+  border-radius: 10px;
+}
+
+#correlationDisplay::-webkit-scrollbar-thumb:hover {
+  background: darkblue;
+  border-radius: 10px;
+}
+
