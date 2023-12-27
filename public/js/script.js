@@ -1,14 +1,18 @@
-let datasets = [];
-let time = [];
+let datasets = []; // Array to store data series
+let time = []; // Array to store timestamps
 
+// Returns current time as a string
 function getCurrentTime() {
-    return new Date().toLocaleTimeString(); // Get current time as a string
+    return new Date().toLocaleTimeString();
 }
 
+// Calculates Pearson correlation coefficient between two arrays
 function pearsonCorrelation(arr1, arr2) {
+    // Initialize variables
     let n = arr1.length;
     let sum_x = 0, sum_y = 0, sum_xy = 0, sum_x2 = 0, sum_y2 = 0;
 
+    // Summation calculations
     for (let i = 0; i < n; i++) {
         sum_x += arr1[i];
         sum_y += arr2[i];
@@ -17,49 +21,56 @@ function pearsonCorrelation(arr1, arr2) {
         sum_y2 += (arr2[i] * arr2[i]);
     }
 
+    // Calculation of the correlation coefficient
     let numerator = sum_xy - (sum_x * sum_y / n);
     let denominator = Math.sqrt((sum_x2 - sum_x * sum_x / n) * (sum_y2 - sum_y * sum_y / n));
 
-    if (denominator === 0) return 0;
+    if (denominator === 0) return 0; // Avoid division by zero
 
     return numerator / denominator;
 }
 
+// Updates the datasets and time arrays with new data and timestamps
 function updateData() {
     datasets.forEach(dataset => {
-        if (dataset.data.length >= 15) dataset.data.pop(); // Remove oldest data
-        dataset.data.unshift(Math.floor(Math.random() * 10000) + 1); // Add new data at the beginning
+        if (dataset.data.length >= 15) dataset.data.pop(); // Limit data array size
+        dataset.data.unshift(Math.floor(Math.random() * 10000) + 1); // Add random data
     });
-    if (time.length >= 15) time.pop(); // Remove oldest timestamp
-    time.unshift(getCurrentTime()); // Add current time at the beginning
+    if (time.length >= 15) time.pop(); // Limit time array size
+    time.unshift(getCurrentTime()); // Add current time
 }
 
+// Updates the chart with new datasets
 function updateChart(chart) {
     chart.data.datasets = datasets;
     chart.update();
 }
 
+// Adds a new data series to the chart
 function addSeries() {
+    // Generate a random color
     const newColor = `rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)})`;
+    // Create new dataset object
     const newDataset = {
         label: `Series ${datasets.length + 1}`,
         data: [],
         borderColor: newColor,
         backgroundColor: newColor,
     };
-    datasets.push(newDataset);
+    datasets.push(newDataset); // Add new dataset to the array
     updateChart(chart);
-    
 }
 
+// Calculates and returns a correlation matrix for the current datasets
 function calculateCorrelationMatrix() {
     const correlationMatrix = [];
     for (let i = 0; i < datasets.length; i++) {
         const row = [];
         for (let j = 0; j < datasets.length; j++) {
             if (i === j) {
-                row.push(1); // Correlation of a dataset with itself is 1
+                row.push(1); // Correlation with itself is 1
             } else {
+                // Calculate correlation for different series
                 const correlation = pearsonCorrelation(
                     datasets[i].data.slice(-5),
                     datasets[j].data.slice(-5)
@@ -72,12 +83,13 @@ function calculateCorrelationMatrix() {
     return correlationMatrix;
 }
 
+// Updates the display to show the current correlation matrix
 function updateCorrelationDisplay() {
     const correlationMatrix = calculateCorrelationMatrix();
     const correlationDisplay = document.getElementById('correlationDisplay');
     let correlationText = 'Correlation Matrix:<br>';
 
-    // Generate the correlation matrix text
+    // Generate HTML for the correlation matrix
     correlationMatrix.forEach(row => {
         row.forEach(value => {
             correlationText += `${value} | \t`;
@@ -85,83 +97,83 @@ function updateCorrelationDisplay() {
         correlationText += '<br>';
     });
 
-    // Update the HTML element with the correlation matrix text
-    correlationDisplay.innerHTML = correlationText;
+    correlationDisplay.innerHTML = correlationText; // Update the HTML element
 }
 
-
+// Initializes and returns a Chart.js chart instance
 function setupChart() {
     const ctx = document.getElementById('chart').getContext('2d');
     return new Chart(ctx, {
         type: 'line',
         data: {
-            labels: time, // Use current time as x-axis labels
+            labels: time,
             datasets: datasets
         },
         options: {
             scales: {
                 x: {
                     ticks: {
-                        maxRotation: 15, // Cancel label rotation
-                        minRotation: 15, // Cancel label rotation
+                        maxRotation: 15, // Adjust label rotation
+                        minRotation: 15,
                         font: {
-                            size: 10 // Set font size to 10 (or any desired value)
+                            size: 10
                         }
                     },
-                    reverse: true, // Keep this if you want the newest data on the right
+                    reverse: true, // Newest data on the right
                 },
                 y: { 
-                    beginAtZero: true 
+                    beginAtZero: true // Start y-axis at zero
                 }
             }
         }
     });
 }
 
-
 let chart;
-let intervalId = null; // Variable to hold the interval reference
+let intervalId = null; // Holds the interval reference for data updates
 
+// Starts periodic data updates
 function startDataUpdates() {
     if (intervalId === null) {
         intervalId = setInterval(async function () {
-            updateData();
-            updateChart(chart);
-           updateCorrelationDisplay()();
-        }, 2300);
+            updateData(); // Update data
+            updateChart(chart); // Update chart
+            updateCorrelationDisplay(); // Update correlation display
+        }, 2300); // Update interval in milliseconds
     }
 }
 
+// Stops periodic data updates
 function stopDataUpdates() {
     if (intervalId !== null) {
-        clearInterval(intervalId);
+        clearInterval(intervalId); // Clear the interval
         intervalId = null;
     }
 }
 
-
 let correlationUpdateInterval;
 
+// Displays the correlation matrix in a modal
 function showCorrelationMatrix() {
     updateCorrelationMatrixInModal(); // Initial update
     correlationUpdateInterval = setInterval(updateCorrelationMatrixInModal, 2000); // Update every 2 seconds
 
-    // Show the modal using Bootstrap's modal functionality
+    // Show the modal
     new bootstrap.Modal(document.getElementById('correlationMatrixModal')).show();
 }
 
-
+// Updates the correlation matrix in the modal
 function updateCorrelationMatrixInModal() {
     const correlationMatrix = calculateCorrelationMatrix();
     let correlationHtml = '<table class="table"><thead><tr><th></th>';
 
-    // Add column headers (Series names)
+    // Add column headers
     datasets.forEach(dataset => {
         correlationHtml += `<th>${dataset.label}</th>`;
     });
     correlationHtml += '</tr></thead><tbody>';
 
-    // Add rows with row headers (Series names)
+    // Add rows
     correlationMatrix.forEach((row, rowIndex) => {
         correlationHtml += `<tr><th>${datasets[rowIndex].label}</th>`;
         row.forEach(value => {
@@ -178,20 +190,18 @@ function updateCorrelationMatrixInModal() {
     }
 }
 
-
-
+// Initialize and set event listeners when the DOM is fully loaded
 document.addEventListener('DOMContentLoaded', () => {
     chart = setupChart();
 
-    // Attach event listeners to buttons using their IDs
+    // Attach event listeners to buttons
     document.getElementById('startButton').addEventListener('click', startDataUpdates);
     document.getElementById('stopButton').addEventListener('click', stopDataUpdates);
     document.getElementById('addSeriesButton').addEventListener('click', addSeries);
 
-    // Event listener for the "Show Correlation" button
     document.querySelector('.btn.btn-light').addEventListener('click', showCorrelationMatrix);
     const correlationModal = document.getElementById('correlationMatrixModal');
     correlationModal.addEventListener('hidden.bs.modal', function (event) {
-        clearInterval(correlationUpdateInterval); // Clear the interval when the modal is closed
+        clearInterval(correlationUpdateInterval); // Clear interval when modal closes
     });
 });
