@@ -7,37 +7,47 @@ function getCurrentTime() {
 }
 
 // Calculates Pearson correlation coefficient between two arrays
-function pearsonCorrelation(arr1, arr2) {
-    // Initialize variables
-    let n = arr1.length;
-    let sum_x = 0, sum_y = 0, sum_xy = 0, sum_x2 = 0, sum_y2 = 0,counter = 0;
-
-    // Summation calculations
-    for (let i = 0; i < n; i++) {
-        sum_x += arr1[i];
-        counter++
-        sum_y += arr2[i];
-        counter++
-        sum_xy += (arr1[i] * arr2[i]);
-        counter += 2
-        sum_x2 += (arr1[i] * arr1[i]);
-        counter += 2
-        sum_y2 += (arr2[i] * arr2[i]);
-        counter += 2
-    }
-
-    // Calculation of the correlation coefficient
-    let numerator = sum_xy - (sum_x * sum_y / n);
-    counter += 3
-    let denominator = Math.sqrt((sum_x2 - sum_x * sum_x / n) * (sum_y2 - sum_y * sum_y / n));
-    counter += 8
-
-    if (denominator === 0) return 0; // Avoid division by zero
-
-    let correlation =  numerator / denominator ;
-    counter++
-    console.log(counter)
-    return correlation
+function pearsonCorrelation(x, y) {
+    let computationCounter = 0;
+    // if (x.length !== y.length) {
+    //     throw new Error('Arrays must have the same length for correlation calculation.');
+    //   }
+    
+      const n = x.length;
+    
+      // Calculate the mean of x and y
+      const meanX = x.reduce((sum, value) => sum + value, 0) / n;
+      computationCounter += x.length + 1;
+      const meanY = y.reduce((sum, value) => sum + value, 0) / n;
+      computationCounter += x.length + 1;
+    
+      // Calculate the numerator and denominators
+      let numerator = 0;
+      let denominatorX = 0;
+      let denominatorY = 0;
+   
+      for (let i = 0; i < n; i++) {
+        const diffX = x[i] - meanX;
+        computationCounter++;
+  
+        const diffY = y[i] - meanY;
+        computationCounter++;
+    
+        numerator += diffX * diffY;
+        computationCounter += 2;
+  
+        denominatorX += diffX ** 2;
+        computationCounter += 2;
+  
+        denominatorY += diffY ** 2;
+        computationCounter += 2;
+      }
+    
+      // Calculate the correlation coefficient
+      const correlation = numerator / Math.sqrt(denominatorX * denominatorY);
+      computationCounter += 3;
+      console.log(computationCounter)
+      return correlation;
 }
 
 // Updates the datasets and time arrays with new data and timestamps
@@ -68,6 +78,7 @@ function addSeries() {
         backgroundColor: newColor,
     };
     datasets.push(newDataset); // Add new dataset to the array
+    document.getElementById('seriesCount').innerText = datasets.length;
     updateChart(chart);
 }
 
@@ -79,7 +90,7 @@ function calculateCorrelationMatrix() {
         for (let j = 0; j < datasets.length; j++) {
             if (i === j) {
                 row.push(1); // Correlation with itself is 1
-            } else {
+            } else if(i >= j){
                 // Calculate correlation for different series
                 const correlation = pearsonCorrelation(
                     datasets[i].data.slice(-5),
@@ -187,7 +198,7 @@ function updateCorrelationMatrixInModal() {
     correlationMatrix.forEach((row, rowIndex) => {
         correlationHtml += `<tr><th>${datasets[rowIndex].label}</th>`;
         row.forEach(value => {
-            correlationHtml += `<td>${value}</td>`;
+            correlationHtml += `<td class="text-center">${value}</td>`;
         });
         correlationHtml += '</tr>';
     });
