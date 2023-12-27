@@ -10,24 +10,34 @@ function getCurrentTime() {
 function pearsonCorrelation(arr1, arr2) {
     // Initialize variables
     let n = arr1.length;
-    let sum_x = 0, sum_y = 0, sum_xy = 0, sum_x2 = 0, sum_y2 = 0;
+    let sum_x = 0, sum_y = 0, sum_xy = 0, sum_x2 = 0, sum_y2 = 0,counter = 0;
 
     // Summation calculations
     for (let i = 0; i < n; i++) {
         sum_x += arr1[i];
+        counter++
         sum_y += arr2[i];
+        counter++
         sum_xy += (arr1[i] * arr2[i]);
+        counter += 2
         sum_x2 += (arr1[i] * arr1[i]);
+        counter += 2
         sum_y2 += (arr2[i] * arr2[i]);
+        counter += 2
     }
 
     // Calculation of the correlation coefficient
     let numerator = sum_xy - (sum_x * sum_y / n);
+    counter += 3
     let denominator = Math.sqrt((sum_x2 - sum_x * sum_x / n) * (sum_y2 - sum_y * sum_y / n));
+    counter += 8
 
     if (denominator === 0) return 0; // Avoid division by zero
 
-    return numerator / denominator;
+    let correlation =  numerator / denominator ;
+    counter++
+    console.log(counter)
+    return correlation
 }
 
 // Updates the datasets and time arrays with new data and timestamps
