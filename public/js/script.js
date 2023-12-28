@@ -9,9 +9,7 @@ function getCurrentTime() {
 // Calculates Pearson correlation coefficient between two arrays
 function pearsonCorrelation(x, y) {
     let computationCounter = 0;
-    // if (x.length !== y.length) {
-    //     throw new Error('Arrays must have the same length for correlation calculation.');
-    //   }
+   
     
       const n = x.length;
     
@@ -166,11 +164,17 @@ function calculateCorrelationMatrix() {
             if (i === j) {
                 row.push(1);
             } else if (i >= j) {
-                const correlation = pearsonCorrelation(
-                    datasets[i].data.slice(-5),
-                    datasets[j].data.slice(-5)
-                ).toFixed(2);
-                row.push(correlation);
+
+                let array1 = datasets[i].data.slice(-5)
+                let array2 = datasets[j].data.slice(-5)
+
+                if(array1.length == array2.length && array1.length == 5){
+                    const correlation = pearsonCorrelation(array1,array2).toFixed(2);
+                    row.push(correlation);   
+                }else{
+                    row.push(NaN)
+                }
+                
             }
         }
         correlationMatrix.push(row);
