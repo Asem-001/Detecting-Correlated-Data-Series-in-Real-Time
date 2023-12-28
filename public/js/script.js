@@ -173,8 +173,9 @@ function calculateCorrelationMatrix() {
                     row.push(correlation);   
                 }else{
                     row.push(NaN)
-                }
-                
+                } 
+            }else{
+                row.push('-')
             }
         }
         correlationMatrix.push(row);
@@ -186,7 +187,7 @@ function calculateCorrelationMatrix() {
 function updateCorrelationDisplay() {
     const correlationMatrix = calculateCorrelationMatrix();
     const correlationDisplay = document.getElementById('correlationDisplay');
-    let correlationHTML = '<table class="correlation-table"><tr><th></th>';
+    let correlationHTML = '<table class="correlation-table  table table-striped"><tr><th></th>';
 
     // Add dataset labels as table headers
     datasets.forEach(dataset => {
