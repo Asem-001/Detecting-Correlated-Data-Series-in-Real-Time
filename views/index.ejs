@@ -25,8 +25,8 @@
       <input type="hidden" value=<%- JSON.stringify(data) %>>
         <section class="section dashboard">
             <div class="row">
-              <div class="col-md-10 mt-5">
-                <div class="card">
+              <div class="col-md-9 mt-5">
+                <div class="card" style="height: 515px; ">
                   <div class="card-body" style="max-height: 700px;">
                     <h5 class="card-title">Chart</h5>
                     <canvas style="max-width: 2200px; max-height: 400px; margin-bottom: 30px; " id="chart" width="668" height="334" ></canvas>
@@ -34,8 +34,8 @@
                 </div>
               </div>
     
-              <div class="col-md-2 mt-5">
-                <div class="card" style="height: 549px;">
+              <div class="col-md-3 mt-5">
+                <div class="card" style="height: 515px; ">
                   <div class="card-body" style="margin-top: 30px;">
                     <form>
                       <div class="d-flex justify-content-center py-4">
@@ -80,8 +80,8 @@
     
           <div class="row">
 
-            <div class="col-lg-5">
-              <div class="card" style="height: 500px;" id="correlationMatrixModal">
+            <div class="col-lg-6">
+              <div class="card" style="height: 515px;" id="correlationMatrixModal">
                   <div class="card-body">
                       <h5 class="card-title">Correlation Matrix</h5>
                       <div id="correlationDisplay"><!-- Correlation matrix will be displayed here --></div>
@@ -90,8 +90,8 @@
             </div>
           
 
-            <div class="col-lg-7">
-              <div class="card" style="height: 500px;">
+            <div class="col-lg-6">
+              <div class="card" style="height: 515px; ">
                 <div class="card-body">
                   <h5 class="card-title">Notification</h5>
                   <div class="scrollable-content"> <!-- Add this class -->
@@ -107,7 +107,11 @@
                       Correlation detected between PH2 and PH3!
                       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                      Correlation detected between PH2 and PH3!
+                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
                       Correlation detected between PH2 and PH3!
                       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
@@ -119,11 +123,7 @@
                       Correlation detected between PH2 and PH3!
                       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                      Correlation detected between PH2 and PH3!
-                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
                       Correlation detected between PH2 and PH3!
                       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
