@@ -18,7 +18,6 @@ module.exports = {
 
     res.render("index", {
       title: "Home page",
-      data: 'Welcome'
     });
   },
 

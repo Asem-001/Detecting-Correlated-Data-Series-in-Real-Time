@@ -22,7 +22,7 @@
     <%- include('./partials/adminsidebar.ejs') %>
 
     <main id="main" class="main">
-      <input type="hidden" value=<%- JSON.stringify(data) %>>
+
         <section class="section dashboard">
             <div class="row">
               <div class="col-md-9 mt-5">
@@ -95,10 +95,6 @@
                 <div class="card-body">
                   <h5 class="card-title">Notification</h5>
                   <div class="scrollable-content"> <!-- Add this class -->
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                      correlation type: <%= data.corrType %>, from: <strong><%= data.corrTimeStart %> </strong>  to:<strong><%= data.corrTimeEnd %></strong>   
-                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
                       Correlation detected between PH2 and PH3!
                       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
