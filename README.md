@@ -1,6 +1,6 @@
 # Detecting-Correlated-Data-Series-in-Real-Time
 
-NodeJs must be downloaded
+NodeJs must be downloaded and use Firbase Firestore configurations
 
 to run type in the terminal:
 
