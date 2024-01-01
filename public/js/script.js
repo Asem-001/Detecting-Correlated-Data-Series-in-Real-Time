@@ -67,7 +67,7 @@ function updateChart(chart) {
 // Adds a new data series to the chart
 function addSeries() {
     // Generate a random color
-    const newColor = `rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)})`;
+    const newColor = `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 0.5)`;
     // Create new dataset object
     const newDataset = {
         label: `Series ${datasets.length + 1}`,
