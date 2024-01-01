@@ -11,10 +11,7 @@ createfirstdoc()
 module.exports = {
 
   index: async (req, res) => {
-       
- 
-
-       testdb()
+      testdb()
 
     res.render("index", {
       title: "Home page",
