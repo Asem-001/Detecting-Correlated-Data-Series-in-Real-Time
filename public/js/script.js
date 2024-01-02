@@ -9,9 +9,7 @@ function getCurrentTime() {
 // Calculates Pearson correlation coefficient between two arrays
 function pearsonCorrelation(x, y) {
     let computationCounter = 0;
-   
-    
-      const n = x.length;
+const n = x.length;
     
       // Calculate the mean of x and y
       const meanX = x.reduce((sum, value) => sum + value, 0) / n;
@@ -51,10 +49,10 @@ function pearsonCorrelation(x, y) {
 // Updates the datasets and time arrays with new data and timestamps
 function updateData() {
     datasets.forEach(dataset => {
-        if (dataset.data.length >= 15) dataset.data.pop(); // Limit data array size
+        if (dataset.data.length >= 50) dataset.data.pop(); // Limit data array size
         dataset.data.unshift(Math.floor(Math.random() * 10000) + 1); // Add random data
     });
-    if (time.length >= 15) time.pop(); // Limit time array size
+    if (time.length >= 50) time.pop(); // Limit time array size
     time.unshift(getCurrentTime()); // Add current time
 }
 
@@ -67,7 +65,7 @@ function updateChart(chart) {
 // Adds a new data series to the chart
 function addSeries() {
     // Generate a random color
-    const newColor = `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 0.5)`;
+    const newColor = `rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)})`;
     // Create new dataset object
     const newDataset = {
         label: `Series ${datasets.length + 1}`,
