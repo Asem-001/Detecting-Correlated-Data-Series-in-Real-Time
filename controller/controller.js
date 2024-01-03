@@ -1,7 +1,7 @@
 const { timeStamp, log } = require("console");
 const db = require("../models/config")
 const userclass = require("../models/users")
-const { Correlation, DetectedCorr } = require('../models/coreelation')
+const { CorrelationData, DetectedCorrelation } = require('../models/coreelation')
 const { doc, collection, addDoc, setDoc, getDoc, updateDoc, deleteDoc, deleteField, Timestamp, getDocs } = require("firebase/firestore")
 
 createfirstdoc()
@@ -11,7 +11,9 @@ createfirstdoc()
 module.exports = {
 
   index: async (req, res) => {
-      testdb()
+       testdb().then(
+        log('test then')
+      )
 
     res.render("index", {
       title: "Home page",
@@ -182,17 +184,17 @@ function createfirstdoc() {
 async function addCorrData(CorrName, Threshold, CorrDateStart, CorrDateEnd, NoOfCorr) {
   const date = new Date
 
-  const corr = new Correlation(CorrName, Threshold, CorrDateStart, CorrDateEnd, NoOfCorr)
+  const corr = new CorrelationData(CorrName, Threshold, CorrDateStart, CorrDateEnd, NoOfCorr)
 
   await setDoc(doc(db, "Correlation", "" + date.getTime()), corr).then(() => {
     console.log(`The Correlation ${corr.CorrName} successfully added !`)
   });
 }
 
-async function addDetectCorr(CorrName, DataID, corrType, corrTimeStart, corrTimeEnd) {
+async function addDetectCorr(FirstCorrName, SecondCorrName,FirstDataID,SecondDataID,Threshold,CorrTimeStart,CorrTimeEnd) {
   const date = new Date
 
-  const corr = new DetectedCorr(CorrName, DataID, corrType, corrTimeStart, corrTimeEnd)
+  const corr = new CorrelationData(FirstCorrName, SecondCorrName,FirstDataID,SecondDataID,Threshold,CorrTimeStart,CorrTimeEnd)
 
   await setDoc(doc(db, "DetectedCorrelation", "" + date.getTime()), corr).then(() => {
     console.log(`The Correlation ${corr.CorrName} successfully added !`)
