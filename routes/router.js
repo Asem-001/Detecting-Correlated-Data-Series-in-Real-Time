@@ -10,6 +10,8 @@ router.get('/dashboard', Controller.dashboard);
 router.get('/profile', Controller.profile);
 
 
+router.post('/sendtest',Controller.sendData)
+
 
 
 module.exports = router;

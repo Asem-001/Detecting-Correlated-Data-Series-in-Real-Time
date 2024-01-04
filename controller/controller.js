@@ -3,7 +3,6 @@ const db = require("../models/config")
 const userclass = require("../models/users")
 const { CorrelationData, DetectedCorrelation } = require('../models/coreelation')
 const { doc, collection, addDoc, setDoc, getDoc, updateDoc, deleteDoc, deleteField, Timestamp, getDocs } = require("firebase/firestore")
-
 createfirstdoc()
 
 //this code for only creating the coolection
@@ -11,13 +10,19 @@ createfirstdoc()
 module.exports = {
 
   index: async (req, res) => {
-       testdb().then(
-        log('test then')
-      )
-
+      //  testdb()
+   
     res.render("index", {
-      title: "Home page",
+      title: "Home page"
+      
     });
+  },
+  sendData: async(req,res) =>{
+    
+    let data =  JSON.parse(req.body.hd)
+    
+    console.log(data);
+    res.redirect('/')
   },
 
   adminreports: (req, res) => {

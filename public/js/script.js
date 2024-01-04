@@ -1,9 +1,16 @@
 let datasets = []; // Array to store data series
 let time = []; // Array to store timestamps
 
+
+let date = new Date()
+let totalData = {'names':[],
+                 'start':[],
+                 'end': [],
+                 'threshold':[]} // Create dataset for gathering to database
+
 // Returns current time as a string
 function getCurrentTime() {
-    return new Date().toLocaleTimeString();
+    return date.toLocaleTimeString();
 }
 
 // Calculates Pearson correlation coefficient between two arrays
@@ -48,7 +55,10 @@ const n = x.length;
 
 // Updates the datasets and time arrays with new data and timestamps
 function updateData() {
+   
     datasets.forEach(dataset => {
+       
+
         if (dataset.data.length >= 50) dataset.data.pop(); // Limit data array size
         dataset.data.unshift(Math.floor(Math.random() * 10000) + 1); // Add random data
     });
@@ -64,6 +74,7 @@ function updateChart(chart) {
 
 // Adds a new data series to the chart
 function addSeries() {
+  
     // Generate a random color
     const newColor = `rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)})`;
     // Create new dataset object
@@ -73,6 +84,15 @@ function addSeries() {
         borderColor: newColor,
         backgroundColor: newColor,
     };
+    // check if series name not in the Total data 
+    if (!totalData.names.includes(newDataset.label)){
+    totalData.names.push(newDataset.label)
+    totalData.start.push(date.toDateString()+" "+date.toLocaleTimeString()) // add the time that user add series
+    totalData.threshold.push(document.getElementById('rangeValue').value) // add the threshold 
+    }
+    console.log(totalData);
+
+
     datasets.push(newDataset); // Add new dataset to the array
     document.getElementById('seriesCount').innerText = datasets.length;
     updateChart(chart);
@@ -97,6 +117,14 @@ function deleteSeries() {
     const selectedIndex = select.value;
     if (selectedIndex >= 0 && datasets[selectedIndex]) {
         datasets.splice(selectedIndex, 1); // Remove the selected dataset
+        
+        // Remove the the selected from Totaldata 
+        totalData.names.splice(selectedIndex, 1)
+        totalData.start.splice(selectedIndex, 1)
+        totalData.end.splice(selectedIndex, 1)
+        totalData.threshold.splice(selectedIndex, 1)
+
+
         updateChart(chart);
         updateDatasetSelectOptions();
     }
@@ -136,6 +164,7 @@ let intervalId = null; // Holds the interval reference for data updates
 
 // Starts periodic data updates
 function startDataUpdates() {
+    console.log(totalData);
     if (intervalId === null) {
         intervalId = setInterval(async function () {
             updateData(); // Update data
@@ -147,7 +176,13 @@ function startDataUpdates() {
 
 // Stops periodic data updates
 function stopDataUpdates() {
+
+    let hiddenIInput = document.getElementById('hiddeninput')
+    totalData.end.push(date.toDateString()+" "+date.toLocaleTimeString()) // add the time that user end 
+    hiddenIInput.value = JSON.stringify(totalData)
+   
     if (intervalId !== null) {
+        
         clearInterval(intervalId); // Clear the interval
         intervalId = null;
     }
@@ -231,5 +266,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const correlationModal = document.getElementById('correlationMatrixModal');
     correlationModal.addEventListener('hidden.bs.modal', function (event) {
         clearInterval(correlationUpdateInterval); // Clear interval when modal closes
+      
     });
 });
