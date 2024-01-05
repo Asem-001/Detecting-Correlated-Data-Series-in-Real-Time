@@ -12,6 +12,13 @@ router.get('/profile', Controller.profile);
 
 router.post('/sendtest',Controller.sendData)
 
-
+router.post('/sendData', (req, res) => {
+    // Handle the data received from the client-side here
+    const receivedData = req.body;
+    console.log('Received data:', receivedData);
+  
+    // Process the data and send a response if needed
+    res.json({ message: 'Data received successfully!' });
+  });
 
 module.exports = router;
