@@ -1,3 +1,35 @@
+// Set the initial index
+let currentIndex = 1;
+
+// Function to make a request to the API
+const fetchData = async () => {
+    const apiUrl = `http://localhost:3000/api/data/${currentIndex}`;
+
+    try {
+        // Make a GET request to the API endpoint using fetch
+        const response = await fetch(apiUrl);
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        // Parse the JSON response
+        const data = await response.json();
+
+        console.log('Response:', data.PM_2[5]);
+    } catch (error) {
+        console.error('Error:', error.message);
+    }
+
+    // Increment the index for the next request
+    currentIndex++;
+
+    // Reset the index to 1 if it exceeds a certain value (e.g., 10)
+    if (currentIndex > 1000000) {
+        currentIndex = 1;
+    }
+};
+
 let datasets = []; // Array to store data series
 let time = []; // Array to store timestamps
 
@@ -141,6 +173,7 @@ function startDataUpdates() {
             updateData(); // Update data
             updateChart(chart); // Update chart
             updateCorrelationDisplay(); // Update correlation display
+            fetchData()
         }, 2300); // Update interval in milliseconds
     }
 }
