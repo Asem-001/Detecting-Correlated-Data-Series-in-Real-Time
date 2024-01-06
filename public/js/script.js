@@ -164,8 +164,8 @@ function calculateCorrelationMatrix() {
                 row.push(1);
             } else if (i >= j) {
 
-                let array1 = datasets[i].data.slice(-sliceSize);
-                let array2 = datasets[j].data.slice(-sliceSize);
+                let array1 = datasets[i].data.slice(0, sliceSize);
+                let array2 = datasets[j].data.slice(0, sliceSize);
 
                 if(array1.length == array2.length && array1.length == sliceSize){
                     const correlation = pearsonCorrelation(array1, array2).toFixed(2);
