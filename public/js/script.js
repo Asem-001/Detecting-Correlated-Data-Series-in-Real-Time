@@ -1,9 +1,9 @@
 // Set the initial index
-let currentIndex = 1;
+let currentIndex = 0;
 
 // Function to make a request to the API
 const fetchData = async () => {
-    const apiUrl = `http://localhost:3000/api/data/${currentIndex}`;
+    const apiUrl = `http://localhost:3000/api/temp/${currentIndex}`;
 
     try {
         // Make a GET request to the API endpoint using fetch
@@ -16,7 +16,7 @@ const fetchData = async () => {
         // Parse the JSON response
         const data = await response.json();
 
-        console.log('Response:', data.PM_2[5]);
+        console.log('Response:', data);
     } catch (error) {
         console.error('Error:', error.message);
     }
