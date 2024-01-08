@@ -89,7 +89,8 @@ function addSeries() {
     if (!totalData.names.includes(newDataset.label)){
     totalData.names.push(newDataset.label)
     totalData.start.push( new Date().toDateString()+" "+ new Date().toLocaleTimeString()) // add the time that user add series
-    totalData.threshold.push(document.getElementById('rangeValue').value) // add the threshold 
+    
+    totalData.threshold[0]=(document.getElementById('range').value) // add the threshold 
     }
     // console.log(totalData);
 
