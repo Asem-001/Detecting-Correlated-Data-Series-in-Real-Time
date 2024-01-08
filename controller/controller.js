@@ -3,7 +3,6 @@ const db = require("../models/config")
 const userclass = require("../models/users")
 const { CorrelationData, DetectedCorrelation } = require('../models/coreelation')
 const { doc, collection, addDoc, setDoc, getDoc, updateDoc, deleteDoc, deleteField, Timestamp, getDocs } = require("firebase/firestore")
-
 createfirstdoc()
 
 //this code for only creating the coolection
@@ -11,13 +10,20 @@ createfirstdoc()
 module.exports = {
 
   index: async (req, res) => {
-       testdb().then(
-        log('test then')
-      )
-
+      //  testdb()
+   
     res.render("index", {
-      title: "Home page",
+      title: "Home page"
+      
     });
+  },
+  getData: async(req,res) =>{
+    
+    let data =  req.body.parcel
+    
+
+    console.log(data);
+    res.redirect('/')
   },
 
   adminreports: (req, res) => {
@@ -194,7 +200,7 @@ async function addCorrData(CorrName, Threshold, CorrDateStart, CorrDateEnd, NoOf
 async function addDetectCorr(FirstCorrName, SecondCorrName,FirstDataID,SecondDataID,Threshold,CorrTimeStart,CorrTimeEnd) {
   const date = new Date
 
-  const corr = new CorrelationData(FirstCorrName, SecondCorrName,FirstDataID,SecondDataID,Threshold,CorrTimeStart,CorrTimeEnd)
+  const corr = new DetectedCorrelation(FirstCorrName, SecondCorrName,FirstDataID,SecondDataID,Threshold,CorrTimeStart,CorrTimeEnd)
 
   await setDoc(doc(db, "DetectedCorrelation", "" + date.getTime()), corr).then(() => {
     console.log(`The Correlation ${corr.CorrName} successfully added !`)
