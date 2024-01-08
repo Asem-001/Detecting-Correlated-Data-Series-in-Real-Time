@@ -1,8 +1,9 @@
+
 let datasets = []; // Array to store data series
 let time = []; // Array to store timestamps
 
 
-let date = new Date()
+
 let totalData = {'names':[],
                  'start':[],
                  'end': [],
@@ -10,7 +11,7 @@ let totalData = {'names':[],
 
 // Returns current time as a string
 function getCurrentTime() {
-    return date.toLocaleTimeString();
+    return  new Date().toLocaleTimeString();
 }
 
 // Calculates Pearson correlation coefficient between two arrays
@@ -87,10 +88,10 @@ function addSeries() {
     // check if series name not in the Total data 
     if (!totalData.names.includes(newDataset.label)){
     totalData.names.push(newDataset.label)
-    totalData.start.push(date.toDateString()+" "+date.toLocaleTimeString()) // add the time that user add series
+    totalData.start.push( new Date().toDateString()+" "+ new Date().toLocaleTimeString()) // add the time that user add series
     totalData.threshold.push(document.getElementById('rangeValue').value) // add the threshold 
     }
-    console.log(totalData);
+    // console.log(totalData);
 
 
     datasets.push(newDataset); // Add new dataset to the array
@@ -159,29 +160,59 @@ function setupChart() {
     });
 }
 
+
 let chart;
 let intervalId = null; // Holds the interval reference for data updates
 
 // Starts periodic data updates
-function startDataUpdates() {
-    console.log(totalData);
+function startDataUpdates(e) {
     if (intervalId === null) {
+        sendToBackend(e)
+        // console.log("before ",totalData);
+        clearTotalData()
+        // console.log("after ",totalData);
         intervalId = setInterval(async function () {
             updateData(); // Update data
             updateChart(chart); // Update chart
             updateCorrelationDisplay(); // Update correlation display
+            
         }, 2300); // Update interval in milliseconds
     }
 }
+function clearTotalData() {
+    // Remove the the selected from Totaldata 
+    totalData.names.splice(0, totalData.names.length)
+    totalData.start.splice(0, totalData.start.length)
+    totalData.threshold.splice(0, totalData.threshold.length)
+
+}
+async function sendToBackend(e){ // The totalData dic will be sended to the backend server
+    
+    // console.log(totalData);
+    // hiddenIInput.value = JSON.stringify(totalData)
+    e.preventDefault() // Stop refreshing the page 
+    const res = await fetch('/sendbackend', { // Send the data to the router in JSON file 
+        method:'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body:JSON.stringify({
+            parcel: totalData
+        })
+    } )
+}
+
 
 // Stops periodic data updates
-function stopDataUpdates() {
-
-    let hiddenIInput = document.getElementById('hiddeninput')
-    totalData.end.push(date.toDateString()+" "+date.toLocaleTimeString()) // add the time that user end 
-    hiddenIInput.value = JSON.stringify(totalData)
-   
+function stopDataUpdates(e) {
+     totalData.end.push( new Date().toDateString()+" "+ new Date().toLocaleTimeString()) // Add the time that user end 
+    // After the user stop the program the data will be sended to the backend
     if (intervalId !== null) {
+        sendToBackend(e)
+        // console.log("before end ",totalData);
+        totalData.end.splice(0, totalData.end.length)
+        // console.log("after end",totalData);
+        
         
         clearInterval(intervalId); // Clear the interval
         intervalId = null;

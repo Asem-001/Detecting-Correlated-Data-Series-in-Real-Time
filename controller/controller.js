@@ -17,10 +17,11 @@ module.exports = {
       
     });
   },
-  sendData: async(req,res) =>{
+  getData: async(req,res) =>{
     
-    let data =  JSON.parse(req.body.hd)
+    let data =  req.body.parcel
     
+
     console.log(data);
     res.redirect('/')
   },
@@ -199,7 +200,7 @@ async function addCorrData(CorrName, Threshold, CorrDateStart, CorrDateEnd, NoOf
 async function addDetectCorr(FirstCorrName, SecondCorrName,FirstDataID,SecondDataID,Threshold,CorrTimeStart,CorrTimeEnd) {
   const date = new Date
 
-  const corr = new CorrelationData(FirstCorrName, SecondCorrName,FirstDataID,SecondDataID,Threshold,CorrTimeStart,CorrTimeEnd)
+  const corr = new DetectedCorrelation(FirstCorrName, SecondCorrName,FirstDataID,SecondDataID,Threshold,CorrTimeStart,CorrTimeEnd)
 
   await setDoc(doc(db, "DetectedCorrelation", "" + date.getTime()), corr).then(() => {
     console.log(`The Correlation ${corr.CorrName} successfully added !`)
