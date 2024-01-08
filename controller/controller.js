@@ -4,17 +4,13 @@ const userclass = require("../models/users")
 const { CorrelationData, DetectedCorrelation } = require('../models/coreelation')
 const { doc, collection, addDoc, setDoc, getDoc, updateDoc, deleteDoc, deleteField, Timestamp, getDocs } = require("firebase/firestore")
 
-createfirstdoc()
 
 //this code for only creating the coolection
 
 module.exports = {
 
   index: async (req, res) => {
-       testdb().then(
-        log('test then')
-      )
-
+      
     res.render("index", {
       title: "Home page",
     });
