@@ -58,12 +58,12 @@ const n = x.length;
 function updateData() {
    
     datasets.forEach(dataset => {
-       
 
-        if (dataset.data.length >= 50) dataset.data.pop(); // Limit data array size
+        if (dataset.data.length >= 100) dataset.data.pop(); // Limit data array size
+
         dataset.data.unshift(Math.floor(Math.random() * 10000) + 1); // Add random data
     });
-    if (time.length >= 50) time.pop(); // Limit time array size
+    if (time.length >= 100) time.pop(); // Limit time array size
     time.unshift(getCurrentTime()); // Add current time
 }
 
@@ -144,8 +144,8 @@ function setupChart() {
             scales: {
                 x: {
                     ticks: {
-                        maxRotation: 15, // Adjust label rotation
-                        minRotation: 15,
+                        maxRotation: 90, // Adjust label rotation
+                        minRotation: 90,
                         font: {
                             size: 10
                         }
@@ -221,6 +221,7 @@ function stopDataUpdates(e) {
 
 // Calculates and returns a correlation matrix for the current datasets
 function calculateCorrelationMatrix() {
+    const sliceSize = parseInt(document.getElementById('sliceSizeSelect').value, 10);
     const correlationMatrix = [];
     for (let i = 0; i < datasets.length; i++) {
         const row = [];
@@ -229,23 +230,24 @@ function calculateCorrelationMatrix() {
                 row.push(1);
             } else if (i >= j) {
 
-                let array1 = datasets[i].data.slice(-5)
-                let array2 = datasets[j].data.slice(-5)
+                let array1 = datasets[i].data.slice(0, sliceSize);
+                let array2 = datasets[j].data.slice(0, sliceSize);
 
-                if(array1.length == array2.length && array1.length == 5){
-                    const correlation = pearsonCorrelation(array1,array2).toFixed(2);
+                if(array1.length == array2.length && array1.length == sliceSize){
+                    const correlation = pearsonCorrelation(array1, array2).toFixed(2);
                     row.push(correlation);   
-                }else{
-                    row.push(NaN)
+                } else {
+                    row.push(NaN);
                 } 
-            }else{
-                row.push('-')
+            } else {
+                row.push('-');
             }
         }
         correlationMatrix.push(row);
     }
     return correlationMatrix;
 }
+
 
 // Updates the display to show the current correlation matrix
 function updateCorrelationDisplay() {
@@ -272,17 +274,6 @@ function updateCorrelationDisplay() {
     correlationDisplay.innerHTML = correlationHTML;
 }
 
-let correlationUpdateInterval;
-
-// Displays the correlation matrix in a modal
-function showCorrelationMatrix() {
-    updateCorrelationMatrixInModal(); // Initial update
-    correlationUpdateInterval = setInterval(updateCorrelationMatrixInModal, 2000); // Update every 2 seconds
-
-    // Show the modal
-    new bootstrap.Modal(document.getElementById('correlationMatrixModal')).show();
-}
-
 // Initialize and set event listeners when the DOM is fully loaded
 document.addEventListener('DOMContentLoaded', () => {
     chart = setupChart();
@@ -290,8 +281,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('startButton').addEventListener('click', startDataUpdates);
     document.getElementById('stopButton').addEventListener('click', stopDataUpdates);
     document.getElementById('addSeriesButton').addEventListener('click', addSeries);
-
     document.getElementById('deleteSeriesButton').addEventListener('click', deleteSeries);
+
 
     document.querySelector('.btn.btn-light').addEventListener('click', showCorrelationMatrix);
     const correlationModal = document.getElementById('correlationMatrixModal');
@@ -300,3 +291,5 @@ document.addEventListener('DOMContentLoaded', () => {
       
     });
 });
+
+
