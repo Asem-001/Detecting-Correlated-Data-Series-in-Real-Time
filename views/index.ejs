@@ -47,11 +47,15 @@
                         <button type="submit" id="stopButton" class="btn btn-outline-danger" >Stop</button>
                       </div>                    
                       
+
                       <div class="d-flex justify-content-center py-1 mb-2">
+                        <select class="form-select me-2" id="timeSeriesSelect">
+                          <!-- Options will be added dynamically -->
+                        </select>
                         <button type="button" class="btn btn-outline-primary" id="addSeriesButton">Add Series</button>
                       </div>
 
-              
+
                       <div class="d-flex justify-content-center py-1 mb-4">
                         <label for="seriesNumber" class="form-label">Total series: <span id="seriesCount">0</span></label>
                       </div>
@@ -170,7 +174,6 @@
             values: [ -1, 1 ], // Default values
             slide: function( event, ui ) {
               $( "#range" ).val( ui.values[ 0 ] + " , " + ui.values[ 1 ] );
-              console.log("Selected Range: " + ui.values[ 0 ] + " , " + ui.values[ 1 ]); // This line prints the range in the console
             }
           });
           $( "#range" ).val( $( "#slider-range" ).slider( "values", 0 ) +

@@ -4,13 +4,12 @@ const userclass = require("../models/users")
 const { CorrelationData, DetectedCorrelation } = require('../models/coreelation')
 const { doc, collection, addDoc, setDoc, getDoc, updateDoc, deleteDoc, deleteField, Timestamp, getDocs, query, where } = require("firebase/firestore");
 
-//this for gathering the IDs for current detection
+
 let IDforEndDate = []
 
 module.exports = {
 
   index: async (req, res) => {
-    //  testdb()
 
     res.render("index", {
       title: "Home page"
