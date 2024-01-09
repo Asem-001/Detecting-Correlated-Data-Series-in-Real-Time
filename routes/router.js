@@ -10,6 +10,7 @@ router.get('/dashboard', Controller.dashboard);
 router.get('/profile', Controller.profile);
 
 
+router.post('/sendbackend',Controller.addCorrelationData)
 
 
 module.exports = router;

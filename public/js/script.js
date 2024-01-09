@@ -1,3 +1,4 @@
+
 // Set the initial index
 let currentIndex = 0
 
@@ -39,12 +40,20 @@ const fetchData = async (url) => {
         console.error('Error:', error.message);
     }
 };
+
 let datasets = []; // Array to store data series
 let time = []; // Array to store timestamps
 
+
+
+let totalData = {'names':[],
+                 'start':[],
+                 'end': [],
+                 'threshold':[]} // Create dataset for gathering to database
+
 // Returns current time as a string
 function getCurrentTime() {
-    return new Date().toLocaleTimeString();
+    return  new Date().toLocaleTimeString();
 }
 
 // Calculates Pearson correlation coefficient between two arrays
@@ -106,6 +115,7 @@ function updateChart(chart) {
     chart.update();
 }
 
+
 function updateData() {
     datasets.forEach(async (dataset,index) => {
         if (dataset.data.length >= 100) dataset.data.pop(); // Limit data array size
@@ -126,6 +136,16 @@ function addSeries(){
         borderColor: newColor,
         backgroundColor: newColor,
     };
+    // check if series name not in the Total data 
+    if (!totalData.names.includes(newDataset.label)){
+    totalData.names.push(newDataset.label)
+    totalData.start.push( new Date().toDateString()+" "+ new Date().toLocaleTimeString()) // add the time that user add series
+    
+    totalData.threshold[0]=(document.getElementById('range').value) // add the threshold 
+    }
+    // console.log(totalData);
+
+
     datasets.push(newDataset); // Add new dataset to the array
     document.getElementById('seriesCount').innerText = datasets.length;
     updateChart(chart);
@@ -150,6 +170,14 @@ function deleteSeries() {
     const selectedIndex = select.value;
     if (selectedIndex >= 0 && datasets[selectedIndex]) {
         datasets.splice(selectedIndex, 1); // Remove the selected dataset
+        
+        // Remove the the selected from Totaldata 
+        totalData.names.splice(selectedIndex, 1)
+        totalData.start.splice(selectedIndex, 1)
+        totalData.end.splice(selectedIndex, 1)
+        totalData.threshold.splice(selectedIndex, 1)
+
+
         updateChart(chart);
         updateDatasetSelectOptions();
     }
@@ -185,24 +213,61 @@ function setupChart() {
     });
 }
 
+
 let chart;
 let intervalId = null; // Holds the interval reference for data updates
 
 // Starts periodic data updates
-function startDataUpdates() {
+function startDataUpdates(e) {
     if (intervalId === null) {
+        sendToBackend(e)
+        // console.log("before ",totalData);
+        clearTotalData()
+        // console.log("after ",totalData);
         intervalId = setInterval(async function () {
             updateData(); // Update data
             updateChart(chart); // Update chart
             updateCorrelationDisplay(); // Update correlation display
             
         }, 300); // Update interval in milliseconds
+
     }
 }
+function clearTotalData() {
+    // Remove the the selected from Totaldata 
+    totalData.names.splice(0, totalData.names.length)
+    totalData.start.splice(0, totalData.start.length)
+    totalData.threshold.splice(0, totalData.threshold.length)
+
+}
+async function sendToBackend(e){ // The totalData dic will be sended to the backend server
+    
+    // console.log(totalData);
+    // hiddenIInput.value = JSON.stringify(totalData)
+    e.preventDefault() // Stop refreshing the page 
+    const res = await fetch('/sendbackend', { // Send the data to the router in JSON file 
+        method:'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body:JSON.stringify({
+            parcel: totalData
+        })
+    } )
+}
+
 
 // Stops periodic data updates
-function stopDataUpdates() {
+function stopDataUpdates(e) {
+     totalData.end.push( new Date().toDateString()+" "+ new Date().toLocaleTimeString()) // Add the time that user end 
+    // After the user stop the program the data will be sended to the backend
     if (intervalId !== null) {
+        sendToBackend(e)
+        // console.log("before end ",totalData);
+        totalData.end.splice(0, totalData.end.length)
+        // console.log("after end",totalData);
+        
+        
         clearInterval(intervalId); // Clear the interval
         intervalId = null;
     }
@@ -282,4 +347,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('addSeriesButton').addEventListener('click', addSeries);
     document.getElementById('deleteSeriesButton').addEventListener('click', deleteSeries);
 
+
+    document.querySelector('.btn.btn-light').addEventListener('click', showCorrelationMatrix);
+    const correlationModal = document.getElementById('correlationMatrixModal');
+    correlationModal.addEventListener('hidden.bs.modal', function (event) {
+        clearInterval(correlationUpdateInterval); // Clear interval when modal closes
+      
+    });
 });
+
+
