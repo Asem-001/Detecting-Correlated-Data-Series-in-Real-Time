@@ -1,6 +1,13 @@
-
 // Set the initial index
 let currentIndex = 0
+let datasets = []; // Array to store data series
+let time = []; // Array to store timestamps
+let totalData = {'names':[],
+                 'start':[],
+                 'end': [],
+                 'threshold':[]} // Create dataset for gathering to database
+
+
 
 // Function to make a request to the API
 const fetchData = async (url) => {
@@ -41,15 +48,6 @@ const fetchData = async (url) => {
     }
 };
 
-let datasets = []; // Array to store data series
-let time = []; // Array to store timestamps
-
-
-
-let totalData = {'names':[],
-                 'start':[],
-                 'end': [],
-                 'threshold':[]} // Create dataset for gathering to database
 
 // Returns current time as a string
 function getCurrentTime() {
@@ -142,15 +140,15 @@ function addSeries(){
     totalData.start.push( new Date().toDateString()+" "+ new Date().toLocaleTimeString()) // add the time that user add series
     
     totalData.threshold[0]=(document.getElementById('range').value) // add the threshold 
-    }
-    // console.log(totalData);
 
+    //TODO disable threshold input after start !!!
+
+    }
 
     datasets.push(newDataset); // Add new dataset to the array
     document.getElementById('seriesCount').innerText = datasets.length;
     updateChart(chart);
     updateDatasetSelectOptions();
-    
    
 }
 
@@ -220,10 +218,10 @@ let intervalId = null; // Holds the interval reference for data updates
 // Starts periodic data updates
 function startDataUpdates(e) {
     if (intervalId === null) {
+
         sendToBackend(e)
-        // console.log("before ",totalData);
         clearTotalData()
-        // console.log("after ",totalData);
+
         intervalId = setInterval(async function () {
             updateData(); // Update data
             updateChart(chart); // Update chart
@@ -242,8 +240,6 @@ function clearTotalData() {
 }
 async function sendToBackend(e){ // The totalData dic will be sended to the backend server
     
-    // console.log(totalData);
-    // hiddenIInput.value = JSON.stringify(totalData)
     e.preventDefault() // Stop refreshing the page 
     const res = await fetch('/sendbackend', { // Send the data to the router in JSON file 
         method:'POST',
@@ -263,11 +259,9 @@ function stopDataUpdates(e) {
     // After the user stop the program the data will be sended to the backend
     if (intervalId !== null) {
         sendToBackend(e)
-        // console.log("before end ",totalData);
+       
         totalData.end.splice(0, totalData.end.length)
-        // console.log("after end",totalData);
-        
-        
+       
         clearInterval(intervalId); // Clear the interval
         intervalId = null;
     }
