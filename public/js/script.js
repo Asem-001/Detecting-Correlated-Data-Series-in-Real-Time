@@ -321,10 +321,7 @@ function updateCorrelationDisplay() {
     correlationDisplay.innerHTML = correlationHTML;
 }
 
-// Initialize and set event listeners when the DOM is fully loaded
-document.addEventListener('DOMContentLoaded', async () => {
-    chart = setupChart();
-
+ async function selectOptions (){
     const collections = await fetchData('http://localhost:3000/api/collections')
     const select = document.getElementById('timeSeriesSelect');
     select.innerHTML = '<option disabled selected value="">Select time Series</option>';
@@ -333,8 +330,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     option.value = collection;
     option.textContent = collection;
     select.appendChild(option);
+    })
+}
+
+// Initialize and set event listeners when the DOM is fully loaded
+document.addEventListener('DOMContentLoaded', async () => {
+    chart = setupChart();
+
+    await selectOptions()
     
-});
 
     document.getElementById('startButton').addEventListener('click', startDataUpdates);
     document.getElementById('stopButton').addEventListener('click', stopDataUpdates);
