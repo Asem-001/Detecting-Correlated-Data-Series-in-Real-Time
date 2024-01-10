@@ -219,7 +219,7 @@ let intervalId = null; // Holds the interval reference for data updates
 function startDataUpdates(e) {
     if (intervalId === null) {
 
-        sendToBackend(e)
+        // sendToBackend(e)
         clearTotalData()
 
         intervalId = setInterval(async function () {
@@ -258,7 +258,7 @@ function stopDataUpdates(e) {
      totalData.end.push( new Date().toDateString()+" "+ new Date().toLocaleTimeString()) // Add the time that user end 
     // After the user stop the program the data will be sended to the backend
     if (intervalId !== null) {
-        sendToBackend(e)
+        // sendToBackend(e)
        
         totalData.end.splice(0, totalData.end.length)
        
