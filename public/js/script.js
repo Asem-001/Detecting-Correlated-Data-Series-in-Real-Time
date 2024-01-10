@@ -300,19 +300,40 @@ function calculateCorrelationMatrix() {
 function updateCorrelationDisplay() {
     const correlationMatrix = calculateCorrelationMatrix();
     const correlationDisplay = document.getElementById('correlationDisplay');
-    let correlationHTML = '<table class="correlation-table  table table-striped"><tr><th></th>';
+    let correlationHTML = '<table class="correlation-table table table-striped">';
 
-    // Add dataset labels as table headers
-    datasets.forEach(dataset => {
-        correlationHTML += `<th>${dataset.label}</th>`;
+    // Transposing the header row and the first column
+    correlationHTML += '<tr><th></th>';
+    correlationMatrix.forEach((_, rowIndex) => {
+        correlationHTML += `<th>${datasets[rowIndex].label}</th>`;
     });
-
     correlationHTML += '</tr>';
 
-    correlationMatrix.forEach((row, rowIndex) => {
-        correlationHTML += `<tr><th>${datasets[rowIndex].label}</th>`;
-        row.forEach(value => {
-            correlationHTML += `<td>${value}</td>`;
+    // Adding dataset labels and transposing data cells
+    datasets.forEach((dataset, columnIndex) => {
+        correlationHTML += `<tr><th>${dataset.label}</th>`;
+        correlationMatrix.forEach(row => {
+            let value = row[columnIndex];
+            let cellClass = 'heatmap-cell ';
+            if (value === '-') {
+                cellClass += 'undefined';
+            } else if (!isNaN(value)) {
+                const numValue = parseFloat(value);
+                if (numValue >= 0.8) {
+                    cellClass += 'very-high';
+                } else if (numValue >= 0.6) {
+                    cellClass += 'high';
+                } else if (numValue >= 0.4) {
+                    cellClass += 'medium';
+                } else if (numValue >= 0.2) {
+                    cellClass += 'low';
+                } else {
+                    cellClass += 'very-low';
+                }
+            } else {
+                cellClass += 'undefined';
+            }
+            correlationHTML += `<td class="${cellClass}">${value}</td>`;
         });
         correlationHTML += '</tr>';
     });
@@ -321,7 +342,7 @@ function updateCorrelationDisplay() {
     correlationDisplay.innerHTML = correlationHTML;
 }
 
- async function selectOptions (){
+async function selectOptions (){
     const collections = await fetchData('http://localhost:3000/api/collections')
     const select = document.getElementById('timeSeriesSelect');
     select.innerHTML = '<option disabled selected value="">Select time Series</option>';

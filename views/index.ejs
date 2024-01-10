@@ -113,30 +113,39 @@
               
             </div>
     
-          <div class="row">
+          <div class="row">          
 
             <div class="col-lg-6">
-              <div class="card" style="height: 515px;" id="correlationMatrixModal">
+              <div class="card" id="correlationMatrixModal" style="height: 515px;">
                   <div class="card-body">
                       <h5 class="card-title">Correlation Matrix</h5>
+                      <div id="colorBar" class="color-bar mb-2">
+                        <div class="color-section very-low"><span>< 0.2</span></div>
+                        <div class="color-section low"><span>0.2 - 0.39</span></div>
+                        <div class="color-section medium"><span>0.4 - 0.59</span></div>
+                        <div class="color-section high"><span>0.6 - 0.79</span></div>
+                        <div class="color-section very-high"><span>≥ 0.8</span></div>
+                      </div>                      
                       <div id="correlationDisplay"><!-- Correlation matrix will be displayed here --></div>
                   </div>
               </div>
             </div>
-          
+
 
             <div class="col-lg-6">
-              <div class="card" style="height: 515px; ">
+              <div class="card" style="height: 515px;">
                 <div class="card-body">
                   <h5 class="card-title">Notification</h5>
-                  <div class="scrollable-content"> 
+                  <div class="scrollable-content"> <!-- Add this class -->
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
                       Correlation detected between PH2 and PH3!
                       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
-       
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                      Correlation detected between PH2 and PH3!
+                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
                     <!-- Add more alerts here if needed -->
-
                   </div>
                 </div>
               </div>
