@@ -72,7 +72,7 @@
                       <div class="py-2 mb-3">
                         <p>
                           <label for="range">Threshold:</label>
-                          <input type="text" id="range" readonly style="border:0; color:#899bbd; font-weight:bold;">
+                          <input type="text" id="range" readonly style="border:0; color:#144cb4; font-weight:bold;">
                         </p>
                          
                         <div id="slider-range"></div>
@@ -165,21 +165,50 @@
       <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
       <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
       <script>
-        $( function() {
-          $( "#slider-range" ).slider({
-            range: true,
-            min: -1, 
-            max: 1,  
-            step: 0.01, // Incremental steps of 0.01
-            values: [ -1, 1 ], // Default values
-            slide: function( event, ui ) {
-              $( "#range" ).val( ui.values[ 0 ] + " , " + ui.values[ 1 ] );
-            }
+        $(function() {
+          $("#slider-range").slider({
+              range: true,
+              min: -1,
+              max: 1,
+              step: 0.1, // Updated step value to 0.1
+              values: [-1, 1],
+              slide: function(event, ui) {
+                  $("#range").val(ui.values[0] + " , " + ui.values[1]);
+              }
           });
-          $( "#range" ).val( $( "#slider-range" ).slider( "values", 0 ) +
-            " , " + $( "#slider-range" ).slider( "values", 1 ) );
+          $("#range").val($("#slider-range").slider("values", 0) +
+              " , " + $("#slider-range").slider("values", 1));
+          
+          $("#startButton").click(function() {
+              // Disable the range input, delete button, and the slider
+              $("#range").prop("disabled", true);
+              $("#deleteSeriesButton").prop("disabled", true);
+              $("#slider-range").slider("option", "disabled", true);
+          });
+
+          // You can re-enable the controls and the slider when the "Stop" button is pressed, if needed.
+          $("#stopButton").click(function() {
+              $("#range").prop("disabled", false);
+              $("#deleteSeriesButton").prop("disabled", false);
+              $("#slider-range").slider("option", "disabled", false);
+          });
         });
+
+
         
+        const startButton = document.getElementById("startButton");
+        const deleteSeriesButton = document.getElementById("deleteSeriesButton");
+
+        startButton.addEventListener("click", function () {
+            // Disable the range input and delete series button
+            deleteSeriesButton.disabled = true;
+        });
+
+        // You can re-enable the controls when the "Stop" button is pressed, if needed.
+        const stopButton = document.getElementById("stopButton");
+        stopButton.addEventListener("click", function () {
+            deleteSeriesButton.disabled = false;
+        });
       </script>
       
         
