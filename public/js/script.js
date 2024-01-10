@@ -319,16 +319,24 @@ function updateCorrelationDisplay() {
                 cellClass += 'undefined';
             } else if (!isNaN(value)) {
                 const numValue = parseFloat(value);
-                if (numValue >= 0.8) {
+                if (numValue >= 0.8 && numValue <= 1) {
                     cellClass += 'very-high';
-                } else if (numValue >= 0.6) {
+                } else if (numValue >= 0.6 && numValue < 0.8) {
                     cellClass += 'high';
-                } else if (numValue >= 0.4) {
+                } else if (numValue >= 0.4 && numValue < 0.6) {
                     cellClass += 'medium';
-                } else if (numValue >= 0.2) {
+                } else if (numValue >= 0.2 && numValue < 0.4) {
                     cellClass += 'low';
-                } else {
+                } else if (numValue > 0 && numValue < 0.2) {
                     cellClass += 'very-low';
+                } else if (numValue > -0.2 && numValue < 0) {
+                    cellClass += 'low-negative';
+                } else if (numValue > -0.4 && numValue <= -0.2) {
+                    cellClass += 'medium-negative';
+                } else if (numValue > -0.6 && numValue <= 0.4) {
+                    cellClass += 'high-negative';
+                } else if (numValue >= -1 && numValue <= 0.6) {
+                    cellClass += 'very-high-negative';
                 }
             } else {
                 cellClass += 'undefined';
@@ -340,6 +348,7 @@ function updateCorrelationDisplay() {
 
     correlationHTML += '</table>';
     correlationDisplay.innerHTML = correlationHTML;
+
 }
 
 async function selectOptions (){
