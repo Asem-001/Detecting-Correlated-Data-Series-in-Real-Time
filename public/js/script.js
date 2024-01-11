@@ -377,13 +377,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('addSeriesButton').addEventListener('click', addSeries);
     document.getElementById('deleteSeriesButton').addEventListener('click', deleteSeries);
 
-
-    document.querySelector('.btn.btn-light').addEventListener('click', showCorrelationMatrix);
-    const correlationModal = document.getElementById('correlationMatrixModal');
-    correlationModal.addEventListener('hidden.bs.modal', function (event) {
-        clearInterval(correlationUpdateInterval); // Clear interval when modal closes
-      
-    });
 });
 
 

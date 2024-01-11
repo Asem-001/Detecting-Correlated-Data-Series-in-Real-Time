@@ -225,3 +225,46 @@
   // Attach event listener to close button in the delete dialog
   document.querySelector('#deleteDialog .dialog-close-btn').addEventListener('click', closeDeleteDialog);
 });
+
+$(function() {
+  $("#slider-range").slider({
+      range: true,
+      min: -1,
+      max: 1,
+      step: 0.1, // Updated step value to 0.1
+      values: [-1, 1],
+      slide: function(event, ui) {
+          $("#range").val(ui.values[0] + " , " + ui.values[1]);
+      }
+  });
+  $("#range").val($("#slider-range").slider("values", 0) +
+      " , " + $("#slider-range").slider("values", 1));
+  
+  // Disable when the "Start" button is pressed.
+  $("#startButton").click(function() {
+      $("#datasetSelect").prop("disabled", true);
+      $("#sliceSizeSelect").prop("disabled", true);
+      $("#range").prop("disabled", true);
+      $("#deleteSeriesButton").prop("disabled", true);
+      $("#slider-range").slider("option", "disabled", true);
+
+      //These two for lock adding series
+      // $("#timeSeriesSelect").prop("disabled", true);
+      // $("#addSeriesButton").prop("disabled", true);
+  });
+
+  
+
+  // Enable when the "Stop" button is pressed.
+  $("#stopButton").click(function() {
+      $("#datasetSelect").prop("disabled", false);
+      $("#sliceSizeSelect").prop("disabled", false);
+      $("#range").prop("disabled", false);
+      $("#deleteSeriesButton").prop("disabled", false);
+      $("#slider-range").slider("option", "disabled", false);
+
+      //These two for unlock adding series
+      // $("#timeSeriesSelect").prop("disabled", false);
+      // $("#addSeriesButton").prop("disabled", false);
+  });
+});
