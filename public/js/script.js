@@ -255,6 +255,7 @@ async function sendToBackend(e){ // The totalData dic will be sended to the back
 
 // Stops periodic data updates
 function stopDataUpdates(e) {
+    e.preventDefault()
      totalData.end.push( new Date().toDateString()+" "+ new Date().toLocaleTimeString()) // Add the time that user end 
     // After the user stop the program the data will be sended to the backend
     if (intervalId !== null) {
