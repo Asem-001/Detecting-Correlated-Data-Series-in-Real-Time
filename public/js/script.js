@@ -5,7 +5,8 @@ let time = []; // Array to store timestamps
 let totalData = {'names':[],
                  'start':[],
                  'end': [],
-                 'threshold':[]} // Create dataset for gathering to database
+                 'threshold':[],
+                 'window':[]} // Create dataset for gathering to database
 
 
 
