@@ -3,6 +3,7 @@ const db = require("../models/config")
 const userclass = require("../models/users")
 const { CorrelationData, DetectedCorrelation } = require('../models/coreelation')
 const { doc, collection, addDoc, setDoc, getDoc, updateDoc, deleteDoc, deleteField, Timestamp, getDocs, query, where } = require("firebase/firestore");
+const coreelation = require("../models/coreelation");
 
 
 let IDforEndDate = []
@@ -20,30 +21,35 @@ module.exports = {
     // Extract parcel data from request body
     let data = req.body.parcel;
 
-    // Check if end date is empty
-    if (data.end.length == 0) {
-      // Loop through names in data
-      for (let i = 0; i < data.names.length; i++) {
-        // Push the result of addCorrData function into IDforEndDate array, the result will be the ID of this correlation Data
-        IDforEndDate.push(await addCorrData(data.names[i], data.threshold, data.start[i], '', 0));
-      }
-    } else {
-      // Fetch all correlation data
-      const alldata = await getAllCorrelation();
 
-      // Iterate over each document in alldata
-      alldata.forEach((doc) => {
-        // If the id of the document is included in IDforEndDate array
-        if (IDforEndDate.includes(doc.id)) {
-          // Update the correlation data with the new end date
-          updateCorrleationData(doc.id, { CorrDateEnd: data.end[0] });
-        }
-      });
-      // Clear IDforEndDate array
-      IDforEndDate.splice(0, IDforEndDate.length);
+
+    // Loop over each name in the data.names array
+    for (let i = 0; i < data.names.length; i++) {
+
+      // Perform the CorrelationSearch operation asynchronously for each name
+      let doc = await CorrelationSearch(data.names[i])
+      console.log(doc);
+
+      // If the document doesn't exist and there's no end date, add correlation data
+      if (!doc & data.endDate.length == 0) {
+        IDforEndDate.push(await addCorrData(data.names[i], data.threshold, data.addDate[i], '', 0));
+      }
+      // If the document doesn't exist and there is an end date, add correlation data with the end date
+      else if (!doc & data.endDate.length > 0) {
+        IDforEndDate.push(await addCorrData(data.names[i], data.threshold, data.addDate[i], data.endDate[0], 0));
+      }
+      // If the document exists, update the correlation data
+      else {
+        updateCorrleationData(data.names[i], {
+          SetThreshold: data.threshold,
+          CorrDateEnded: data.endDate[0]
+        });
+      }
     }
-    // Redirect to home page
+
+    // Redirect to the home page after processing all names
     res.redirect('/');
+
 
   },
 
@@ -223,15 +229,15 @@ function createfirstdoc() {
 
 
 
-async function addCorrData(CorrName, Threshold, CorrDateStart, CorrDateEnd, NoOfCorr) {
+async function addCorrData(CorrName, Threshold, CorrDateAdded, CorrDateEnded, NoOfCorr) {
   const date = new Date
 
-  const corr = new CorrelationData(CorrName, Threshold, CorrDateStart, CorrDateEnd, NoOfCorr)
+  const corr = new CorrelationData(CorrName, Threshold, CorrDateAdded, CorrDateEnded, NoOfCorr)
 
-  await setDoc(doc(db, "Correlation", "" + date.getTime()), corr).then(() => {
+  await setDoc(doc(db, "Correlation", CorrName + ''), corr).then(() => {
     console.log(`The Correlation ${corr.CorrName} successfully added !`)
   });
-  return date.getTime() + ''
+  return CorrName + ''
 }
 
 async function CorrelationSearch(data) {
@@ -246,6 +252,7 @@ async function CorrelationSearch(data) {
   }
   else {
     console.log('data unexists!!');
+    return undefined
   }
 }
 
