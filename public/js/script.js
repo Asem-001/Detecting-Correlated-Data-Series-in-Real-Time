@@ -26,14 +26,15 @@ function updateChart(chart) {
 
 
 function updateData() {
-    datasets.forEach(async (dataset,index) => {
-        if (dataset.data.length >= 100) dataset.data.pop(); // Limit data array size
-        let x = parseFloat(await fetchData(`http://localhost:3000/api/${dataset.label}`)) 
-        dataset.data.unshift(x); // Add data from the api
+    datasets.forEach(async (dataset, index) => {
+        if (dataset.data.length >= 100) dataset.data.shift(); // Remove oldest data point
+        let x = parseFloat(await fetchData(`http://localhost:3000/api/${dataset.label}`));
+        dataset.data.push(x); // Add new data point to the end
     });
-    if (time.length >= 100) time.pop(); // Limit time array size
-    time.unshift(getCurrentTime()); // Add current time
+    if (time.length >= 100) time.shift(); // Remove oldest time point
+    time.push(getCurrentTime()); // Add current time to the end
 }
+
 
 function addSeries(){
     let collection = document.getElementById('timeSeriesSelect').value; 
@@ -112,7 +113,6 @@ function setupChart() {
                             size: 10
                         }
                     },
-                    reverse: true, // Newest data on the right
                 },
                 y: { 
                     beginAtZero: true // Start y-axis at zero
