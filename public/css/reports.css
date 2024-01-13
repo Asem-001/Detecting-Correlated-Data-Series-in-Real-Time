@@ -1,0 +1,38 @@
+.list-group-item {
+    cursor: pointer;
+  }
+
+  #correlationDetails {
+    margin-top: 20px;
+    display: none;
+  }
+
+  #historyContainer {
+    padding: 20px;
+    margin-top: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  th,
+  td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  .list-group {
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  /* Additional style for table headers */
+  th {
+    font-weight: bold;
+    background-color: #f2f2f2;
+  }
