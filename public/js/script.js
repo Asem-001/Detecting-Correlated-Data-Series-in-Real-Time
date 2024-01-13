@@ -218,8 +218,8 @@ let intervalId = null; // Holds the interval reference for data updates
 // Starts periodic data updates
 function startDataUpdates(e) {
     if (intervalId === null) {
-
-        sendToBackend(e)
+        console.log(totalData);
+        // sendToBackend(e)
        
         intervalId = setInterval(async function () {
             updateData(); // Update data
@@ -256,14 +256,16 @@ async function sendToBackend(e){ // The totalData dic will be sended to the back
 // Stops periodic data updates
 
  function stopDataUpdates(e) {
+    e.preventDefault() // Stop refreshing the page 
+
+
      totalData.endDate[0]= new Date().toDateString()+" "+ new Date().toLocaleTimeString() // Add the time that user end 
      totalData.threshold[0]=(document.getElementById('range').value)
-
     // After the user stop the program the data will be sended to the backend
-    console.log(totalData);
+    
     if (intervalId !== null) {
-         sendToBackend(e)
-        //  clearTotalData()
+        // sendToBackend(e)
+          clearTotalData()
        
        
         clearInterval(intervalId); // Clear the interval
@@ -370,7 +372,6 @@ async function selectOptions (){
 // Initialize and set event listeners when the DOM is fully loaded
 document.addEventListener('DOMContentLoaded', async () => {
     chart = setupChart();
-
     await selectOptions()
     
 
