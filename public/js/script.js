@@ -3,8 +3,8 @@ let currentIndex = 0
 let datasets = []; // Array to store data series
 let time = []; // Array to store timestamps
 let totalData = {'names':[],
-                 'start':[],
-                 'end': [],
+                 'addDate':[],
+                 'endDate': [],
                  'threshold':[]} // Create dataset for gathering to database
 
 
@@ -137,10 +137,10 @@ function addSeries(){
     // check if series name not in the Total data 
     if (!totalData.names.includes(newDataset.label)){
     totalData.names.push(newDataset.label)
-    totalData.start.push( new Date().toDateString()+" "+ new Date().toLocaleTimeString()) // add the time that user add series
+    totalData.addDate.push( new Date().toDateString()+" "+ new Date().toLocaleTimeString()) // add the time that user add series
     
     totalData.threshold[0]=(document.getElementById('range').value) // add the threshold 
-
+  console.log(totalData);
     //TODO disable threshold input after start !!!
 
     }
@@ -219,9 +219,8 @@ let intervalId = null; // Holds the interval reference for data updates
 function startDataUpdates(e) {
     if (intervalId === null) {
 
-        // sendToBackend(e)
-        clearTotalData()
-
+        sendToBackend(e)
+       
         intervalId = setInterval(async function () {
             updateData(); // Update data
             updateChart(chart); // Update chart
@@ -234,8 +233,9 @@ function startDataUpdates(e) {
 function clearTotalData() {
     // Remove the the selected from Totaldata 
     totalData.names.splice(0, totalData.names.length)
-    totalData.start.splice(0, totalData.start.length)
-    totalData.threshold.splice(0, totalData.threshold.length)
+    totalData.addDate.splice(0, totalData.addDate.length)
+
+   
 
 }
 async function sendToBackend(e){ // The totalData dic will be sended to the backend server
@@ -254,14 +254,17 @@ async function sendToBackend(e){ // The totalData dic will be sended to the back
 
 
 // Stops periodic data updates
-function stopDataUpdates(e) {
-    e.preventDefault()
-     totalData.end.push( new Date().toDateString()+" "+ new Date().toLocaleTimeString()) // Add the time that user end 
+
+ function stopDataUpdates(e) {
+     totalData.endDate[0]= new Date().toDateString()+" "+ new Date().toLocaleTimeString() // Add the time that user end 
+     totalData.threshold[0]=(document.getElementById('range').value)
+
     // After the user stop the program the data will be sended to the backend
+    console.log(totalData);
     if (intervalId !== null) {
-        // sendToBackend(e)
+         sendToBackend(e)
+        //  clearTotalData()
        
-        totalData.end.splice(0, totalData.end.length)
        
         clearInterval(intervalId); // Clear the interval
         intervalId = null;
