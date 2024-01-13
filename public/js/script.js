@@ -171,8 +171,8 @@ function deleteSeries() {
         
         // Remove the the selected from Totaldata 
         totalData.names.splice(selectedIndex, 1)
-        totalData.start.splice(selectedIndex, 1)
-        totalData.end.splice(selectedIndex, 1)
+        totalData.addDate.splice(selectedIndex, 1)
+        totalData.endDate.splice(selectedIndex, 1)
         totalData.threshold.splice(selectedIndex, 1)
 
 
