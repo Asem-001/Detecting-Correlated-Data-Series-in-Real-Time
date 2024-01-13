@@ -259,18 +259,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     chart = setupChart();
     await selectOptions()
     
-
     document.getElementById('startButton').addEventListener('click', startDataUpdates);
     document.getElementById('stopButton').addEventListener('click', stopDataUpdates);
     document.getElementById('addSeriesButton').addEventListener('click', addSeries);
     document.getElementById('deleteSeriesButton').addEventListener('click', deleteSeries);
 
-
-
-    document.querySelector('.btn.btn-light').addEventListener('click', showCorrelationMatrix);
-    const correlationModal = document.getElementById('correlationMatrixModal');
-    correlationModal.addEventListener('hidden.bs.modal', function (event) {
-        clearInterval(correlationUpdateInterval); // Clear interval when modal closes
-      
-    });
 });
