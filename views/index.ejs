@@ -169,6 +169,35 @@
       <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
       <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
+      <script>
+          // You can re-enable the controls and the slider when the "Stop" button is pressed, if needed.
+          $("#stopButton").click(function() {
+              $("#range").prop("disabled", false);
+              $("#deleteSeriesButton").prop("disabled", false);
+              $("#slider-range").slider("option", "disabled", false);
+          });
+
+
+        
+        const startButton = document.getElementById("startButton");
+        const deleteSeriesButton = document.getElementById("deleteSeriesButton");
+        const windowSizeSelector = document.getElementById("sliceSizeSelect");
+
+        startButton.addEventListener("click", function () {
+            // Disable the range input and delete series button
+            deleteSeriesButton.disabled = true;
+            windowSizeSelector.disabled = true;
+        });
+
+        // You can re-enable the controls when the "Stop" button is pressed, if needed.
+        const stopButton = document.getElementById("stopButton");
+        stopButton.addEventListener("click", function () {
+            deleteSeriesButton.disabled = false;
+            windowSizeSelector.disabled = false;
+        });
+      </script>
+      
+        
         
     </body>
     </html>
