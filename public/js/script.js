@@ -1,5 +1,8 @@
-// Set the initial index
-let currentIndex = 0
+import { pearsonCorrelation } from "./pearson.js";
+import { selectOptions} from "./controlPanel.js";
+import { fetchData } from "./ApiHandler.js";
+import { sendToBackend } from "./sendToBackend.js";
+
 let datasets = []; // Array to store data series
 let time = []; // Array to store timestamps
 let totalData = {'names':[],
@@ -9,101 +12,9 @@ let totalData = {'names':[],
 
 
 
-// Function to make a request to the API
-const fetchData = async (url) => {
-    let apiUrl;
-    if(url != 'http://localhost:3000/api/collections'){
-        apiUrl = url+`/${currentIndex}`;   
-    }else{
-        apiUrl = url
-    }
-     // Increment the index for the next request
-     currentIndex++;
-
-     // Reset the index to 1 if it exceeds a certain value (e.g., 10)
-     if (currentIndex > 1000000) {
-         currentIndex = 1;
-     }
-
-    try {
-        // Make a GET request to the API endpoint using fetch
-        const response = await fetch(apiUrl);
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-
-        // Parse the JSON response
-        const data = await response.json();
-
-        if(url != 'http://localhost:3000/api/collections'){
-            return data.value 
-        }else{
-            return data.collections
-        }
-        
-        
-    } catch (error) {
-        console.error('Error:', error.message);
-    }
-};
-
-
 // Returns current time as a string
 function getCurrentTime() {
     return  new Date().toLocaleTimeString();
-}
-
-// Calculates Pearson correlation coefficient between two arrays
-function pearsonCorrelation(x, y) {
-    let computationCounter = 0;
-    
-const n = x.length;
-    
-      // Calculate the mean of x and y
-      const meanX = x.reduce((sum, value) => sum + value, 0) / n;
-      computationCounter += x.length + 1;
-      const meanY = y.reduce((sum, value) => sum + value, 0) / n;
-      computationCounter += x.length + 1;
-       
-      // Calculate the numerator and denominators
-      let numerator = 0;
-      let denominatorX = 0;
-      let denominatorY = 0;
-   
-      
-      for (let i = 0; i < n; i++) {
-        const diffX = x[i] - meanX;
-       
-        computationCounter++;
-  
-        const diffY = y[i] - meanY;
-        computationCounter++;
-    
-        numerator += diffX * diffY;
-        computationCounter += 2;
-  
-        denominatorX += diffX ** 2;
-        computationCounter += 2;
-  
-        denominatorY += diffY ** 2;
-        computationCounter += 2;
-      }
-    
-     
-      // Calculate the correlation coefficient
-      let correlation = numerator / Math.sqrt(denominatorX * denominatorY);
-      computationCounter += 3;
-      
-      
-      if(isNaN(correlation)){
-        correlation = 0
-        return correlation;
-      }else{
-       return correlation; 
-      }
-      
-      
 }
 
 
@@ -235,23 +146,7 @@ function clearTotalData() {
     totalData.names.splice(0, totalData.names.length)
     totalData.addDate.splice(0, totalData.addDate.length)
 
-   
-
 }
-async function sendToBackend(e){ // The totalData dic will be sended to the backend server
-    
-    e.preventDefault() // Stop refreshing the page 
-    const res = await fetch('/sendbackend', { // Send the data to the router in JSON file 
-        method:'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body:JSON.stringify({
-            parcel: totalData
-        })
-    } )
-}
-
 
 // Stops periodic data updates
 
@@ -357,17 +252,7 @@ function updateCorrelationDisplay() {
 
 }
 
-async function selectOptions (){
-    const collections = await fetchData('http://localhost:3000/api/collections')
-    const select = document.getElementById('timeSeriesSelect');
-    select.innerHTML = '<option disabled selected value="">Select time Series</option>';
-    collections.forEach((collection, index) => {
-    const option = document.createElement('option');
-    option.value = collection;
-    option.textContent = collection;
-    select.appendChild(option);
-    })
-}
+
 
 // Initialize and set event listeners when the DOM is fully loaded
 document.addEventListener('DOMContentLoaded', async () => {
@@ -388,5 +273,3 @@ document.addEventListener('DOMContentLoaded', async () => {
       
     });
 });
-
-
