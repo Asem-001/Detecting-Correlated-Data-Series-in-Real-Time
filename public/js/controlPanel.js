@@ -2,6 +2,10 @@ import { fetchData } from "./ApiHandler.js";
 
 let selectedSeries = []; // Array to store selected series
 
+export function removeSeriesFromSelected(seriesName) {
+    selectedSeries = selectedSeries.filter(series => series !== seriesName);
+}
+
 export async function selectOptions() {
     const collections = await fetchData('http://localhost:3000/api/collections');
     const select = document.getElementById('timeSeriesSelect');

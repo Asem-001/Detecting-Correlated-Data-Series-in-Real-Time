@@ -25,19 +25,24 @@ function updateChart(chart) {
 }
 
 
-function updateData() {
-    datasets.forEach(async (dataset, index) => {
-        if (dataset.data.length >= 100) dataset.data.shift(); // Remove oldest data point
+async function updateData() {
+    for (const dataset of datasets) {
+        if (dataset.data.length >= 120) dataset.data.pop(); // Remove oldest data point from the end
         let x = parseFloat(await fetchData(`http://localhost:3000/api/${dataset.label}`));
-        dataset.data.push(x); // Add new data point to the end
-    });
-    if (time.length >= 100) time.shift(); // Remove oldest time point
-    time.push(getCurrentTime()); // Add current time to the end
+        dataset.data.unshift(x); // Add new data point to the beginning
+    }
+
+    if (time.length >= 120) time.pop(); // Remove oldest time point from the end
+    time.unshift(getCurrentTime()); // Add current time to the beginning
 }
 
 
 function addSeries(){
     let collection = document.getElementById('timeSeriesSelect').value; 
+    if (!collection) {
+        alert("Please select a series before adding."); // Alert if no series is selected
+        return;
+    }
     const newColor = `rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)})`;
     // Create new dataset object
     const newDataset = {
@@ -79,23 +84,41 @@ function updateDatasetSelectOptions() {
     });
 }
 
+// Import the function from controlPanel.js
+import { removeSeriesFromSelected } from './controlPanel.js';
+
 function deleteSeries() {
     const select = document.getElementById('datasetSelect');
     const selectedIndex = select.value;
     if (selectedIndex >= 0 && datasets[selectedIndex]) {
-        datasets.splice(selectedIndex, 1); // Remove the selected dataset
-        
-        // Remove the the selected from Totaldata 
-        totalData.names.splice(selectedIndex, 1)
-        totalData.addDate.splice(selectedIndex, 1)
-        totalData.endDate.splice(selectedIndex, 1)
-        totalData.threshold = []
+        const deletedSeries = datasets[selectedIndex].label;
 
+        // Remove the selected dataset
+        datasets.splice(selectedIndex, 1); 
 
+        // Use the imported function to remove the deleted series from selectedSeries
+        removeSeriesFromSelected(deletedSeries);
+
+        // Update totalData to remove the deleted series data
+        totalData.names.splice(selectedIndex, 1);
+        totalData.addDate.splice(selectedIndex, 1);
+        totalData.endDate.splice(selectedIndex, 1);
+        totalData.threshold.splice(selectedIndex, 1);
+
+        // Refresh the chart and dataset select options
         updateChart(chart);
         updateDatasetSelectOptions();
+
+        // Refresh the options in the series select dropdown
+        // Assuming selectOptions is accessible here, otherwise import it as needed
+        selectOptions();
+
+        // Update the displayed series count
+        document.getElementById('seriesCount').innerText = datasets.length;
+    } else {
+        // Handle the case where no valid series is selected for deletion
+        console.warn('No valid series selected for deletion');
     }
-    document.getElementById('seriesCount').innerText = datasets.length;
 }
 
 // Initializes and returns a Chart.js chart instance
@@ -117,6 +140,7 @@ function setupChart() {
                             size: 10
                         }
                     },
+                    reverse: true, // Newest data on the right
                 },
                 y: { 
                     beginAtZero: true // Start y-axis at zero
@@ -125,7 +149,6 @@ function setupChart() {
         }
     });
 }
-
 
 let chart;
 let intervalId = null; // Holds the interval reference for data updates
