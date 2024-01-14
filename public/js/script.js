@@ -56,13 +56,10 @@ function addSeries(){
     totalData.names.push(newDataset.label)
     totalData.addDate.push( new Date().toDateString()+" "+ new Date().toLocaleTimeString()) // add the time that user add series
     
-
     let tempArray =  document.getElementById('range').value.split(",")
    
     totalData.threshold[0] = parseFloat(tempArray[0]) 
     totalData.threshold[1] = parseFloat(tempArray[1])
-
-   
 
     }
 
@@ -103,7 +100,7 @@ function deleteSeries() {
         totalData.names.splice(selectedIndex, 1);
         totalData.addDate.splice(selectedIndex, 1);
         totalData.endDate.splice(selectedIndex, 1);
-        totalData.threshold.splice(selectedIndex, 1);
+        totalData.threshold = [];
 
         // Refresh the chart and dataset select options
         updateChart(chart);
