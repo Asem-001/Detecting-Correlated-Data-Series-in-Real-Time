@@ -1,7 +1,7 @@
 import { pearsonCorrelation } from "./pearson.js";
 import { selectOptions} from "./controlPanel.js";
 import { fetchData } from "./ApiHandler.js";
-import { sendToBackend } from "./sendToBackend.js";
+import { sendTotalDataToBackend ,sendDetectdDataToBackend} from "./sendToBackend.js";
 
 let datasets = []; // Array to store data series
 let time = []; // Array to store timestamps
@@ -10,6 +10,10 @@ let totalData = {'names':[],
                  'endDate': [],
                  'threshold':[]} // Create dataset for gathering to database
 
+let detectedData  = {'timeSeris':[],
+                     'thresold':[],
+                     'starttime':[],
+                     'endtime':[]}// for contaning the detected correlation
 let tempArray ;
 
 
@@ -163,7 +167,7 @@ let intervalId = null; // Holds the interval reference for data updates
 function startDataUpdates(e) {
     if (intervalId === null) {
         console.log(totalData);
-        sendToBackend(e,totalData)
+        sendTotalDataToBackend(e,totalData)
        
         intervalId = setInterval(async function () {
             updateData(); // Update data
@@ -184,7 +188,7 @@ function clearTotalData() {
 // Stops periodic data updates
 
  function stopDataUpdates(e) {
-    // e.preventDefault() // Stop refreshing the page 
+    
 
      tempArray =  document.getElementById('range').value.split(",")
      totalData.endDate[0]= new Date().toDateString()+" "+ new Date().toLocaleTimeString() // Add the time that user end 
@@ -193,8 +197,8 @@ function clearTotalData() {
     // After the user stop the program the data will be sended to the backend
     
     if (intervalId !== null) {
-        sendToBackend(e,totalData)
-          clearTotalData()
+        console.log(totalData);
+        sendTotalDataToBackend(e,totalData)
        
        
         clearInterval(intervalId); // Clear the interval
@@ -218,7 +222,8 @@ function calculateCorrelationMatrix() {
                 if(array1.length == array2.length && array1.length == sliceSize){
                     const correlation = pearsonCorrelation(array1, array2).toFixed(2);
                     if(correlation >= totalData.threshold[0] && correlation <= totalData.threshold[1]){
-                        console.log('nice');
+                        detectedData.thresold.push(correlation)
+                        console.log(correlation);
                     }
                     row.push(correlation);   
                 } else {
@@ -243,6 +248,8 @@ function updateCorrelationDisplay() {
     // Transposing the header row and the first column
     correlationHTML += '<tr><th></th>';
     correlationMatrix.forEach((_, rowIndex) => {
+        detectedData.names.push(datasets[rowIndex].label)
+        onsole.log(datasets[rowIndex].label);
         correlationHTML += `<th>${datasets[rowIndex].label}</th>`;
     });
     correlationHTML += '</tr>';

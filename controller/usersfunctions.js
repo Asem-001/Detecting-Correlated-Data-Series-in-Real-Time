@@ -1,0 +1,127 @@
+const { CorrelationData, DetectedCorrelation } = require('../models/coreelation')
+const userclass = require("../models/users")
+const { doc, collection, addDoc, setDoc, getDoc, updateDoc, deleteDoc, deleteField, Timestamp, getDocs, query, where } = require("firebase/firestore");
+const db = require("../models/config")
+
+
+
+
+
+
+async function addUser(Fname, Lname, Email, IsAdmin, adminID) {
+    const date = new Date
+  
+    const user = new userclass(Fname, Lname, Email, IsAdmin, adminID)
+  
+    const docRef = await setDoc(doc(db, "Users", "" + date.getTime()), user).then(() => {
+      console.log(`The user ${user.fname} successfully added !`)
+    });
+  
+  }
+  async function updateUser(id, newdata) {
+  
+    try {
+      await updateDoc(doc(db, "Users", id), newdata);;
+      console.log(`Successfully updated user with ID: ${id}`);
+    } catch (error) {
+      console.error(`Error deleting user with ID ${id}:`, error);
+    }
+  }
+  
+  async function deleteUser(id) {
+    try {
+      const userToDelete = await searchUser(id);
+      console.log(userToDelete.IsAdmin);
+  
+      if (userToDelete.IsAdmin) {
+        const usersSnapshot = await getAllUsers();
+        await deleteDoc(doc(db, 'Users', id));
+  
+        for (const doc of usersSnapshot.docs) {
+          const user = doc.data();
+          console.log("doc.AdminID == id", user.AdminID == id, user);
+  
+          if (user.AdminID == id) {
+            console.log(user.AdminID == id);
+            const updatedUser = await searchUserID(user.Fname, user.Lname);
+            console.log(updatedUser, user.Fname, user.Lname);
+            await updateUser(updatedUser, { "AdminID": null });
+          }
+        }
+  
+        console.log(`Successfully deleted Admin with ID: ${id}`);
+      } else {
+        await deleteDoc(doc(db, 'Users', id));
+        console.log(`Successfully deleted user with ID: ${id}`);
+      }
+  
+    } catch (error) {
+      console.error(`Error deleting user with ID ${id}:`, error);
+    }
+  }
+  
+  async function getAllUsers() {
+    try {
+      const usersSnapshot = await getDocs(collection(db, 'Users'));
+  
+      usersSnapshot.forEach((doc) => {
+  
+        console.log(doc.id, " => ", doc.data());
+      });
+      return usersSnapshot
+    } catch (error) {
+      console.error('Error fetching users:', error);
+      throw error;  // Re-throw the error if you want to handle it outside this function
+    }
+  
+  }
+
+
+  
+async function searchUserID(Fname, Lname) {
+    try {
+      let matchedDate = null; // Initialize to null
+      const usersSnapshot = await query(collection(db, 'Users'), where("Fname", '==', Fname), where("Lname", '==', Lname));
+      const querySnapshot = await getDocs(usersSnapshot);
+  
+      querySnapshot.forEach((doc) => {
+        matchedDate = doc.id;
+      });
+  
+      if (matchedDate) {
+        return matchedDate; // Return the matched data
+      } else {
+        console.log("No matching user found.");
+        return null; // Return null if no match found
+      }
+    } catch (error) {
+      console.error('Error fetching users:', error);
+      throw error; // Re-throw the error if you want to handle it outside this function
+    }
+  
+  }
+  
+  async function searchUser(id) {
+    try {
+      // Create a reference to the document
+      const docRef = doc(db, 'Users', id);
+  
+      // Fetch the document data
+      const docSnapshot = await getDoc(docRef);
+  
+      if (docSnapshot.exists()) {
+        return docSnapshot.data();
+      } else {
+        console.log('No such document!');
+        return null;
+      }
+    } catch (error) {
+      console.error('Error fetching document:', error);
+      throw error;  // Re-throw the error to handle it outside if necessary
+    }
+  }
+
+
+
+
+  module.exports = {searchUser, searchUserID, getAllUsers, deleteUser,updateUser,addUser}
