@@ -30,118 +30,73 @@
 
 
   <main id="main" class="main">
-    <div class="pagetitle mb-4">
-      <h1>Reports</h1>
-    </div>
 
-    <!-- Create an unordered list to display dates (will be populated dynamically) -->
-    <div class="list-group" id="dateList">
-      <!-- List items will be added dynamically here -->
-    </div>
+    <section class="section dashboard">
 
-    <!-- Display DetectedCorrelation details -->
-    <div id="correlationDetails">
-      <div id="historyContainer">
-        <table id="correlationTable">
-          <!-- Placeholder table for DetectedCorrelation details -->
-          <!-- Table headers -->
-          <tr>
-            <th>Attribute</th>
-            <th>Value</th>
-          </tr>
-        </table>
+      <div class="pagetitle mb-4">
+        <h1>Reports</h1>
       </div>
-    </div>
 
+
+      <div class="row">
+        <div class="col-lg-12">
+    
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <!-- Start Date Section -->
+                        <div class="col-md-6">
+                            <h6 class="card-title">Choose a start date</h6>
+                            <div class="card-body">
+                                <div class="row mb-3">
+                                    <label for="startDate" class="col-sm-2 col-form-label">Date</label>
+                                    <div class="col-sm-10">
+                                        <input type="date" class="form-control" id="startDate">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <!-- End Date Section -->
+                        <div class="col-md-6">
+                            <h6 class="card-title">Choose an end date</h6>
+                            <div class="card-body">
+                                <div class="row mb-3">
+                                    <label for="endDate" class="col-sm-2 col-form-label">Date</label>
+                                    <div class="col-sm-10">
+                                        <input type="date" class="form-control" id="endDate">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+    
+
+    
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-primary" type="button">Search</button>
+                        </div>
+    
+                    </div>
+                </div>
+            </div>
+    
+            <!-- Scrollable Data Display Card -->
+    
+        </div>
+    </div>
+    
+      
+    </section>
   </main>
 
-</body>
+  <footer id="footer" class="footer">
+    <div class="copyright">
+      &copy; Copyright <strong><span>Corell8</span></strong>. All Rights Reserved
+    </div>
+  </footer>
 
-<script>
-  // Function to toggle DetectedCorrelation details visibility
-  function toggleCorrelationDetails(dateId) {
-    const correlationDetails = document.getElementById('correlationDetails');
-    const correlationTable = document.getElementById('correlationTable');
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
-    // Sample data for DetectedCorrelation (replace with dynamic data retrieval)
-    const detectedCorrelationData = {
-      FirstCorrName: 'FirstDataName ' + dateId,
-      SecondCorrName: 'SecondDataName ' + dateId,
-      FirstDataID: 'ID ' + dateId + '1',
-      SecondDataID: 'ID ' + dateId + '2',
-      DetcThreshold: '0.75',
-      CorrTimeStart: '2024-01-0' + dateId + ' 10:00:00',
-      CorrTimeEnd: '2024-01-0' + dateId + ' 11:00:00'
-    };
-
-    // Toggle visibility of DetectedCorrelation details based on dateId
-    if (correlationDetails.style.display === 'none' || correlationDetails.getAttribute('data-id') !== dateId) {
-      correlationDetails.style.display = 'block';
-      correlationDetails.setAttribute('data-id', dateId);
-
-      // Populate the correlation table with data
-      correlationTable.innerHTML = `
-        <tr><td>FirstCorrName:</td><td>${detectedCorrelationData.FirstCorrName}</td></tr>
-        <tr><td>SecondCorrName:</td><td>${detectedCorrelationData.SecondCorrName}</td></tr>
-        <tr><td>FirstDataID:</td><td>${detectedCorrelationData.FirstDataID}</td></tr>
-        <tr><td>SecondDataID:</td><td>${detectedCorrelationData.SecondDataID}</td></tr>
-        <tr><td>DetcThreshold:</td><td>${detectedCorrelationData.DetcThreshold}</td></tr>
-        <tr><td>CorrTimeStart:</td><td>${detectedCorrelationData.CorrTimeStart}</td></tr>
-        <tr><td>CorrTimeEnd:</td><td>${detectedCorrelationData.CorrTimeEnd}</td></tr>
-      `;
-    } else {
-      correlationDetails.style.display = 'none';
-      correlationDetails.removeAttribute('data-id');
-    }
-  }
-
-
-  // Function to fetch data from database or API (simulated asynchronous operation)
-  async function fetchData() {
-    // Simulated data retrieval (replace with actual fetching logic)
-    return new Promise(resolve => {
-      // Simulated delay to mimic asynchronous operation
-      setTimeout(() => {
-        resolve([
-          { dateId: '1', dateTime: '2024-01-01 10:00:00' },
-          { dateId: '2', dateTime: '2024-01-12 10:30:00' },
-          { dateId: '3', dateTime: '2024-01-23 11:23:34' },
-          { dateId: '4', dateTime: '2024-01-3 09:20:22' },
-        ]);
-      }, 1000); // Simulated delay of 1 second
-    });
-  }
-
-  // Function to populate the date list
-  async function populateDateList() {
-    const dateList = document.getElementById('dateList');
-
-    try {
-      // Fetch data asynchronously
-      const dateArray = await fetchData();
-
-      dateArray.forEach(item => {
-        const listItem = document.createElement('a');
-        listItem.href = '#';
-        listItem.classList.add('list-group-item', 'list-group-item-action', 'flex-column', 'align-items-start');
-        listItem.onclick = function () { toggleCorrelationDetails(item.dateId); };
-
-        const listContent = `
-          <div class="d-flex w-100 justify-content-between">
-            <h5 class="mb-1">${item.dateTime}</h5>
-          </div>
-          <small>More information available. Click to view.</small>
-        `;
-
-        listItem.innerHTML = listContent;
-        dateList.appendChild(listItem);
-      });
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  }
-
-  // Call the function to populate the date list on page load
-  populateDateList();
-</script>
-</html>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+  <script src="../public/js/script.js"></script>
+  <script src="../public/js/uiscript.js"></script>
