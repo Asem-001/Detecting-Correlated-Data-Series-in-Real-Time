@@ -21,8 +21,8 @@ class DetectedCorrelation{
     constructor(FirstDataID,SecondDataID,DetcThreshold,CorrTimeStart,CorrTimeEnd) {
         
         return {
-             'FirstDataID':FirstDataID,
-             'SecondDataID':SecondDataID,
+             'FirstNameID':FirstDataID,
+             'SecondNameID':SecondDataID,
             'DetcThreshold':DetcThreshold,
             'CorrTimeStart': CorrTimeStart,
             'CorrTimeEnd':CorrTimeEnd,

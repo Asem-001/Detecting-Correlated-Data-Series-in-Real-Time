@@ -4,6 +4,7 @@ const userclass = require("../models/users")
 const { CorrelationData, DetectedCorrelation } = require('../models/coreelation')
 const { doc, collection, addDoc, setDoc, getDoc, updateDoc, deleteDoc, deleteField, Timestamp, getDocs, query, where } = require("firebase/firestore");
 const coreelation = require("../models/coreelation");
+const { name } = require("ejs");
 
 
 let IDforEndDate = []
@@ -11,7 +12,7 @@ let IDforEndDate = []
 module.exports = {
 
   index: async (req, res) => {
-
+   
     res.render("index", {
       title: "Home page"
 
@@ -51,6 +52,20 @@ module.exports = {
     res.redirect('/');
 
 
+  },
+  //This fucntion add the detected information that occur between two time series
+  addDetectCorrelation:(req, res) =>{
+    let date = new Date()
+    const data = {'names':['timeseris_1','timeseris_2'],
+                  'time':[date.toLocaleTimeString(), date.toLocaleTimeString()],
+                  'threshold':[0.7]
+
+  }
+  console.log(data);
+
+    // addDetectCorr(data.names[0],data.names[1],data.threshold, data.time[0], data.time[1])
+
+    
   },
 
   adminreports: (req, res) => {
@@ -266,10 +281,10 @@ async function updateCorrleationData(id, newdata) {
   }
 }
 
-async function addDetectCorr(FirstCorrName, SecondCorrName, FirstDataID, SecondDataID, Threshold, CorrTimeStart, CorrTimeEnd) {
+async function addDetectCorr(FirstCorrName, SecondCorrName, Threshold, CorrTimeStart, CorrTimeEnd) {
   const date = new Date
 
-  const corr = new DetectedCorrelation(FirstCorrName, SecondCorrName, FirstDataID, SecondDataID, Threshold, CorrTimeStart, CorrTimeEnd)
+  const corr = new DetectedCorrelation(FirstCorrName, SecondCorrName, Threshold, CorrTimeStart, CorrTimeEnd)
 
   await setDoc(doc(db, "DetectedCorrelation", "" + date.getTime()), corr).then(() => {
     console.log(`The Correlation ${corr.CorrName} successfully added !`)

@@ -10,6 +10,7 @@ let totalData = {'names':[],
                  'endDate': [],
                  'threshold':[]} // Create dataset for gathering to database
 
+let tempArray ;
 
 
 // Returns current time as a string
@@ -56,11 +57,10 @@ function addSeries(){
     totalData.names.push(newDataset.label)
     totalData.addDate.push( new Date().toDateString()+" "+ new Date().toLocaleTimeString()) // add the time that user add series
     
-    let tempArray =  document.getElementById('range').value.split(",")
-   
+    tempArray = document.getElementById('range').value.split(",")
     totalData.threshold[0] = parseFloat(tempArray[0]) 
     totalData.threshold[1] = parseFloat(tempArray[1])
-
+    console.log(totalData);
     }
 
     datasets.push(newDataset); // Add new dataset to the array
@@ -100,7 +100,9 @@ function deleteSeries() {
         totalData.names.splice(selectedIndex, 1);
         totalData.addDate.splice(selectedIndex, 1);
         totalData.endDate.splice(selectedIndex, 1);
-        totalData.threshold = [];
+        if(totalData.names,length == 0){
+           totalData.threshold = [];
+        }
 
         // Refresh the chart and dataset select options
         updateChart(chart);
@@ -161,7 +163,7 @@ let intervalId = null; // Holds the interval reference for data updates
 function startDataUpdates(e) {
     if (intervalId === null) {
         console.log(totalData);
-        // sendToBackend(e)
+        sendToBackend(e,totalData)
        
         intervalId = setInterval(async function () {
             updateData(); // Update data
@@ -182,15 +184,16 @@ function clearTotalData() {
 // Stops periodic data updates
 
  function stopDataUpdates(e) {
-    e.preventDefault() // Stop refreshing the page 
+    // e.preventDefault() // Stop refreshing the page 
 
-
+     tempArray =  document.getElementById('range').value.split(",")
      totalData.endDate[0]= new Date().toDateString()+" "+ new Date().toLocaleTimeString() // Add the time that user end 
-     totalData.threshold[0]=(document.getElementById('range').value)
+     totalData.threshold[0] = parseFloat(tempArray[0]) 
+     totalData.threshold[1] = parseFloat(tempArray[1])
     // After the user stop the program the data will be sended to the backend
     
     if (intervalId !== null) {
-        // sendToBackend(e)
+        sendToBackend(e,totalData)
           clearTotalData()
        
        
