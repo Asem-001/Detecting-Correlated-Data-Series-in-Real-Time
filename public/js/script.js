@@ -128,6 +128,13 @@ function setupChart() {
             datasets: datasets
         },
         options: {
+            tension: 0.4, 
+            elements: {
+                point: {
+                  radius: 0,
+                  hitRadius: 10,
+                }
+            },
             scales: {
                 x: {
                     ticks: {
