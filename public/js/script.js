@@ -1,8 +1,11 @@
 import { pearsonCorrelation } from "./pearson.js";
-import { selectOptions} from "./controlPanel.js";
+import { selectOptions, removeSeriesFromSelected } from "./controlPanel.js";
 import { fetchData } from "./ApiHandler.js";
 import { sendToBackend } from "./sendToBackend.js";
 
+//this flag and times for calculateCorrelationMatrix() 
+let flag = false;
+let times = [];
 let datasets = []; // Array to store data series
 let time = []; // Array to store timestamps
 let totalData = {'names':[],
@@ -81,8 +84,7 @@ function updateDatasetSelectOptions() {
     });
 }
 
-// Import the function from controlPanel.js
-import { removeSeriesFromSelected } from './controlPanel.js';
+
 
 function deleteSeries() {
     const select = document.getElementById('datasetSelect');
@@ -188,7 +190,9 @@ function clearTotalData() {
      totalData.endDate[0]= new Date().toDateString()+" "+ new Date().toLocaleTimeString() // Add the time that user end 
      totalData.threshold[0]=(document.getElementById('range').value)
     // After the user stop the program the data will be sended to the backend
-    
+
+
+
     if (intervalId !== null) {
         // sendToBackend(e)
           clearTotalData()
@@ -196,6 +200,17 @@ function clearTotalData() {
        
         clearInterval(intervalId); // Clear the interval
         intervalId = null;
+        if(flag){
+            let appendedCode = `
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+            Correlation detected at ${times[times.length - 1]} to ${times[0]}  
+            between ${datasets[i].label} and ${datasets[j].label}!
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+          `
+          document.getElementById('notificationContent').innerHTML += appendedCode
+          flag = false
+        }
     }
 }
 
@@ -211,12 +226,31 @@ function calculateCorrelationMatrix() {
             } else if (i >= j) {
                 let array1 = datasets[i].data.slice(0, sliceSize);
                 let array2 = datasets[j].data.slice(0, sliceSize);
+
+
                 
                 if(array1.length == array2.length && array1.length == sliceSize){
                     const correlation = pearsonCorrelation(array1, array2).toFixed(2);
+
+                    
                     if(correlation >= totalData.threshold[0] && correlation <= totalData.threshold[1]){
-                        console.log('nice');
+                        flag = true;
+                        times.unshift(new Date().toDateString()+" "+ new Date().toLocaleTimeString())
+                    }else{
+                        if(flag){
+                            let appendedCode = `
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            Correlation detected at ${times[times.length - 1]} to ${times[0]}  
+                            between ${datasets[i].label} and ${datasets[j].label}!
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                          `
+                          document.getElementById('notificationContent').innerHTML += appendedCode
+                          flag = false
+                        }
                     }
+
+
                     row.push(correlation);   
                 } else {
                     row.push(NaN);
