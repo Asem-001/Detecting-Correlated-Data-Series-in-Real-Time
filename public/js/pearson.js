@@ -39,7 +39,9 @@ const n = x.length;
       let correlation = numerator / Math.sqrt(denominatorX * denominatorY);
       computationCounter += 3;
       
-      console.log(computationCounter);
+     
+      document.getElementById("computation").innerText = " "+computationCounter;
+
       if(isNaN(correlation)){
         correlation = 0
         return correlation;
