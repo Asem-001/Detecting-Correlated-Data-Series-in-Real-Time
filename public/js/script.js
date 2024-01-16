@@ -222,7 +222,6 @@ function calculateCorrelationMatrix() {
                 if(array1.length == array2.length && array1.length == sliceSize){
                     const correlation = pearsonCorrelation(array1, array2).toFixed(2);
                     if(correlation >= totalData.threshold[0] && correlation <= totalData.threshold[1]){
-                        detectedData.thresold.push(correlation)
                         console.log(correlation);
                     }
                     row.push(correlation);   
@@ -248,8 +247,6 @@ function updateCorrelationDisplay() {
     // Transposing the header row and the first column
     correlationHTML += '<tr><th></th>';
     correlationMatrix.forEach((_, rowIndex) => {
-        detectedData.names.push(datasets[rowIndex].label)
-        onsole.log(datasets[rowIndex].label);
         correlationHTML += `<th>${datasets[rowIndex].label}</th>`;
     });
     correlationHTML += '</tr>';
