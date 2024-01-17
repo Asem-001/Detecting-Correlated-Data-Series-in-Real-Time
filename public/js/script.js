@@ -14,8 +14,6 @@ let correlationObject = {'correlatedSeries': [],
                          'endTime': [],
                          'threshold': [] } 
 
-let tempArray ;
-
 
 // Returns current time as a string
 function getCurrentTime() {
@@ -61,8 +59,6 @@ function addSeries() {
     totalData.names.push(newDataset.label);
      // add the time that user add series
     totalData.addDate.push(new Date().toDateString() + " " + new Date().toLocaleTimeString());
-
-  
   }
 
   datasets.push(newDataset); // Add new dataset to the array
@@ -83,46 +79,6 @@ function updateDatasetSelectOptions() {
   });
 }
 
-
-function addSeries(){
-    let collection = document.getElementById('timeSeriesSelect').value; 
-    if (!collection) {
-        alert("Please select a series before adding."); // Alert if no series is selected
-        return;
-    }
-    const newColor = `rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)})`;
-    // Create new dataset object
-    const newDataset = {
-        label: collection,
-        data: [],
-        borderColor: newColor,
-        backgroundColor: newColor,
-    };
-    // check if series name not in the Total data 
-    if (!totalData.names.includes(newDataset.label)){
-    totalData.names.push(newDataset.label)
-    totalData.addDate.push( new Date().toDateString()+" "+ new Date().toLocaleTimeString()) // add the time that user add series
-    
-    tempArray = document.getElementById('range').value.split(",")
-    totalData.threshold[0] = parseFloat(tempArray[0]) 
-    totalData.threshold[1] = parseFloat(tempArray[1])
-    console.log(totalData);
-    }
-
-    // Refresh the chart and dataset select options
-    updateChart(chart);
-    updateDatasetSelectOptions();
-
-    // Refresh the options in the series select dropdown
-    // Assuming selectOptions is accessible here, otherwise import it as needed
-    selectOptions();
-
-    // Update the displayed series count
-    document.getElementById("seriesCount").innerText = datasets.length;
-  } else {
-    // Handle the case where no valid series is selected for deletion
-    console.warn("No valid series selected for deletion");
-  }
 
 function deleteSeries() {
     const select = document.getElementById('datasetSelect');
@@ -238,7 +194,6 @@ function stopDataUpdates(e) {
   if (intervalId !== null) {
       console.log(totalData);
       sendTotalDataToBackend(e,totalData)
-  
 
     clearInterval(intervalId); // Clear the interval
     intervalId = null;
@@ -300,7 +255,6 @@ function calculateCorrelationMatrix() {
               if(correlationObject.correlatedSeries.indexOf(string) != -1){
         
                   let index = correlationObject.correlatedSeries.indexOf(string);
-
                   let correlatedNames = correlationObject.correlatedSeries[index].split(',');
 
                   printNotification(index,correlatedNames);
@@ -336,8 +290,6 @@ function printNotification(index,correlatedNames) {
                     `; 
 
                   document.getElementById("notificationContent").insertAdjacentHTML("afterbegin", appendedCode);
-
-   
 }
 
 // Updates the display to show the current correlation matrix
