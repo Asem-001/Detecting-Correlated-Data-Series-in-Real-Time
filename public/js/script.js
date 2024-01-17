@@ -168,10 +168,10 @@ function startDataUpdates(e) {
     totalData.threshold[1] = parseFloat(thresh[1]);
     thresh = [];
 
-    intervalId = setInterval(async function () {
+    intervalId = setInterval(async function (e) {
       updateData(); // Update data
       updateChart(chart); // Update chart
-      updateCorrelationDisplay(); // Update correlation display
+      updateCorrelationDisplay(e); // Update correlation display
     }, 1300); // Update interval in milliseconds
   }
 
@@ -214,7 +214,7 @@ function stopDataUpdates(e) {
 }
 
 // Calculates and returns a correlation matrix for the current datasets
-function calculateCorrelationMatrix() {
+function calculateCorrelationMatrix(e) {
 
   const sliceSize = parseInt(
     document.getElementById("sliceSizeSelect").value,
@@ -302,8 +302,8 @@ function printNotification(index,correlatedNames) {
 }
 
 // Updates the display to show the current correlation matrix
-function updateCorrelationDisplay() {
-  const correlationMatrix = calculateCorrelationMatrix();
+function updateCorrelationDisplay(e) {
+  const correlationMatrix = calculateCorrelationMatrix(e);
   const correlationDisplay = document.getElementById("correlationDisplay");
   let correlationHTML = '<table class="correlation-table table table-striped">';
 
