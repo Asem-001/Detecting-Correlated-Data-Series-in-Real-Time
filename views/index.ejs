@@ -31,8 +31,9 @@
               <div class="col-md-9 mt-5">
                 <div class="card" style="height: 515px; ">
                   <div class="card-body" style="max-height: 700px;">
-                    <h5 class="card-title">Chart</h5>
+                    <h5 class="card-title">Chart </h5>
                     <canvas style="max-width: 2200px; max-height: 400px; margin-bottom: 30px; " id="chart" width="668" height="334" ></canvas>
+                    <h6 >number of computations: <span id="computation"> NA</span></h6>
                   </div>
                 </div>
               </div>
@@ -131,16 +132,9 @@
               <div class="card" style="height: 515px;">
                 <div class="card-body">
                   <h5 class="card-title">Notification</h5>
-                  <div class="scrollable-content"> <!-- Add this class -->
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                      Correlation detected between PH2 and PH3!
-                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                      Correlation detected between PH2 and PH3!
-                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                    <!-- Add more alerts here if needed -->
+                  <div class="scrollable-content" id="notificationContent">
+                    
+                    <!-- Will be filled in the javascript -->
                   </div>
                 </div>
               </div>
