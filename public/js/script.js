@@ -159,6 +159,8 @@ let intervalId = null; // Holds the interval reference for data updates
 // Starts periodic data updates
 function startDataUpdates(e) {
 
+  disableControls();
+
   if (intervalId === null) {
     console.log(totalData);
     sendTotalDataToBackend(e,totalData)
@@ -176,6 +178,7 @@ function startDataUpdates(e) {
   }
 
 }
+
 function clearTotalData() {
   // Remove the the selected from Totaldata
   totalData.names.splice(0, totalData.names.length);
@@ -185,6 +188,7 @@ function clearTotalData() {
 // Stops periodic data updates
 
 function stopDataUpdates(e) {
+  enableControls();
   e.preventDefault(); // Stop refreshing the page
 
   totalData.endDate[0] = new Date().toDateString() + " " + new Date().toLocaleTimeString(); // Add the time that user end
@@ -355,12 +359,63 @@ function updateCorrelationDisplay() {
   correlationDisplay.innerHTML = correlationHTML;
 }
 
+function disableControls() {
+  $("#datasetSelect").prop("disabled", true);
+  $("#sliceSizeSelect").prop("disabled", true);
+  $("#range").prop("disabled", true);
+  $("#deleteSeriesButton").prop("disabled", true);
+  $("#slider-range").slider("option", "disabled", true);
+
+  // Uncomment these if you want to disable adding series functionality
+  // $("#timeSeriesSelect").prop("disabled", true);
+  // $("#addSeriesButton").prop("disabled", true);
+}
+
+function enableControls() {
+  $("#datasetSelect").prop("disabled", false);
+  $("#sliceSizeSelect").prop("disabled", false);
+  $("#range").prop("disabled", false);
+  $("#deleteSeriesButton").prop("disabled", false);
+  $("#slider-range").slider("option", "disabled", false);
+
+  // Uncomment these if you want to re-enable adding series functionality
+  // $("#timeSeriesSelect").prop("disabled", false);
+  // $("#addSeriesButton").prop("disabled", false);
+}
+
+
 // Initialize and set event listeners when the DOM is fully loaded
 document.addEventListener("DOMContentLoaded", async () => {
   chart = setupChart();
   await selectOptions();
 
-  document.getElementById("startButton").addEventListener("click", startDataUpdates);
+// Event listener for the start button
+document.getElementById("startButton").addEventListener("click", function(event) {
+  var sliceSizeSelect = document.getElementById('sliceSizeSelect');
+  var thresholdValues = $("#slider-range").slider("values");
+
+  if (datasets.length === 0) {
+    alert('Please add at least one series before starting.');
+    event.preventDefault();
+    return;
+  }
+
+  if (thresholdValues[0] === -1 && thresholdValues[1] === 1) {
+    alert('Please adjust the threshold values before starting.');
+    event.preventDefault();
+    return;
+  }
+
+  if (!sliceSizeSelect.value || sliceSizeSelect.value === 'Window Size') {
+    alert('Please select a window size before starting.');
+    event.preventDefault();
+    return;
+  }
+
+  startDataUpdates();
+});
+
+
   document.getElementById("stopButton").addEventListener("click", stopDataUpdates);
   document.getElementById("addSeriesButton").addEventListener("click", addSeries);
   document.getElementById("deleteSeriesButton").addEventListener("click", deleteSeries);
