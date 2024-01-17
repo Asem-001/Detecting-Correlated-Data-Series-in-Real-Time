@@ -1,7 +1,7 @@
 import { pearsonCorrelation } from "./pearson.js";
 import { selectOptions, removeSeriesFromSelected } from "./controlPanel.js";
 import { fetchData } from "./ApiHandler.js";
-import { sendToBackend } from "./sendToBackend.js";
+import { sendTotalDataToBackend ,sendDetectdDataToBackend} from "./sendToBackend.js";
 
 let datasets = []; // Array to store data series
 let time = []; // Array to store timestamps
@@ -13,6 +13,9 @@ let correlationObject = {'correlatedSeries': [],
                          'startTime': [],
                          'endTime': [],
                          'threshold': [] } 
+
+let tempArray ;
+
 
 // Returns current time as a string
 function getCurrentTime() {
@@ -80,23 +83,31 @@ function updateDatasetSelectOptions() {
   });
 }
 
-function deleteSeries() {
-  const select = document.getElementById("datasetSelect");
-  const selectedIndex = select.value;
-  if (selectedIndex >= 0 && datasets[selectedIndex]) {
-    const deletedSeries = datasets[selectedIndex].label;
 
-    // Remove the selected dataset
-    datasets.splice(selectedIndex, 1);
-
-    // Use the imported function to remove the deleted series from selectedSeries
-    removeSeriesFromSelected(deletedSeries);
-
-    // Update totalData to remove the deleted series data
-    totalData.names.splice(selectedIndex, 1);
-    totalData.addDate.splice(selectedIndex, 1);
-    totalData.endDate.splice(selectedIndex, 1);
-    totalData.threshold = [];
+function addSeries(){
+    let collection = document.getElementById('timeSeriesSelect').value; 
+    if (!collection) {
+        alert("Please select a series before adding."); // Alert if no series is selected
+        return;
+    }
+    const newColor = `rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)})`;
+    // Create new dataset object
+    const newDataset = {
+        label: collection,
+        data: [],
+        borderColor: newColor,
+        backgroundColor: newColor,
+    };
+    // check if series name not in the Total data 
+    if (!totalData.names.includes(newDataset.label)){
+    totalData.names.push(newDataset.label)
+    totalData.addDate.push( new Date().toDateString()+" "+ new Date().toLocaleTimeString()) // add the time that user add series
+    
+    tempArray = document.getElementById('range').value.split(",")
+    totalData.threshold[0] = parseFloat(tempArray[0]) 
+    totalData.threshold[1] = parseFloat(tempArray[1])
+    console.log(totalData);
+    }
 
     // Refresh the chart and dataset select options
     updateChart(chart);
@@ -112,6 +123,42 @@ function deleteSeries() {
     // Handle the case where no valid series is selected for deletion
     console.warn("No valid series selected for deletion");
   }
+
+function deleteSeries() {
+    const select = document.getElementById('datasetSelect');
+    const selectedIndex = select.value;
+    if (selectedIndex >= 0 && datasets[selectedIndex]) {
+        const deletedSeries = datasets[selectedIndex].label;
+
+        // Remove the selected dataset
+        datasets.splice(selectedIndex, 1); 
+
+        // Use the imported function to remove the deleted series from selectedSeries
+        removeSeriesFromSelected(deletedSeries);
+
+        // Update totalData to remove the deleted series data
+        totalData.names.splice(selectedIndex, 1);
+        totalData.addDate.splice(selectedIndex, 1);
+        totalData.endDate.splice(selectedIndex, 1);
+        if(totalData.names,length == 0){
+           totalData.threshold = [];
+        }
+
+        // Refresh the chart and dataset select options
+        updateChart(chart);
+        updateDatasetSelectOptions();
+
+        // Refresh the options in the series select dropdown
+        // Assuming selectOptions is accessible here, otherwise import it as needed
+        selectOptions();
+
+        // Update the displayed series count
+        document.getElementById('seriesCount').innerText = datasets.length;
+    } else {
+        // Handle the case where no valid series is selected for deletion
+        console.warn('No valid series selected for deletion');
+    }
+
 }
 
 // Initializes and returns a Chart.js chart instance
@@ -155,14 +202,15 @@ let intervalId = null; // Holds the interval reference for data updates
 
 // Starts periodic data updates
 function startDataUpdates(e) {
+
   if (intervalId === null) {
     console.log(totalData);
-    // sendToBackend(e)
+    sendTotalDataToBackend(e,totalData)
 
-    let tempArray = document.getElementById("range").value.split(",");
-    totalData.threshold[0] = parseFloat(tempArray[0]);
-    totalData.threshold[1] = parseFloat(tempArray[1]);
-    tempArray = [];
+    let thresh = document.getElementById("range").value.split(",");
+    totalData.threshold[0] = parseFloat(thresh[0]);
+    totalData.threshold[1] = parseFloat(thresh[1]);
+    thresh = [];
 
     intervalId = setInterval(async function () {
       updateData(); // Update data
@@ -170,6 +218,7 @@ function startDataUpdates(e) {
       updateCorrelationDisplay(); // Update correlation display
     }, 1300); // Update interval in milliseconds
   }
+
 }
 function clearTotalData() {
   // Remove the the selected from Totaldata
@@ -187,8 +236,9 @@ function stopDataUpdates(e) {
   // After the user stop the program the data will be sended to the backend
 
   if (intervalId !== null) {
-    // sendToBackend(e)
-    clearTotalData();
+      console.log(totalData);
+      sendTotalDataToBackend(e,totalData)
+  
 
     clearInterval(intervalId); // Clear the interval
     intervalId = null;
@@ -202,6 +252,7 @@ function stopDataUpdates(e) {
         correlationObject.startTime = [];
         correlationObject.endTime = [];
         correlationObject.threshold = [];
+
     }
     
   }
@@ -209,6 +260,7 @@ function stopDataUpdates(e) {
 
 // Calculates and returns a correlation matrix for the current datasets
 function calculateCorrelationMatrix() {
+
   const sliceSize = parseInt(
     document.getElementById("sliceSizeSelect").value,
     10
@@ -263,6 +315,7 @@ function calculateCorrelationMatrix() {
           row.push(correlation);
         } else {
           row.push(NaN);
+
         }
       } else {
         row.push("-");
