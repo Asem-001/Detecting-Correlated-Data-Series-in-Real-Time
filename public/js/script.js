@@ -1,5 +1,5 @@
 import { pearsonCorrelation } from "./pearson.js";
-import { selectOptions, removeSeriesFromSelected } from "./controlPanel.js";
+import { selectOptions, removeSeriesFromSelected, selectedSeries } from "./controlPanel.js";
 import { fetchData } from "./ApiHandler.js";
 import { sendTotalDataToBackend ,sendDetectdDataToBackend} from "./sendToBackend.js";
 
@@ -40,6 +40,15 @@ async function updateData() {
 }
 
 function addSeries() {
+
+  const select = document.getElementById('timeSeriesSelect');
+  const selectedValue = select.value;
+  
+  if (selectedValue && !selectedSeries.includes(selectedValue)) {
+      selectedSeries.push(selectedValue); // Add the selected series to the array
+      selectOptions(); // Refresh the select options to hide the added series
+  }
+
   let collection = document.getElementById("timeSeriesSelect").value;
   if (!collection) {
     alert("Please select a series before adding."); // Alert if no series is selected

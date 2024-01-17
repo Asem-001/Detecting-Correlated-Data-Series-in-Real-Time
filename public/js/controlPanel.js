@@ -1,6 +1,6 @@
 import { fetchData } from "./ApiHandler.js";
 
-let selectedSeries = []; // Array to store selected series
+export let selectedSeries = []; // Array to store selected series
 
 export function removeSeriesFromSelected(seriesName) {
     selectedSeries = selectedSeries.filter(series => series !== seriesName);
@@ -21,12 +21,3 @@ export async function selectOptions() {
     });
 }
 
-document.getElementById('addSeriesButton').addEventListener('click', () => {
-    const select = document.getElementById('timeSeriesSelect');
-    const selectedValue = select.value;
-    
-    if (selectedValue && !selectedSeries.includes(selectedValue)) {
-        selectedSeries.push(selectedValue); // Add the selected series to the array
-        selectOptions(); // Refresh the select options to hide the added series
-    }
-});
