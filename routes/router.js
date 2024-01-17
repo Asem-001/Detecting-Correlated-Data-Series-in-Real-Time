@@ -5,6 +5,9 @@ router.get('/', Controller.index);
 
 router.get('/adminreports', Controller.adminreports);
 
+router.get('/detailedReport', Controller.detailedReport);
+
+
 router.get('/dashboard', Controller.dashboard);
 
 router.get('/profile', Controller.profile);

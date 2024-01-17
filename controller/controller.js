@@ -72,6 +72,13 @@ module.exports = {
     });
   },
 
+  detailedReport: (req, res) => {
+
+    res.render("detailedReport", {
+      title: "Report Details",
+    });
+  },
+
   dashboard: (req, res) => {
 
     res.render("dashboard", {
