@@ -232,7 +232,7 @@ $(function() {
     range: true,
     min: -1,
     max: 1,
-    step: 0.1,
+    step: 0.05,
     values: [-1, 1], 
     slide: function(event, ui) {
       $("#range").val(ui.values[0] + " , " + ui.values[1]);

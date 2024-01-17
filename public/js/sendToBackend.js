@@ -1,7 +1,7 @@
  export async function sendTotalDataToBackend(e,totalData){ // The totalData dic will be sended to the backend server
     
     e.preventDefault() // Stop refreshing the page 
-    const res = await fetch('/sendbackend', { // Send the data to the router in JSON file 
+    let res = await fetch('/sendbackend', { // Send the data to the router in JSON file 
         method:'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -12,18 +12,20 @@
     } )
 }
 
-export async function sendDetectdDataToBackend(e,DetectdData){ // The totalData dic will be sended to the backend server
+export async function sendDetectdDataToBackend(detectdData){ // The totalData dic will be sended to the backend server
     
-    e.preventDefault() // Stop refreshing the page 
-    const res = await fetch('/DetectdDataBackend', { // Send the data to the router in JSON file 
+    // e.preventDefault() // Stop refreshing the page 
+    let res1 = await fetch('/detectddatadackend', { // Send the data to the router in JSON file 
         method:'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body:JSON.stringify({
-            parcel: DetectdData
+            parcel: detectdData
         })
     } )
+
+
 }
 
 

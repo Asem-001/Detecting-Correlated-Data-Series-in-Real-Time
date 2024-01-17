@@ -1,5 +1,5 @@
-const {searchUser, searchUserID, getAllUsers, deleteUser,updateUser,addUser} = require('./usersfunctions')
-const {addCorrData, CorrelationSearch, updateCorrleationData} = require('./correlationFunctions')
+const { searchUser, searchUserID, getAllUsers, deleteUser, updateUser, addUser } = require('./usersfunctions')
+const { addDetectCorr, addCorrData, CorrelationSearch, updateCorrleationData } = require('./correlationFunctions')
 
 
 
@@ -8,7 +8,7 @@ let IDforEndDate = []
 module.exports = {
 
   index: async (req, res) => {
-   
+
     res.render("index", {
       title: "Home page"
 
@@ -25,7 +25,7 @@ module.exports = {
 
       // Perform the CorrelationSearch operation asynchronously for each name
       let doc = await CorrelationSearch(data.names[i])
-   
+
 
       // If the document doesn't exist and there's no end date, add correlation data
       if (!doc & data.endDate.length == 0) {
@@ -44,25 +44,26 @@ module.exports = {
         });
       }
     }
-     
+
     // Redirect to the home page after processing all names
     res.redirect('/');
 
 
   },
   //This fucntion add the detected information that occur between two time series
-  addDetectCorrelation:(req, res) =>{
-    let date = new Date()
-    const data = {'names':['timeseris_1','timeseris_2'],
-                  'time':[date.toLocaleTimeString(), date.toLocaleTimeString()],
-                  'threshold':[0.7]
+  addDetectCorrelation: async (req, res) => {
 
-  }
-  console.log(data);
 
-    addDetectCorr(data.names[0],data.names[1],data.threshold, data.time[0], data.time[1])
+    let data = req.body.parcel;
+    console.log(data);
 
-    
+    // Assuming addDetectCorr is a function that needs to be implemented
+    let name = data.correlatedSeries[0].split(',')
+    console.log(name);
+    addDetectCorr(name[0], name[1], data.threshold, data.startTime[0], data.endTime[0]);
+
+    res.redirect('/');
+
   },
 
   adminreports: (req, res) => {
