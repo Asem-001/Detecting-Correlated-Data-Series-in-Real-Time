@@ -998,3 +998,10 @@
 .color-bar .medium-negative { background-color: #e57373; }
 .color-bar .high-negative { background-color: #ef5350; }
 .color-bar .very-high-negative { background-color: #f44336; } /* darker red for values closer to -1 */
+
+.info-title {
+  font-size: 14px;
+  font-weight: 400;
+  color: #012970;
+  font-family: "Poppins", sans-serif;
+}
