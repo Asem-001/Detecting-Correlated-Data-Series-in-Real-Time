@@ -199,7 +199,7 @@ function stopDataUpdates(e) {
     intervalId = null;
 
     if(correlationObject.correlatedSeries.length > 0){
-      for(let i = 0; i <= correlationObject.correlatedSeries.length; i++){
+      for(let i = 0; i < correlationObject.correlatedSeries.length; i++){
         let correlatedNames = correlationObject.correlatedSeries[i].split(',');
         printNotification(i,correlatedNames); 
       }
