@@ -192,6 +192,17 @@ function stopDataUpdates(e) {
 
     clearInterval(intervalId); // Clear the interval
     intervalId = null;
+
+    if(correlationObject.correlatedSeries.length > 0){
+      for(let i = 0; i <= correlationObject.correlatedSeries.length; i++){
+        let correlatedNames = correlationObject.correlatedSeries[i].split(',');
+        printNotification(i,correlatedNames); 
+      }
+        correlationObject.correlatedSeries = [];
+        correlationObject.startTime = [];
+        correlationObject.endTime = [];
+        correlationObject.threshold = [];
+    }
     
   }
 }
@@ -234,26 +245,20 @@ function calculateCorrelationMatrix() {
                
             }   
           }else{
-            
-                if(correlationObject.correlatedSeries.indexOf(string) != -1){
+              if(correlationObject.correlatedSeries.indexOf(string) != -1){
         
-                    let index = correlationObject.correlatedSeries.indexOf(string);
-                    let correlated = correlationObject.correlatedSeries[index].split(',');
+                  let index = correlationObject.correlatedSeries.indexOf(string);
 
-                    let appendedCode = `
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    Correlation detected from ${correlationObject.startTime[index]} to ${correlationObject.endTime[index]}
-                    between ${correlated[0]} and ${correlated[1]} !
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>`; 
-                    document.getElementById("notificationContent").insertAdjacentHTML("afterbegin", appendedCode);
+                  let correlatedNames = correlationObject.correlatedSeries[index].split(',');
 
-                    correlationObject.correlatedSeries.splice(index,1);
-                    correlationObject.startTime.splice(index,1);
-                    correlationObject.endTime.splice(index,1);
-                    correlationObject.threshold.splice(index,1);
+                  printNotification(index,correlatedNames);
 
-                }
+                  correlationObject.correlatedSeries.splice(index,1);
+                  correlationObject.startTime.splice(index,1);
+                  correlationObject.endTime.splice(index,1);
+                  correlationObject.threshold.splice(index,1);
+
+              }
             }  
           row.push(correlation);
         } else {
@@ -268,7 +273,16 @@ function calculateCorrelationMatrix() {
   return correlationMatrix;
 }
 
-function pushNotification() {
+function printNotification(index,correlatedNames) {
+  let appendedCode = `
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    Correlation detected from ${correlationObject.startTime[index]} to ${correlationObject.endTime[index]}
+                    between ${correlatedNames[0]} and ${correlatedNames[1]} !
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    `; 
+
+                  document.getElementById("notificationContent").insertAdjacentHTML("afterbegin", appendedCode);
 
    
 }
