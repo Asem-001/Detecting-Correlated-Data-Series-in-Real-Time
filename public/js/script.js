@@ -259,6 +259,15 @@ function calculateCorrelationMatrix() {
 
                   printNotification(index,correlatedNames);
 
+                  let objectToBeSent = {
+                    'correlatedSeries': correlationObject.correlatedSeries[index],
+                  'startTime':   correlationObject.startTime[index],
+                  'endTime':  correlationObject.endTime[index],
+                  'threshold':  correlationObject.threshold[index] 
+                } 
+                
+                  sendDetectdDataToBackend(e,objectToBeSent)
+
                   correlationObject.correlatedSeries.splice(index,1);
                   correlationObject.startTime.splice(index,1);
                   correlationObject.endTime.splice(index,1);
