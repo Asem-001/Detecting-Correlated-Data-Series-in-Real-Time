@@ -15,6 +15,6 @@ router.get('/profile', Controller.profile);
 
 router.post('/sendbackend',Controller.addCorrelationData)
 
-router.post('/DetectdDataBackend',Controller.addDetectCorrelation)
+router.post('/detectddatadackend',Controller.addDetectCorrelation)
 
 module.exports = router;

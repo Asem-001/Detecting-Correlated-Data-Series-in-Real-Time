@@ -161,6 +161,14 @@ function setupChart() {
     },
   });
 }
+//This function for update the threshold valus
+async function thresholdUpdate(){
+  let thresh = document.getElementById("range").value.split(",");
+  totalData.threshold[0] = parseFloat(thresh[0]);
+  totalData.threshold[1] = parseFloat(thresh[1]);
+  
+  thresh = [];
+}
 
 let chart;
 let intervalId = null; // Holds the interval reference for data updates
@@ -169,39 +177,30 @@ let intervalId = null; // Holds the interval reference for data updates
 function startDataUpdates(e) {
 
   disableControls();
-
+  
   if (intervalId === null) {
+    thresholdUpdate()
     console.log(totalData);
     sendTotalDataToBackend(e,totalData)
 
-    let thresh = document.getElementById("range").value.split(",");
-    totalData.threshold[0] = parseFloat(thresh[0]);
-    totalData.threshold[1] = parseFloat(thresh[1]);
-    thresh = [];
+    
 
-    intervalId = setInterval(async function (e) {
+    intervalId = setInterval(async function () {
       updateData(); // Update data
       updateChart(chart); // Update chart
-      updateCorrelationDisplay(e); // Update correlation display
+      updateCorrelationDisplay(); // Update correlation display
     }, 1300); // Update interval in milliseconds
   }
 
 }
 
-function clearTotalData() {
-  // Remove the the selected from Totaldata
-  totalData.names.splice(0, totalData.names.length);
-  totalData.addDate.splice(0, totalData.addDate.length);
-}
-
 // Stops periodic data updates
-
 function stopDataUpdates(e) {
   enableControls();
-  e.preventDefault(); // Stop refreshing the page
+  // e.preventDefault(); // Stop refreshing the page
 
   totalData.endDate[0] = new Date().toDateString() + " " + new Date().toLocaleTimeString(); // Add the time that user end
-  totalData.threshold[0] = document.getElementById("range").value;
+  thresholdUpdate()
   // After the user stop the program the data will be sended to the backend
 
   if (intervalId !== null) {
@@ -255,13 +254,13 @@ function calculateCorrelationMatrix(e) {
                 correlationObject.correlatedSeries.push(string);
                 correlationObject.startTime.push(new Date().toDateString() + " " + new Date().toLocaleTimeString());
                 correlationObject.endTime.push(new Date().toDateString() + " " + new Date().toLocaleTimeString());
-                correlationObject.threshold.push([correlation]);
+                correlationObject.threshold.push([parseFloat(correlation)]);
                
 
             }else{
                 let index = correlationObject.correlatedSeries.indexOf(string);
                 correlationObject.endTime[index]= new Date().toDateString() + " " + new Date().toLocaleTimeString()
-                correlationObject.threshold[index].push(correlation)
+                correlationObject.threshold[index].push(parseFloat(correlation))
                
             }   
           }else{
@@ -273,13 +272,13 @@ function calculateCorrelationMatrix(e) {
                   printNotification(index,correlatedNames);
 
                   let objectToBeSent = {
-                    'correlatedSeries': correlationObject.correlatedSeries[index],
-                  'startTime':   correlationObject.startTime[index],
-                  'endTime':  correlationObject.endTime[index],
-                  'threshold':  correlationObject.threshold[index] 
+                    'correlatedSeries': [correlationObject.correlatedSeries[index]],
+                  'startTime':  [ correlationObject.startTime[index]],
+                  'endTime':  [correlationObject.endTime[index]],
+                  'threshold':  correlationObject.threshold[index]
                 } 
-                
-                  sendDetectdDataToBackend(e,objectToBeSent)
+                  console.log('hello from script');
+                  sendDetectdDataToBackend(objectToBeSent)
 
                   correlationObject.correlatedSeries.splice(index,1);
                   correlationObject.startTime.splice(index,1);
@@ -394,7 +393,7 @@ function enableControls() {
 
 
 // Initialize and set event listeners when the DOM is fully loaded
-document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener("DOMContentLoaded", async (e) => {
   chart = setupChart();
   await selectOptions();
 
@@ -421,7 +420,7 @@ document.getElementById("startButton").addEventListener("click", function(event)
     return;
   }
 
-  startDataUpdates();
+  startDataUpdates(e);
 });
 
 
