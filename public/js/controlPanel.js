@@ -21,3 +21,21 @@ export async function selectOptions() {
     });
 }
 
+export async function populateSelectDropdown() {
+    const collections = await fetchData('http://localhost:3000/api/collections');
+    const selectElement = document.getElementById('timeSeriesSelect');
+    selectElement.innerHTML = ''; // Clear existing options if any
+
+    collections.forEach(collection => {
+        // Create option element
+        const option = document.createElement('option');
+        option.value = collection;
+        option.textContent = collection;
+        option.disabled = true;
+        option.selected = false;
+
+
+        // Append to the select element
+        selectElement.appendChild(option);
+    });
+}

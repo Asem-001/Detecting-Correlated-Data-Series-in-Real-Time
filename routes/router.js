@@ -3,7 +3,7 @@ const Controller = require('../controller/controller');
 
 router.get('/', Controller.index);
 
-router.get('/adminreports', Controller.adminreports);
+router.get('/reports', Controller.reports);
 
 router.get('/detailedReport', Controller.detailedReport);
 

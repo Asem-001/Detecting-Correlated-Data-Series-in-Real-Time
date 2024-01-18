@@ -66,9 +66,9 @@ module.exports = {
 
   },
 
-  adminreports: (req, res) => {
+  reports: (req, res) => {
 
-    res.render("adminreports", {
+    res.render("reports", {
       title: "Reports",
     });
   },
