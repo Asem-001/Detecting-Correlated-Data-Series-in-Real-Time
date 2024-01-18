@@ -11,7 +11,7 @@ export const fetchData = async (url) => {
      currentIndex++;
 
      // Reset the index to 1 if it exceeds a certain value (e.g., 10)
-     if (currentIndex > 1000000) {
+     if (currentIndex > 6000) {
          currentIndex = 1;
      }
 
