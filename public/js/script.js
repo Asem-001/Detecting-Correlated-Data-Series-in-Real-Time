@@ -277,7 +277,7 @@ function calculateCorrelationMatrix(e) {
                   'endTime':  [correlationObject.endTime[index]],
                   'threshold':  correlationObject.threshold[index]
                 } 
-                  console.log('hello from script');
+                
                   sendDetectdDataToBackend(objectToBeSent)
 
                   correlationObject.correlatedSeries.splice(index,1);
