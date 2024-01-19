@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const controller = require('../controller/controller');
 const Controller = require('../controller/controller');
 
 router.get('/', Controller.index);
@@ -7,6 +8,8 @@ router.get('/reports', Controller.reports);
 
 router.get('/detailedReport', Controller.detailedReport);
 
+router.get('/login', controller.login);
+router.post('/login', controller.postLogin);
 
 router.get('/dashboard', Controller.dashboard);
 

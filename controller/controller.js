@@ -66,6 +66,16 @@ module.exports = {
 
   },
 
+  login: (req,res) =>{
+    res.render("login",{
+      title: 'login page',
+    })
+  },
+
+  postLogin: (req,res) =>{
+    console.log('t')
+  },
+
   reports: (req, res) => {
 
     res.render("reports", {
