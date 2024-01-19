@@ -83,10 +83,10 @@ async function addUser(name, Email ,password, IsAdmin, adminID) {
 
 
   
-async function searchUserID(name, password) {
+async function searchUserID(Email, password) {
     try {
       let matchedDate = null; // Initialize to null
-      const usersSnapshot = await query(collection(db, 'Users'), where("name", '==', name), where("password", '==', password));
+      const usersSnapshot = await query(collection(db, 'Users'), where("Email", '==', Email), where("password", '==', password));
       const querySnapshot = await getDocs(usersSnapshot);
   
       querySnapshot.forEach((doc) => {

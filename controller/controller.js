@@ -7,6 +7,10 @@ let IDforEndDate = []
 
 module.exports = {
 
+  home: (req, res) => {
+    res.redirect('/home')
+  },
+
   index: async (req, res) => {
 
     res.render("index", {
@@ -46,7 +50,7 @@ module.exports = {
     }
 
     // Redirect to the home page after processing all names
-    res.redirect('/');
+    res.redirect('/home')
 
 
   },
@@ -62,7 +66,7 @@ module.exports = {
     console.log(name);
     addDetectCorr(name[0], name[1], data.threshold, data.startTime[0], data.endTime[0]);
 
-    res.redirect('/');
+    res.redirect('/home')
 
   },
 

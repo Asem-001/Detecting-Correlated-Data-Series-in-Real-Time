@@ -5,6 +5,3 @@ forEach(link => {
         link.classList.remove('collapsed');
     }
 })
-
-
-// source of this code : https://www.youtube.com/watch?v=JkuiKeNS2mg

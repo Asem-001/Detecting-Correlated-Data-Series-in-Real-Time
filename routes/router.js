@@ -2,7 +2,9 @@ const router = require('express').Router();
 const controller = require('../controller/controller');
 const Controller = require('../controller/controller');
 
-router.get('/', Controller.index);
+router.get('/',controller.home)
+
+router.get('/home', Controller.index);
 
 router.get('/reports', Controller.reports);
 
