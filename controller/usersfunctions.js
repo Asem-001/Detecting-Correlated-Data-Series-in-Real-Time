@@ -63,18 +63,23 @@ async function addUser(Fname, Lname, Email, IsAdmin, adminID) {
   async function getAllUsers() {
     try {
       const usersSnapshot = await getDocs(collection(db, 'Users'));
+      const users = [];
   
       usersSnapshot.forEach((doc) => {
+        const user = doc.data();
+        user.id = doc.id;
+        users.push(user);
   
-        console.log(doc.id, " => ", doc.data());
+        // console.log(doc.id, " => ", user);
       });
-      return usersSnapshot
+  
+      return users;
     } catch (error) {
       console.error('Error fetching users:', error);
       throw error;  // Re-throw the error if you want to handle it outside this function
     }
-  
   }
+  
 
 
   

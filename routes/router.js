@@ -17,4 +17,12 @@ router.post('/sendbackend',Controller.addCorrelationData)
 
 router.post('/detectddatadackend',Controller.addDetectCorrelation)
 
+router.post('/addUser', Controller.addUser);
+
+router.put('/updateUser/:id', Controller.updateUser);
+
+router.get('/editUser/:id', Controller.editUser);
+
+router.delete('/delete/:id' , Controller.deleteUser)
+
 module.exports = router;

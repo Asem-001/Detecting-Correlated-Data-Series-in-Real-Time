@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title><%- title %> - Correl8</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <link href="../public/img/logo2.png" rel="icon">
+
+  <link href="https://fonts.gstatic.com" rel="preconnect">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <link href="../public/img/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+
+  <link href="../public/css/main.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+  <%- include('./partials/header.ejs') %>
+
+  <%- include('./partials/adminsidebar.ejs') %>
+
+
+  <main id="main" class="main">
+
+    <div class="pagetitle mb-4">
+      <h1>Dashboard</h1>
+    </div>
+
+    <section class="section dashboard">
+
+      <div class="card">
+        <div class="card-body mt-5" >
+
+          <!-- Default Tabs -->
+          <ul class="nav nav-tabs d-flex" id="myTabjustified" role="tablist">
+            <li class="nav-item flex-fill" role="presentation">
+              <button class="nav-link w-100 active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-justified" type="button" role="tab" aria-controls="home" aria-selected="true">Users</button>
+            </li>
+          </ul>
+          <div class="tab-content pt-2" id="myTabjustifiedContent">
+            <div class="tab-pane fade show active" id="home-justified" role="tabpanel" aria-labelledby="home-tab">
+
+                <div class="card-body" style="margin-top: 2%;">
+    
+                  <!-- Table with stripped rows -->
+                  <table class="table datatable">
+                    <thead>
+                      <tr>
+                        <th>User ID</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Email</th>
+                        <th>Permission</th>
+                        <th data-type="date" data-format="YYYY/DD/MM">Account Date</th>
+                        <th></th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <% users.forEach(function(user) { %>
+                        <% if(user.id == userId){ %> 
+                            <form action="/updateUser/<%= user.id%>?_method=PUT" method="POST"> 
+                            <tr>
+                                <td><input type="text" class="form-control" value="<%= user.AdminID %>" name="AdminID"></td>
+                                <td><input type="text" class="form-control" value="<%= user.Fname %>" name="Fname"></td>
+                                <td><input type="text" class="form-control" value="<%= user.Lname %>" name="Lname" ></td>
+                                <td><input type="text" class="form-control" value="<%= user.Email %>" name="email" ></td>
+                                <td>
+                                    <select class="form-select" id="validationCustom06" value= "<%= user.IsAdmin %>"  name="isAdmin" >
+                                    <option value="admin">Admin</option>
+                                    <option value="user">User</option>
+                                </select></td>
+                                <td><input type="text" class="form-control" value="<%= user.Created %>" name="date" ></td>
+                                
+                                <td>
+                                    <button type="submit" class="btn btn-link">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check" viewBox="0 0 16 16">
+                                            <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z"/>
+                                          </svg>
+                                    </button>
+                                    
+                                </td>
+                                <td>
+                                    <a style="text-decoration: none;" href="/dashboard">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                                            <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+                                          </svg>
+                                    </a>
+                                </td>
+                              </tr>
+                            </form>
+                        
+                            <% } else {%> 
+                        <tr>
+                          <td><%= user.AdminID %></td>
+                          <td><%= user.Fname %></td>
+                          <td><%= user.Lname %></td>
+                          <td><%= user.Email %></td>
+                          <td><%= user.IsAdmin %></td>
+                          <td><%= user.Created %></td>
+              
+                        </tr>
+                        <% } %> 
+                      <% }); %>
+                    </tbody>                    
+                  </table>
+                  <!-- End Table with stripped rows -->
+                </div>
+
+            </div>
+
+          </div>
+      </div>
+    </section>
+
+    
+  
+  </main>
+
+
+
+  <footer id="footer" class="footer">
+    <div class="copyright">
+      &copy; Copyright <strong><span>Corell8</span></strong>. All Rights Reserved
+    </div>
+  </footer>
+
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+  <script src="../public/js/script.js"></script>
+  <script src="../public/js/uiscript.js"></script>
+
+</body>
+
+</html>

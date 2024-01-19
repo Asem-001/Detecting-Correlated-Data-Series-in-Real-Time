@@ -80,22 +80,101 @@ module.exports = {
     });
   },
 
-  dashboard: (req, res) => {
-
-    res.render("dashboard", {
-      title: "Dashboard",
-    });
+  dashboard: async (req, res) => {
+    try {
+      const users = await getAllUsers();
+      // console.log(users)
+      res.render("dashboard", {
+        title: "Dashboard",
+        users: users,
+      });
+    } catch (error) {
+      console.error('Error fetching users:', error);
+      res.status(500).send('Internal Server Error');
+    }
   },
+  
 
   profile: (req, res) => {
 
     res.render("profile", {
       title: "Profile",
     });
-  }
+  },
+
+  addUser: async (req, res) => {
+    try {
+        // Extract user data from request body
+        let AdminID = req.body.AdminID;
+        let Fname = req.body.Fname;
+        let Lname = req.body.Lname;
+        let Email = req.body.email;
+        let IsAdmin = req.body.isAdmin;
+
+       
+        await addUser(Fname, Lname, Email, IsAdmin, AdminID);
+        console.log('User added successfuly')
+        res.redirect("/dashboard");
+    } catch (error) {
+        console.error('Error adding user:', error);
+        res.status(500).json({ success: false, error: 'Internal Server Error' });
+    }
+},
 
 
-};
+  updateUser: async (req, res) => {
+    try {
+      // Extract user data from request body
+      let id = req.params.id;
+
+      let user = {
+       AdminID : req.body.AdminID,
+       Fname : req.body.Fname,
+       Lname : req.body.Lname,
+       Email : req.body.email,
+       IsAdmin : req.body.isAdmin,
+       date : req.body.date
+      }
+      console.log(id , user)
+      // Edit user in the database
+      await updateUser(id , user);
+
+      // Send success response
+      res.redirect("/dashboard")
+    } catch (error) {
+      console.error('Error editing user:', error);
+      res.status(500).json({ success: false, error: 'Internal Server Error' });
+    }
+  },
+
+  editUser: async (req, res) => {
+    const id = req.params.id;
+    try {
+      const users = await getAllUsers();
+      console.log(users);
+      res.render("editUser", {
+        title: "editUser",
+        users: users,
+        userId: id,
+      });
+    } catch (error) {
+      console.error('Error fetching users:', error);
+      res.status(500).send('Internal Server Error');
+    }
+  },
+
+  deleteUser: async (req, res) => {
+    const id = req.params.id;
+    try {
+      await deleteUser(id)
+      res.redirect('/dashboard')
+    } catch (error) {
+      console.error('Error deleting users:', error);
+      res.status(500).send('Internal Server Error');
+    }
+  },
+},
+
 
 async function testdb() {
 
