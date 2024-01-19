@@ -8,13 +8,13 @@ const db = require("../models/config")
 
 
 
-async function addUser(Fname, Lname, Email, IsAdmin, adminID) {
+async function addUser(name, Email ,password, IsAdmin, adminID) {
     const date = new Date
   
-    const user = new userclass(Fname, Lname, Email, IsAdmin, adminID)
+    const user = new userclass(name, Email,password, IsAdmin, adminID)
   
     const docRef = await setDoc(doc(db, "Users", "" + date.getTime()), user).then(() => {
-      console.log(`The user ${user.fname} successfully added !`)
+      console.log(`The user ${user.name} successfully added !`+ user)
     });
   
   }
@@ -43,8 +43,8 @@ async function addUser(Fname, Lname, Email, IsAdmin, adminID) {
   
           if (user.AdminID == id) {
             console.log(user.AdminID == id);
-            const updatedUser = await searchUserID(user.Fname, user.Lname);
-            console.log(updatedUser, user.Fname, user.Lname);
+            const updatedUser = await searchUserID(user.name, user.password);
+            console.log(updatedUser, user.name, user.password);
             await updateUser(updatedUser, { "AdminID": null });
           }
         }
@@ -83,10 +83,10 @@ async function addUser(Fname, Lname, Email, IsAdmin, adminID) {
 
 
   
-async function searchUserID(Fname, Lname) {
+async function searchUserID(name, password) {
     try {
       let matchedDate = null; // Initialize to null
-      const usersSnapshot = await query(collection(db, 'Users'), where("Fname", '==', Fname), where("Lname", '==', Lname));
+      const usersSnapshot = await query(collection(db, 'Users'), where("name", '==', name), where("password", '==', password));
       const querySnapshot = await getDocs(usersSnapshot);
   
       querySnapshot.forEach((doc) => {

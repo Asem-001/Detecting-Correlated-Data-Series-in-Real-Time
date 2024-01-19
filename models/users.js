@@ -1,11 +1,11 @@
 
 class Users {
-    constructor( Fname,Lname,Email,IsAdmin,adminID) {
+    constructor( name,Email,password,IsAdmin,adminID) {
         let date = new Date
         return {
-            "Fname":Fname,
-            "Lname":Lname,
+            "name":name,
             "Email":Email,
+            "password":password,
             'Created': date.toLocaleString(),
             'IsAdmin':IsAdmin,
             "AdminID": adminID,

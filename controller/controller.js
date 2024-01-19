@@ -106,13 +106,13 @@ module.exports = {
     try {
         // Extract user data from request body
         let AdminID = req.body.AdminID;
-        let Fname = req.body.Fname;
-        let Lname = req.body.Lname;
+        let name = req.body.name;
         let Email = req.body.email;
+        let password = req.body.password;
         let IsAdmin = req.body.isAdmin;
 
        
-        await addUser(Fname, Lname, Email, IsAdmin, AdminID);
+        await addUser(name, Email , password, IsAdmin, AdminID);
         console.log('User added successfuly')
         res.redirect("/dashboard");
     } catch (error) {
@@ -129,9 +129,9 @@ module.exports = {
 
       let user = {
        AdminID : req.body.AdminID,
-       Fname : req.body.Fname,
-       Lname : req.body.Lname,
+       name : req.body.name,
        Email : req.body.email,
+       password : req.body.password,
        IsAdmin : req.body.isAdmin,
        date : req.body.date
       }
@@ -187,7 +187,7 @@ async function testdb() {
   addCorrData('youtube', 0.79, '2023/28/12', '2023,/29/12', 0)
 
   //update admin last name
-  updateUser(await searchUserID('ahmed', 'khaled'), { Lname: 'saleh' })
+  updateUser(await searchUserID('ahmed', 'khaled'), { password: 'saleh' })
   // search for user by his id 
   console.log(await searchUser('1703788699748'))
 
