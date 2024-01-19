@@ -8,10 +8,10 @@ const db = require("../models/config")
 
 
 
-async function addUser(Fname, Lname, Email, IsAdmin, adminID) {
+async function addUser(Fname, Lname, Email,password, IsAdmin, adminID) {
     const date = new Date
   
-    const user = new userclass(Fname, Lname, Email, IsAdmin, adminID)
+    const user = new userclass(Fname, Lname, Email,password, IsAdmin, adminID)
   
     const docRef = await setDoc(doc(db, "Users", "" + date.getTime()), user).then(() => {
       console.log(`The user ${user.fname} successfully added !`)
@@ -105,6 +105,29 @@ async function searchUserID(Fname, Lname) {
     }
   
   }
+    
+async function LoginQuery(email,password) {
+  try {
+    let matchedDate = null; // Initialize to null
+    const usersSnapshot = query(collection(db, 'Users'), where("Email", '==', email));
+    const querySnapshot = await getDocs(usersSnapshot);
+
+    querySnapshot.forEach((doc) => {
+      matchedDate = doc.id;
+    });
+
+    if (matchedDate) {
+      return matchedDate; // Return the matched data
+    } else {
+      console.log("No matching user found.");
+      return null; // Return null if no match found
+    }
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    throw error; // Re-throw the error if you want to handle it outside this function
+  }
+
+}
   
   async function searchUser(id) {
     try {
