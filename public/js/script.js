@@ -1,4 +1,4 @@
-import { pearsonCorrelation } from "./pearson.js";
+import { pearsonCorrelation ,ENHANCED_BRAID} from "./pearson.js";
 import { selectOptions, removeSeriesFromSelected, selectedSeries } from "./controlPanel.js";
 import { fetchData } from "./ApiHandler.js";
 import { sendTotalDataToBackend ,sendDetectdDataToBackend} from "./sendToBackend.js";
@@ -225,6 +225,21 @@ function stopDataUpdates(e) {
   }
 }
 
+
+function findIndex(arr, i, j) {
+  // console.log('I am in FindIndex',arr, j,i);
+
+  // console.log('I am in FindIndex', arr[j][i]);
+  
+ 
+  if (arr[j][i] == undefined) {
+    return -1;
+  }
+ 
+  return 1;
+ }
+
+let pearsonData =[[]]
 // Calculates and returns a correlation matrix for the current datasets
 function calculateCorrelationMatrix(e) {
 
@@ -241,9 +256,32 @@ function calculateCorrelationMatrix(e) {
       } else if (i >= j) {
         let array1 = datasets[i].data.slice(0, sliceSize);
         let array2 = datasets[j].data.slice(0, sliceSize);
-
+        
         if (array1.length == array2.length && array1.length == sliceSize) {
+          if (pearsonData[j] === undefined || pearsonData[j][i] === undefined) {
+            pearsonData[j] = pearsonData[j] || [];
+            pearsonData[j][i] = pearsonData[j][i] || [];
+            pearsonData[j][i].push(0, 0, 0, 0, 0, 0, 0);
+          }
+
+          
+        
+          console.log(datasets[i].label, datasets[j].label, i,j);
           const correlation = pearsonCorrelation(array1, array2).toFixed(2);
+       
+          const [re, gx, gy, sx, sy, sxy, sxx, syy] =  ENHANCED_BRAID(array1, array2, pearsonData[j][i][0],  pearsonData[j][i][1],  
+                                                                 pearsonData[j][i][2],  pearsonData[j][i][3], pearsonData[j][i][4], pearsonData[j][i][5], pearsonData[j][i][6]);
+           console.log('after the ENHANCED_BRAID', re.toFixed(2));
+          console.log('aftet person ', correlation);
+        
+          pearsonData[j][i][0] = gx
+          pearsonData[j][i][1] = gy 
+          pearsonData[j][i][2] = sx
+          pearsonData[j][i][3]= sy 
+          pearsonData[j][i][4]= sxy
+          pearsonData[j][i][5]= sxx
+          pearsonData[j][i][6]= syy
+
 
           let string = '';
           string = datasets[i].label +","+datasets[j].label
