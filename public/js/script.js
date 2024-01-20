@@ -242,9 +242,11 @@ function findIndex(arr, i, j) {
 
 // Calculates and returns a correlation matrix for the current datasets
 function calculateCorrelationMatrix(e) {
-  let typeOfFunction = document.getElementById('functionSelect');
+
+  let typeOfFunction = document.getElementById('functionSelect').value;
   const sliceSize = parseInt(document.getElementById("sliceSizeSelect").value,10);
   const correlationMatrix = [];
+
   for (let i = 0; i < datasets.length; i++) {
     const row = [];
     for (let j = 0; j < datasets.length; j++) {
@@ -256,10 +258,10 @@ function calculateCorrelationMatrix(e) {
         
         if (array1.length == array2.length && array1.length == sliceSize) {
           let correlation, gx, gy, sx, sy, sxy, sxx, syy;
-
+        
           if(typeOfFunction == "pearson"){
             console.log(datasets[i].label, datasets[j].label, i,j);
-            correlation = pearsonCorrelation(array1, array2).toFixed(2);
+            correlation = pearsonCorrelation(array1, array2);
             console.log('after person ', correlation);
           }else{
             if (pearsonData[j] === undefined || pearsonData[j][i] === undefined) {
@@ -270,7 +272,7 @@ function calculateCorrelationMatrix(e) {
             [correlation, gx, gy, sx, sy, sxy, sxx, syy] =  pearsonEnhanced(array1, array2, pearsonData[j][i][0],  pearsonData[j][i][1],  
               pearsonData[j][i][2],  pearsonData[j][i][3], pearsonData[j][i][4], pearsonData[j][i][5], pearsonData[j][i][6]);
 
-              console.log('after the pearsonEnhanced', correlation.toFixed(2));
+              console.log('after the pearsonEnhanced', correlation);
 
               pearsonData[j][i][0] = gx
               pearsonData[j][i][1] = gy 
@@ -281,7 +283,8 @@ function calculateCorrelationMatrix(e) {
               pearsonData[j][i][6]= syy
     
             }
-          
+
+            correlation = correlation.toFixed(2);
 
           let string = '';
           string = datasets[i].label +","+datasets[j].label
