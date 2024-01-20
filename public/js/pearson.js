@@ -52,16 +52,20 @@ export function pearsonCorrelation(x, y) {
 
 }
 
+// @param x , y is the time series we want to calculate
+// @param y is the other time want to calculate
+// @param Gx ,Gy  is the the last value in the time series will be stored in global variable for each time series
+// @param Sx , Sy is the sum of the time series 
+// @param Sxx , Syy is the sum of the sequared point in the time series 
+// @param Sxy is the sum of multiplication between x and y
 
-
-export function ENHANCED_BRAID(x, y, Gx, Gy, Sx, Sy, Sxy, Sxx, Syy) {
+export function pearsonEnhanced(x, y, Gx, Gy, Sx, Sy, Sxy, Sxx, Syy) {
   // console.log('Gx, Gy, Sx, Sy, Sxy', Gx, Gy, Sx, Sy, Sxy, Sxx, Syy);
   let [Vx, Vy, c, correlation] = [0.0, 0.0, 0.0, 0.0];
   // console.log('inside the function x', x);
   // console.log('inside the function  y ', y);
   // console.log(Sxy, Sxx, Syy, Vx, Vy, c);
  
-  
   const n = x.length
 
   if (Sx == 0 ) {
@@ -72,12 +76,9 @@ export function ENHANCED_BRAID(x, y, Gx, Gy, Sx, Sy, Sxy, Sxx, Syy) {
           Sy += y[i];
           Syy += (y[i] ** 2);
 
-
           Sxy += x[i] * y[i];
       }
-
       // console.log('Sx, Sxx, Sy, Syy, Sxy',Sx, Sxx, Sy, Syy, Sxy);
-
   }
   else {
       console.log('iam here in Gx');
@@ -117,7 +118,7 @@ export function ENHANCED_BRAID(x, y, Gx, Gy, Sx, Sy, Sxy, Sxx, Syy) {
   // console.log('Sxx,',  Sxx);
   // console.log('Syy,', Syy);
 
-
+// calculating the variance 
   Vx = Sxx - ((Sx ** 2) / n);
   Vy = Syy - ((Sy ** 2) / n);
 

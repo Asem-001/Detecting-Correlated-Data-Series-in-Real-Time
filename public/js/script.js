@@ -1,4 +1,4 @@
-import { pearsonCorrelation ,ENHANCED_BRAID} from "./pearson.js";
+import { pearsonCorrelation ,pearsonEnhanced} from "./pearson.js";
 import { selectOptions, removeSeriesFromSelected, selectedSeries } from "./controlPanel.js";
 import { fetchData } from "./ApiHandler.js";
 import { sendTotalDataToBackend ,sendDetectdDataToBackend} from "./sendToBackend.js";
@@ -13,7 +13,7 @@ let correlationObject = {'correlatedSeries': [],
                          'startTime': [],
                          'endTime': [],
                          'threshold': [] } 
-
+let pearsonData =[[]]
 
 // Returns current time as a string
 function getCurrentTime() {
@@ -239,14 +239,11 @@ function findIndex(arr, i, j) {
   return 1;
  }
 
-let pearsonData =[[]]
+
 // Calculates and returns a correlation matrix for the current datasets
 function calculateCorrelationMatrix(e) {
-
-  const sliceSize = parseInt(
-    document.getElementById("sliceSizeSelect").value,
-    10
-  );
+  let typeOfFunction = document.getElementById('functionSelect');
+  const sliceSize = parseInt(document.getElementById("sliceSizeSelect").value,10);
   const correlationMatrix = [];
   for (let i = 0; i < datasets.length; i++) {
     const row = [];
@@ -258,30 +255,33 @@ function calculateCorrelationMatrix(e) {
         let array2 = datasets[j].data.slice(0, sliceSize);
         
         if (array1.length == array2.length && array1.length == sliceSize) {
-          if (pearsonData[j] === undefined || pearsonData[j][i] === undefined) {
-            pearsonData[j] = pearsonData[j] || [];
-            pearsonData[j][i] = pearsonData[j][i] || [];
-            pearsonData[j][i].push(0, 0, 0, 0, 0, 0, 0);
-          }
+          let correlation, gx, gy, sx, sy, sxy, sxx, syy;
 
+          if(typeOfFunction == "pearson"){
+            console.log(datasets[i].label, datasets[j].label, i,j);
+            correlation = pearsonCorrelation(array1, array2).toFixed(2);
+            console.log('after person ', correlation);
+          }else{
+            if (pearsonData[j] === undefined || pearsonData[j][i] === undefined) {
+              pearsonData[j] = pearsonData[j] || [];
+              pearsonData[j][i] = pearsonData[j][i] || [];
+              pearsonData[j][i].push(0, 0, 0, 0, 0, 0, 0);
+            }
+            [correlation, gx, gy, sx, sy, sxy, sxx, syy] =  pearsonEnhanced(array1, array2, pearsonData[j][i][0],  pearsonData[j][i][1],  
+              pearsonData[j][i][2],  pearsonData[j][i][3], pearsonData[j][i][4], pearsonData[j][i][5], pearsonData[j][i][6]);
+
+              console.log('after the pearsonEnhanced', correlation.toFixed(2));
+
+              pearsonData[j][i][0] = gx
+              pearsonData[j][i][1] = gy 
+              pearsonData[j][i][2] = sx
+              pearsonData[j][i][3]= sy 
+              pearsonData[j][i][4]= sxy
+              pearsonData[j][i][5]= sxx
+              pearsonData[j][i][6]= syy
+    
+            }
           
-        
-          console.log(datasets[i].label, datasets[j].label, i,j);
-          const correlation = pearsonCorrelation(array1, array2).toFixed(2);
-       
-          const [re, gx, gy, sx, sy, sxy, sxx, syy] =  ENHANCED_BRAID(array1, array2, pearsonData[j][i][0],  pearsonData[j][i][1],  
-                                                                 pearsonData[j][i][2],  pearsonData[j][i][3], pearsonData[j][i][4], pearsonData[j][i][5], pearsonData[j][i][6]);
-           console.log('after the ENHANCED_BRAID', re.toFixed(2));
-          console.log('aftet person ', correlation);
-        
-          pearsonData[j][i][0] = gx
-          pearsonData[j][i][1] = gy 
-          pearsonData[j][i][2] = sx
-          pearsonData[j][i][3]= sy 
-          pearsonData[j][i][4]= sxy
-          pearsonData[j][i][5]= sxx
-          pearsonData[j][i][6]= syy
-
 
           let string = '';
           string = datasets[i].label +","+datasets[j].label
