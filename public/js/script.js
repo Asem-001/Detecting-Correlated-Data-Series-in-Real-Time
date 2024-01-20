@@ -14,7 +14,7 @@ let correlationObject = {'correlatedSeries': [],
                          'endTime': [],
                          'threshold': [] } 
 let pearsonData =[[]]
-let windowSize = 0;
+let windowSize = 0
 // Returns current time as a string
 function getCurrentTime() {
   return new Date().toLocaleTimeString();
@@ -226,22 +226,11 @@ function stopDataUpdates(e) {
 }
 
 
-function findIndex(arr, i, j) {
-  // console.log('I am in FindIndex',arr, j,i);
-
-  // console.log('I am in FindIndex', arr[j][i]);
-  
- 
-  if (arr[j][i] == undefined) {
-    return -1;
-  }
- 
-  return 1;
- }
 
 
 // Calculates and returns a correlation matrix for the current datasets
 function calculateCorrelationMatrix(e) {
+  let correlation, gx, gy, sx, sy, sxy, sxx, syy,n;
 
   let typeOfFunction = document.getElementById('functionSelect').value;
   const sliceSize = parseInt(document.getElementById("sliceSizeSelect").value,10);
@@ -257,34 +246,28 @@ function calculateCorrelationMatrix(e) {
         let array2 = datasets[j].data.slice(0, sliceSize);
         
         if (array1.length == array2.length && array1.length == sliceSize) {
-          let correlation, gx, gy, sx, sy, sxy, sxx, syy;
         
           if(typeOfFunction == "pearson"){
             console.log(datasets[i].label, datasets[j].label, i,j);
             correlation = pearsonCorrelation(array1, array2);
             console.log('after person ', correlation);
           }else{
-            console.log(windowSize,sliceSize);
+            // console.log(windowSize,sliceSize);
             //console.log(pearsonData[j][i]);
             if (pearsonData[j] === undefined || pearsonData[j][i] === undefined ) {
               pearsonData[j] = pearsonData[j] || [];
               pearsonData[j][i] = pearsonData[j][i] || [];
-              pearsonData[j][i].push(0, 0, 0, 0, 0, 0, 0);
+              pearsonData[j][i].push(0, 0, 0, 0, 0, 0, 0,windowSize);
             }
-            if( windowSize != sliceSize){
-              pearsonData[j] = pearsonData[j] || [];
-              pearsonData[j][i] = pearsonData[j][i] || [];
-              pearsonData[j][i].splice(0, 7)
-              pearsonData[j][i].push(0, 0, 0, 0, 0, 0, 0);
-              windowSize = sliceSize;
-            }
-
-            [correlation, gx, gy, sx, sy, sxy, sxx, syy] =  pearsonEnhanced(array1, array2, pearsonData[j][i][0],  pearsonData[j][i][1],  
-              pearsonData[j][i][2],  pearsonData[j][i][3], pearsonData[j][i][4], pearsonData[j][i][5], pearsonData[j][i][6]);
-
+           
+            // console.log(pearsonData[j][i]);
+            [correlation, gx, gy, sx, sy, sxy, sxx, syy,n] = pearsonEnhanced(array1, array2, pearsonData[j][i][0],  pearsonData[j][i][1],  
+              pearsonData[j][i][2],  pearsonData[j][i][3], pearsonData[j][i][4], pearsonData[j][i][5], pearsonData[j][i][6],pearsonData[j][i][7]);
+              
+           
               console.log('after the pearsonEnhanced', correlation);
-              console.log(correlation, gx, gy, sx, sy, sxy, sxx, syy);
-
+              console.log(correlation, gx, gy, sx, sy, sxy, sxx, syy,n);
+              
               pearsonData[j][i][0] = gx
               pearsonData[j][i][1] = gy 
               pearsonData[j][i][2] = sx
@@ -292,6 +275,8 @@ function calculateCorrelationMatrix(e) {
               pearsonData[j][i][4]= sxy
               pearsonData[j][i][5]= sxx
               pearsonData[j][i][6]= syy
+              pearsonData[j][i][7]= n
+
     
             }
 

@@ -59,17 +59,26 @@ export function pearsonCorrelation(x, y) {
 // @param Sxx , Syy is the sum of the sequared point in the time series 
 // @param Sxy is the sum of multiplication between x and y
 
-export function pearsonEnhanced(x, y, Gx, Gy, Sx, Sy, Sxy, Sxx, Syy) {
+export function pearsonEnhanced(x, y, Gx, Gy, Sx, Sy, Sxy, Sxx, Syy,windowSize) {
   let computationCounter = 0;
   // console.log('Gx, Gy, Sx, Sy, Sxy', Gx, Gy, Sx, Sy, Sxy, Sxx, Syy);
   let [Vx, Vy, c, correlation] = [0.0, 0.0, 0.0, 0.0];
   // console.log('inside the function x', x);
   // console.log('inside the function  y ', y);
   // console.log(Sxy, Sxx, Syy, Vx, Vy, c);
- 
   const n = x.length
+  console.log(windowSize,n);
+  console.log(windowSize !=n);
+   
+  if( windowSize !=n){
+     [Gx, Gy, Sx, Sy, Sxy, Sxx, Syy] = [0,0,0,0,0,0,0]
+       console.log('Innnnn',Gx, Gy, Sx, Sy, Sxy, Sxx, Syy);
+    windowSize = n
+  }
 
-  if (Sx == 0  && Sy ==0) {
+  if ((Sx == 0  && Sy ==0 )) {
+       console.log(windowSize,n);
+
       for (let i = 0; i <x.length; i++) {
        
           Sx += x[i];
@@ -163,7 +172,7 @@ export function pearsonEnhanced(x, y, Gx, Gy, Sx, Sy, Sxy, Sxx, Syy) {
   }
 
    
-  return [correlation, Gx, Gy, Sx, Sy, Sxy, Sxx, Syy];
+  return [correlation, Gx, Gy, Sx, Sy, Sxy, Sxx, Syy,windowSize];
 
 
 }
