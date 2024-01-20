@@ -266,7 +266,7 @@ function calculateCorrelationMatrix(e) {
               
            
               console.log('after the pearsonEnhanced', correlation);
-              console.log(correlation, gx, gy, sx, sy, sxy, sxx, syy,n);
+            //  console.log(correlation, gx, gy, sx, sy, sxy, sxx, syy,n);
               
               pearsonData[j][i][0] = gx
               pearsonData[j][i][1] = gy 

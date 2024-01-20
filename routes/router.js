@@ -1,6 +1,12 @@
 const router = require('express').Router();
+const passport = require('passport');
 const controller = require('../controller/controller');
 const Controller = require('../controller/controller');
+
+
+const initializePassport = require('../passport-config');
+
+initializePassport(passport)
 
 router.get('/',controller.home)
 
@@ -11,7 +17,12 @@ router.get('/reports', Controller.reports);
 router.get('/detailedReport', Controller.detailedReport);
 
 router.get('/login', controller.login);
-router.post('/login', controller.postLogin);
+
+router.post('/login', passport.authenticate('local',{
+    successRedirect: '/home',
+    failureRedirect: '/login',
+    failureFlash: true
+}));
 
 router.get('/dashboard', Controller.dashboard);
 

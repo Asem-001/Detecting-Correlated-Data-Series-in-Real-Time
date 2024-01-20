@@ -2,7 +2,6 @@ const { searchUser, searchUserID, getAllUsers, deleteUser, updateUser, addUser }
 const { addDetectCorr, addCorrData, CorrelationSearch, updateCorrleationData } = require('./correlationFunctions')
 
 
-
 let IDforEndDate = []
 
 module.exports = {
@@ -76,9 +75,7 @@ module.exports = {
     })
   },
 
-  postLogin: (req,res) =>{
-    console.log('t')
-  },
+  postLogin: async(req,res) =>{},
 
   reports: (req, res) => {
 
@@ -122,7 +119,7 @@ module.exports = {
         let AdminID = req.body.AdminID;
         let name = req.body.name;
         let Email = req.body.email;
-        let password = req.body.password;
+        let password = await bcrypt.hash(req.body.password,12);
         let IsAdmin = req.body.isAdmin;
 
        
