@@ -1,4 +1,4 @@
-import { pearsonCorrelation } from "./pearson.js";
+import { pearsonCorrelation ,pearsonEnhanced} from "./pearson.js";
 import { selectOptions, removeSeriesFromSelected, selectedSeries } from "./controlPanel.js";
 import { fetchData } from "./ApiHandler.js";
 import { sendTotalDataToBackend ,sendDetectdDataToBackend} from "./sendToBackend.js";
@@ -13,8 +13,8 @@ let correlationObject = {'correlatedSeries': [],
                          'startTime': [],
                          'endTime': [],
                          'threshold': [] } 
-
-
+let pearsonData =[[]]
+let windowSize = 0
 // Returns current time as a string
 function getCurrentTime() {
   return new Date().toLocaleTimeString();
@@ -225,14 +225,17 @@ function stopDataUpdates(e) {
   }
 }
 
+
+
+
 // Calculates and returns a correlation matrix for the current datasets
 function calculateCorrelationMatrix(e) {
+  let correlation, gx, gy, sx, sy, sxy, sxx, syy,n;
 
-  const sliceSize = parseInt(
-    document.getElementById("sliceSizeSelect").value,
-    10
-  );
+  let typeOfFunction = document.getElementById('functionSelect').value;
+  const sliceSize = parseInt(document.getElementById("sliceSizeSelect").value,10);
   const correlationMatrix = [];
+
   for (let i = 0; i < datasets.length; i++) {
     const row = [];
     for (let j = 0; j < datasets.length; j++) {
@@ -241,9 +244,43 @@ function calculateCorrelationMatrix(e) {
       } else if (i >= j) {
         let array1 = datasets[i].data.slice(0, sliceSize);
         let array2 = datasets[j].data.slice(0, sliceSize);
-
+        
         if (array1.length == array2.length && array1.length == sliceSize) {
-          const correlation = pearsonCorrelation(array1, array2).toFixed(2);
+        
+          if(typeOfFunction == "pearson"){
+            console.log(datasets[i].label, datasets[j].label, i,j);
+            correlation = pearsonCorrelation(array1, array2);
+            console.log('after person ', correlation);
+          }else{
+            // console.log(windowSize,sliceSize);
+            //console.log(pearsonData[j][i]);
+            if (pearsonData[j] === undefined || pearsonData[j][i] === undefined ) {
+              pearsonData[j] = pearsonData[j] || [];
+              pearsonData[j][i] = pearsonData[j][i] || [];
+              pearsonData[j][i].push(0, 0, 0, 0, 0, 0, 0,windowSize);
+            }
+           
+            // console.log(pearsonData[j][i]);
+            [correlation, gx, gy, sx, sy, sxy, sxx, syy,n] = pearsonEnhanced(array1, array2, pearsonData[j][i][0],  pearsonData[j][i][1],  
+              pearsonData[j][i][2],  pearsonData[j][i][3], pearsonData[j][i][4], pearsonData[j][i][5], pearsonData[j][i][6],pearsonData[j][i][7]);
+              
+           
+              console.log('after the pearsonEnhanced', correlation);
+              console.log(correlation, gx, gy, sx, sy, sxy, sxx, syy,n);
+              
+              pearsonData[j][i][0] = gx
+              pearsonData[j][i][1] = gy 
+              pearsonData[j][i][2] = sx
+              pearsonData[j][i][3]= sy 
+              pearsonData[j][i][4]= sxy
+              pearsonData[j][i][5]= sxx
+              pearsonData[j][i][6]= syy
+              pearsonData[j][i][7]= n
+
+    
+            }
+
+            correlation = correlation.toFixed(2);
 
           let string = '';
           string = datasets[i].label +","+datasets[j].label
