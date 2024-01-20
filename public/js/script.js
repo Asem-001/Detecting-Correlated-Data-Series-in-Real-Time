@@ -14,7 +14,7 @@ let correlationObject = {'correlatedSeries': [],
                          'endTime': [],
                          'threshold': [] } 
 let pearsonData =[[]]
-
+let windowSize = 0;
 // Returns current time as a string
 function getCurrentTime() {
   return new Date().toLocaleTimeString();
@@ -264,15 +264,26 @@ function calculateCorrelationMatrix(e) {
             correlation = pearsonCorrelation(array1, array2);
             console.log('after person ', correlation);
           }else{
-            if (pearsonData[j] === undefined || pearsonData[j][i] === undefined) {
+            console.log(windowSize,sliceSize);
+            //console.log(pearsonData[j][i]);
+            if (pearsonData[j] === undefined || pearsonData[j][i] === undefined ) {
               pearsonData[j] = pearsonData[j] || [];
               pearsonData[j][i] = pearsonData[j][i] || [];
               pearsonData[j][i].push(0, 0, 0, 0, 0, 0, 0);
             }
+            if( windowSize != sliceSize){
+              pearsonData[j] = pearsonData[j] || [];
+              pearsonData[j][i] = pearsonData[j][i] || [];
+              pearsonData[j][i].splice(0, 7)
+              pearsonData[j][i].push(0, 0, 0, 0, 0, 0, 0);
+              windowSize = sliceSize;
+            }
+
             [correlation, gx, gy, sx, sy, sxy, sxx, syy] =  pearsonEnhanced(array1, array2, pearsonData[j][i][0],  pearsonData[j][i][1],  
               pearsonData[j][i][2],  pearsonData[j][i][3], pearsonData[j][i][4], pearsonData[j][i][5], pearsonData[j][i][6]);
 
               console.log('after the pearsonEnhanced', correlation);
+              console.log(correlation, gx, gy, sx, sy, sxy, sxx, syy);
 
               pearsonData[j][i][0] = gx
               pearsonData[j][i][1] = gy 

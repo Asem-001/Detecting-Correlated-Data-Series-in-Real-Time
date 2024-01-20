@@ -69,7 +69,7 @@ export function pearsonEnhanced(x, y, Gx, Gy, Sx, Sy, Sxy, Sxx, Syy) {
  
   const n = x.length
 
-  if (Sx == 0 ) {
+  if (Sx == 0  && Sy ==0) {
       for (let i = 0; i <x.length; i++) {
        
           Sx += x[i];
@@ -162,7 +162,7 @@ export function pearsonEnhanced(x, y, Gx, Gy, Sx, Sy, Sxy, Sxx, Syy) {
       correlation = 0
   }
 
-
+   
   return [correlation, Gx, Gy, Sx, Sy, Sxy, Sxx, Syy];
 
 
