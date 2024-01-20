@@ -60,6 +60,7 @@ export function pearsonCorrelation(x, y) {
 // @param Sxy is the sum of multiplication between x and y
 
 export function pearsonEnhanced(x, y, Gx, Gy, Sx, Sy, Sxy, Sxx, Syy) {
+  let computationCounter = 0;
   // console.log('Gx, Gy, Sx, Sy, Sxy', Gx, Gy, Sx, Sy, Sxy, Sxx, Syy);
   let [Vx, Vy, c, correlation] = [0.0, 0.0, 0.0, 0.0];
   // console.log('inside the function x', x);
@@ -72,11 +73,19 @@ export function pearsonEnhanced(x, y, Gx, Gy, Sx, Sy, Sxy, Sxx, Syy) {
       for (let i = 0; i <x.length; i++) {
        
           Sx += x[i];
+          computationCounter++;
+
           Sxx += (x[i] ** 2);
+          computationCounter += 2;
+
           Sy += y[i];
+          computationCounter++;
+
           Syy += (y[i] ** 2);
+          computationCounter += 2;
 
           Sxy += x[i] * y[i];
+          computationCounter += 2;
       }
       // console.log('Sx, Sxx, Sy, Syy, Sxy',Sx, Sxx, Sy, Syy, Sxy);
   }
@@ -85,20 +94,25 @@ export function pearsonEnhanced(x, y, Gx, Gy, Sx, Sy, Sxy, Sxx, Syy) {
 
       // // console.log(x[x.length - 1] != Gx);
       // console.log('test x y',x[0],y[0]);
-      Sx =Sx- Gx +x[0]
+      Sx =Sx - Gx + x[0]
+      computationCounter += 2;
       // Sx =Sx+x[0];
-      Sy =Sy- Gy  +y[0];
+      Sy =Sy - Gy + y[0];
+      computationCounter += 2;
       // Sy =Sy+y[0];
 
-      Sxy =Sxy- (Gx * Gy) + (x[0] * y[0]);
+      Sxy =Sxy - (Gx * Gy) + (x[0] * y[0]);
+      computationCounter += 4;
       // Sxy =Sxy+ (x[0] * y[0]);
       // console.log('---------------------------------------');
 
      
-      Sxx = Sxx- (Gx ** 2) + (x[0]) ** 2;
+      Sxx = Sxx - (Gx ** 2) + (x[0]) ** 2;
+      computationCounter += 4;
       // Sxx = Sxx+ (x[0]) ** 2;
 
-      Syy = Syy- (Gy ** 2) + (y[0])**2;
+      Syy = Syy - (Gy ** 2) + (y[0]) ** 2;
+      computationCounter += 4;
       // Syy = Syy+ (y[0])**2;
       
       // console.log('---------------------------------------');
@@ -120,12 +134,19 @@ export function pearsonEnhanced(x, y, Gx, Gy, Sx, Sy, Sxy, Sxx, Syy) {
 
 // calculating the variance 
   Vx = Sxx - ((Sx ** 2) / n);
+  computationCounter += 3;
+
   Vy = Syy - ((Sy ** 2) / n);
+  computationCounter += 3;
 
   c = Sxy - ((Sx * Sy) / n);
+  computationCounter += 3;
 
   let V = Math.sqrt(Vx * Vy);
+  computationCounter += 2;
+
   correlation = (c / V);
+  computationCounter++;
   // console.log('corr:',correlation, Vx, Vy, c, n);
   // console.log( (c / V));
 
@@ -133,7 +154,7 @@ export function pearsonEnhanced(x, y, Gx, Gy, Sx, Sy, Sxy, Sxx, Syy) {
   Gx = x[x.length - 1];
   Gy = y[y.length - 1];
   
-  // document.getElementById("computation").innerText = " "+computationCounter;
+  document.getElementById("computation").innerText = " "+computationCounter;
 
 
   if (isNaN(correlation)) {
