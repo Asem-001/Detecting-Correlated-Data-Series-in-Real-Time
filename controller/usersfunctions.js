@@ -1,4 +1,3 @@
-const { CorrelationData, DetectedCorrelation } = require('../models/coreelation')
 const userclass = require("../models/users")
 const { doc, collection, addDoc, setDoc, getDoc, updateDoc, deleteDoc, deleteField, Timestamp, getDocs, query, where } = require("firebase/firestore");
 const db = require("../models/config")
@@ -8,12 +7,13 @@ const db = require("../models/config")
 
 
 
-async function addUser(name, Email ,password, IsAdmin, adminID) {
+async function addUser(Fname,Lname, Email ,password, IsAdmin, adminID) {
     const date = new Date
+    const id = date.getFullYear().toString().slice(-2)+date.getTime()% 100000
+   
+    const user = new userclass(id,Fname,Lname, Email,password, IsAdmin, adminID)
   
-    const user = new userclass(name, Email,password, IsAdmin, adminID)
-  
-    const docRef = await setDoc(doc(db, "Users", "" + date.getTime()), user).then(() => {
+    const docRef = await setDoc(doc(db, "Users", "" + id), user).then(() => {
       console.log(`The user ${user.name} successfully added !`+ user)
     });
   
@@ -44,7 +44,7 @@ async function addUser(name, Email ,password, IsAdmin, adminID) {
           if (user.AdminID == id) {
             console.log(user.AdminID == id);
             const updatedUser = await searchUserID(user.name, user.password);
-            console.log(updatedUser, user.name, user.password);
+            console.log(updatedUser, user.Fname, user.password);
             await updateUser(updatedUser, { "AdminID": null });
           }
         }

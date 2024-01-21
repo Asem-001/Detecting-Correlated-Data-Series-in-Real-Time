@@ -7,7 +7,9 @@ let IDforEndDate = []
 module.exports = {
 
   index: (req, res) => {
+    
     res.redirect('/home')
+    
   },
 
   home: async (req, res) => {
@@ -70,6 +72,7 @@ module.exports = {
   },
 
   login: (req,res) =>{
+    // addUser('ahmed','ali', 'ahmed@hotmail.com','123321', true, null)
     res.render("login",{
       title: 'login page',
       user: req.user
@@ -131,13 +134,19 @@ module.exports = {
     try {
         // Extract user data from request body
         let AdminID = req.body.AdminID;
-        let name = req.body.name;
+        let Fname = req.body.Fname;
+        let Lname = req.body.Lname;
         let Email = req.body.email;
         let password = await bcrypt.hash(req.body.password,6);
         let IsAdmin = req.body.isAdmin;
+        if(IsAdmin != Boolean){
+          console.log('the IsAdmin var must!!!!!! be boolean ');
+          // res.redirect("/dashboard");
+          return
+        }
 
        
-        await addUser(name, Email , password, IsAdmin, AdminID);
+        await addUser(Fname,Lname, Email , password, IsAdmin, AdminID);
         console.log('User added successfuly')
         res.redirect("/dashboard");
     } catch (error) {
