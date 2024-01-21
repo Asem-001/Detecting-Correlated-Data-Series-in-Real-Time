@@ -2,6 +2,7 @@ const userclass = require("../models/users")
 const { doc, collection, addDoc, setDoc, getDoc, updateDoc, deleteDoc, deleteField, Timestamp, getDocs, query, where } = require("firebase/firestore");
 const db = require("../models/config")
 
+bcrypt = require('bcrypt')
 
 
 
@@ -10,7 +11,7 @@ const db = require("../models/config")
 async function addUser(Fname,Lname, Email ,password, IsAdmin, adminID) {
     const date = new Date
     const id = date.getFullYear().toString().slice(-2)+date.getTime()% 100000
-   
+    //  password = await bcrypt.hash(password,6);
     const user = new userclass(id,Fname,Lname, Email,password, IsAdmin, adminID)
   
     const docRef = await setDoc(doc(db, "Users", "" + id), user).then(() => {
@@ -118,17 +119,8 @@ async function searchUserID(Email, password) {
 
         let user = docSnapshot.data()
         
-        let fullUser = {
-          id: id,
-          AdminID: user.AdminID,
-          Created: user.Created,
-          Email: user.Email,
-          IsAdmin: user.IsAdmin,
-          name: user.name,
-          password: user.password ,
-        }
-
-        return fullUser ;
+       
+        return user ;
       } else {
         console.log('No such document!');
         return null;
