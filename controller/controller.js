@@ -1,6 +1,6 @@
 const { searchUser, searchUserID, getAllUsers, deleteUser, updateUser, addUser } = require('./usersfunctions')
 const { addDetectCorr, addCorrData, CorrelationSearch, updateCorrleationData } = require('./correlationFunctions')
-
+bcrypt = require('bcrypt')
 
 let IDforEndDate = []
 
@@ -119,7 +119,7 @@ module.exports = {
         let AdminID = req.body.AdminID;
         let name = req.body.name;
         let Email = req.body.email;
-        let password = await bcrypt.hash(req.body.password,12);
+        let password = await bcrypt.hash(req.body.password,6);
         let IsAdmin = req.body.isAdmin;
 
        
@@ -142,7 +142,7 @@ module.exports = {
        AdminID : req.body.AdminID,
        name : req.body.name,
        Email : req.body.email,
-       password : req.body.password,
+       password : await bcrypt.hash(req.body.password,6),
        IsAdmin : req.body.isAdmin,
        date : req.body.date
       }

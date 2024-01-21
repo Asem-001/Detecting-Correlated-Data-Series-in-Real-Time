@@ -115,7 +115,20 @@ async function searchUserID(Email, password) {
       const docSnapshot = await getDoc(docRef);
   
       if (docSnapshot.exists()) {
-        return docSnapshot.data();
+
+        let user = docSnapshot.data()
+        
+        let fullUser = {
+          id: id,
+          AdminID: user.AdminID,
+          Created: user.Created,
+          Email: user.Email,
+          IsAdmin: user.IsAdmin,
+          name: user.name,
+          password: user.password ,
+        }
+
+        return fullUser ;
       } else {
         console.log('No such document!');
         return null;
