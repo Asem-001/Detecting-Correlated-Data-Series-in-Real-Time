@@ -25,7 +25,7 @@ function initialize(passport){
 
  passport.serializeUser(function(user, done) {
    
-   done(null, user.id);
+   done(null, user.ID);
  });
  passport.deserializeUser(async (id, done) => done(null, await searchUser(id)))
 

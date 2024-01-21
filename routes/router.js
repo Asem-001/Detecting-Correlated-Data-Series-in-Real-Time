@@ -58,7 +58,7 @@ function checkNotAuthentication(req,res,next){
     res.redirect('/home')
   }
 function isAdmin(req,res,next){
-    if(req.isAuthenticated() && req.user.IsAdmin == 'admin'){
+    if(req.isAuthenticated() && req.user.IsAdmin){
         return next()
     }
     res.redirect('/home')

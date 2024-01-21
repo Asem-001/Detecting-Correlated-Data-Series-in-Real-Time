@@ -74,8 +74,8 @@
                                 <td><input type="email" class="form-control" value="<%= user.Email %>" name="email" ></td>
                                 <td><input type="text" class="form-control" value="<%= user.password %>" name="password" ></td>
                                 <td>
-                                    <select class="form-select" id="validationCustom06" value= "<%= user.IsAdmin %>"   name="isAdmin" >
-                                    <% if(user.IsAdmin == 'admin'){ %>
+                                    <select class="form-select" id="validationCustom06" value= "<%= user.IsAdmin ? "admin":"user" %>"   name="isAdmin" >
+                                    <% if(user.IsAdmin){ %>
                                     <option value="admin" selected>Admin</option>
                                     <option value="user">User</option>
                                     <% }else{ %>

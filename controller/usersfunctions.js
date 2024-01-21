@@ -118,9 +118,8 @@ async function searchUserID(Email, password) {
       if (docSnapshot.exists()) {
 
         let user = docSnapshot.data()
-        
-       
         return user ;
+
       } else {
         console.log('No such document!');
         return null;
