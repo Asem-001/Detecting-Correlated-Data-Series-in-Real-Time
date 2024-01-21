@@ -72,7 +72,7 @@ module.exports = {
   },
 
   login: (req,res) =>{
-    addUser('ahmed','ali', 'ahmed@hotmail.com','123321', true, null)
+    // addUser('ahmed','ali', 'ahmed@hotmail.com','123321', true, null)
     res.render("login",{
       title: 'login page',
       user: req.user
