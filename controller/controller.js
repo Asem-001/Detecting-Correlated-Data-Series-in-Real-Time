@@ -6,14 +6,14 @@ let IDforEndDate = []
 
 module.exports = {
 
-  home: (req, res) => {
+  index: (req, res) => {
     res.redirect('/home')
   },
 
-  index: async (req, res) => {
-
+  home: async (req, res) => {
     res.render("index", {
-      title: "Home page"
+      title: "Home page",
+      user: req.user
 
     });
   },
@@ -72,6 +72,7 @@ module.exports = {
   login: (req,res) =>{
     res.render("login",{
       title: 'login page',
+      user: req.user
     })
   },
 
@@ -81,6 +82,16 @@ module.exports = {
 
     res.render("reports", {
       title: "Reports",
+      user: req.user
+    });
+  },
+
+  logout:(req, res,next) => {
+    req.logOut((err) => {
+      if (err) {
+        return next(err);
+      }
+      res.redirect('/login');
     });
   },
 
@@ -88,6 +99,7 @@ module.exports = {
 
     res.render("detailedReport", {
       title: "Report Details",
+      user: req.user
     });
   },
 
@@ -97,6 +109,7 @@ module.exports = {
       // console.log(users)
       res.render("dashboard", {
         title: "Dashboard",
+        user: req.user,
         users: users,
       });
     } catch (error) {
@@ -110,6 +123,7 @@ module.exports = {
 
     res.render("profile", {
       title: "Profile",
+      user: req.user
     });
   },
 
@@ -165,6 +179,7 @@ module.exports = {
       console.log(users);
       res.render("editUser", {
         title: "editUser",
+        user: req.user,
         users: users,
         userId: id,
       });

@@ -69,16 +69,22 @@
                         <% if(user.id == userId){ %> 
                             <form action="/updateUser/<%= user.id%>?_method=PUT" method="POST"> 
                             <tr>
-                                <td><input type="text" class="form-control" value="<%= user.AdminID %>" name="AdminID"></td>
+                                <td><%= user.AdminID %></td>
                                 <td><input type="text" class="form-control" value="<%= user.name %>" name="name"></td>
                                 <td><input type="email" class="form-control" value="<%= user.Email %>" name="email" ></td>
                                 <td><input type="text" class="form-control" value="<%= user.password %>" name="password" ></td>
                                 <td>
-                                    <select class="form-select" id="validationCustom06" value= "<%= user.IsAdmin %>"  name="isAdmin" >
-                                    <option value="admin">Admin</option>
+                                    <select class="form-select" id="validationCustom06" value= "<%= user.IsAdmin %>"   name="isAdmin" >
+                                    <% if(user.IsAdmin == 'admin'){ %>
+                                    <option value="admin" selected>Admin</option>
                                     <option value="user">User</option>
+                                    <% }else{ %>
+                                    <option value="admin">Admin</option>
+                                    <option value="user" selected>User</option>
+                                    <% } %>
+                                    
                                 </select></td>
-                                <td><input type="text" class="form-control" value="<%= user.Created %>" name="date" ></td>
+                               <td><%= user.Created %></td>
                                 
                                 <td>
                                     <button type="submit" class="btn btn-link">

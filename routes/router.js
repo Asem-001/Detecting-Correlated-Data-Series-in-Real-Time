@@ -8,37 +8,63 @@ const initializePassport = require('../passport-config');
 
 initializePassport(passport)
 
-router.get('/',controller.home)
+router.get('/',controller.index)
 
-router.get('/home', Controller.index);
+router.get('/home',checkAuthentication, Controller.home);
 
-router.get('/reports', Controller.reports);
+router.get('/reports',checkAuthentication, Controller.reports);
 
-router.get('/detailedReport', Controller.detailedReport);
+router.get('/detailedReport',checkAuthentication, Controller.detailedReport);
 
-router.get('/login', controller.login);
+router.get('/login',checkNotAuthentication, controller.login);
 
-router.post('/login', passport.authenticate('local',{
+router.post('/login',checkNotAuthentication, passport.authenticate('local',{
     successRedirect: '/home',
     failureRedirect: '/login',
     failureFlash: true
 }));
 
-router.get('/dashboard', Controller.dashboard);
+router.delete('/logout', controller.logout)
 
-router.get('/profile', Controller.profile);
+router.get('/dashboard',isAdmin, Controller.dashboard);
+
+router.get('/profile', checkAuthentication,Controller.profile);
 
 
-router.post('/sendbackend',Controller.addCorrelationData)
+router.post('/sendbackend',checkAuthentication, Controller.addCorrelationData)
 
-router.post('/detectddatadackend',Controller.addDetectCorrelation)
+router.post('/detectddatadackend',checkAuthentication, Controller.addDetectCorrelation)
 
-router.post('/addUser', Controller.addUser);
+router.post('/addUser', isAdmin,Controller.addUser);
 
-router.put('/updateUser/:id', Controller.updateUser);
+router.put('/updateUser/:id',isAdmin, Controller.updateUser);
 
-router.get('/editUser/:id', Controller.editUser);
+router.get('/editUser/:id', isAdmin,Controller.editUser);
 
-router.delete('/delete/:id' , Controller.deleteUser)
+router.delete('/delete/:id' ,isAdmin, Controller.deleteUser)
+
+
+function checkAuthentication(req,res,next){
+    if(req.isAuthenticated()){
+      return next()
+    }
+    res.redirect('/login')
+  }
+  
+function checkNotAuthentication(req,res,next){
+    if(!req.isAuthenticated()){
+      return next()
+    }
+    res.redirect('/home')
+  }
+function isAdmin(req,res,next){
+    if(req.isAuthenticated() && req.user.IsAdmin == 'admin'){
+        return next()
+    }
+    res.redirect('/home')
+}
+
+
+  
 
 module.exports = router;
