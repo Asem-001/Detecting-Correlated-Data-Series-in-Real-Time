@@ -1,5 +1,5 @@
 const { searchUser, searchUserID, getAllUsers, deleteUser, updateUser, addUser } = require('./usersfunctions')
-const { addDetectCorr, addCorrData, CorrelationSearch, updateCorrleationData } = require('./correlationFunctions')
+const { addDetectCorr, addCorrData, CorrelationSearch, updateCorrleationData,addControlPanelInfo } = require('./correlationFunctions')
 bcrypt = require('bcrypt')
 
 let IDforEndDate = []
@@ -8,6 +8,7 @@ module.exports = {
 
   index: (req, res) => {
     
+    // addControlPanelInfo('2455763',[0.9,1],90)
     res.redirect('/home')
     
   },

@@ -34,8 +34,21 @@ class DetectedCorrelation{
 // CorrTimeStart: Start time when detected correlation 
 // CorrTimeEnd: End time when detected correlation
 }
+class ControlPanelSetting{
+    constructor(AdminID,SetThreshold,WindowSize) {
+        
+        return {
+             'AdminID':AdminID,
+             'SetThreshold':SetThreshold,
+             'WindowSize':WindowSize,
+        }
+    }
+// Meta data
+// AdminID, the id for who add this setting
+// Threshold: A float number representing the correlation value that was detected in that number
 
+}
 module.exports = {"CorrelationData":CorrelationData, 
-                  "DetectedCorrelation":DetectedCorrelation}
+                  "DetectedCorrelation":DetectedCorrelation, "ControlPanelSetting":ControlPanelSetting}
 
 

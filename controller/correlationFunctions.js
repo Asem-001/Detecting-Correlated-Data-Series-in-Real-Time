@@ -1,5 +1,7 @@
-const { CorrelationData, DetectedCorrelation } = require('../models/coreelation')
+const { CorrelationData, DetectedCorrelation, ControlPanelSetting } = require('../models/coreelation')
 const { doc, collection, addDoc, setDoc, getDoc, updateDoc, deleteDoc, deleteField, Timestamp, getDocs, query, where } = require("firebase/firestore");
+const { searchUser, searchUserID, getAllUsers, deleteUser, updateUser, addUser } = require('./usersfunctions')
+
 const db = require("../models/config")
 
 
@@ -16,6 +18,7 @@ async function addCorrData(CorrName, Threshold, CorrDateAdded, CorrDateEnded, No
   return CorrName + ''
 }
 
+// search for correaltion data by corrName in data base
 async function CorrelationSearch(data) {
   let d;
   const q = await query(collection(db, 'Correlation'), where("CorrName", "==", data));
@@ -23,6 +26,7 @@ async function CorrelationSearch(data) {
   querySnapshot.forEach((doc) => {
     d = doc.data();
   });
+  //check if doc is exist
   if (d) {
     return d;
   }
@@ -31,7 +35,7 @@ async function CorrelationSearch(data) {
     return undefined
   }
 }
-
+// update specific attribute from by id  correlation data 
 async function updateCorrleationData(id, newdata) {
 
   try {
@@ -95,5 +99,69 @@ async function getAllCorrelation() {
 
 }
 
-module.exports = { addDetectCorr, updateCorrleationData, CorrelationSearch, addCorrData, getAllCorrelation }
+// Add or update Control Panel settings for a specific admin. 
+// This includes creating new settings if they don't exist, 
+// or updating the last set of settings if they do.
+async function addControlPanelInfo(AdminID, SetThreshold, WindowSize) {
+  // Asynchronously searches for a user with the given AdminID.
+  let checkIdExisting = await searchUser(AdminID);
+
+  // Checks if the user is found. If not, the function returns early.
+  if (checkIdExisting == null) {
+    return;
+  }
+
+  // Asynchronously retrieves Control Panel information for the given AdminID.
+  let adminid = await searchControlPanelinfo(AdminID);
+
+  // Logs the retrieved admin information to the console.
+  console.log(adminid);
+
+  // Checks if the admin information is not found.
+  if (adminid == null) {
+    // If not found, creates a new ControlPanelSetting object with the provided parameters.
+    const cnd = new ControlPanelSetting(AdminID, SetThreshold, WindowSize);
+
+    // Asynchronously sets the document in the database with the new Control Panel settings.
+    // Uses the AdminID as the document identifier.
+    await setDoc(doc(db, "ControlPanelSetting", AdminID + ''), cnd).then(() => {
+      // Logs a success message to the console after the document is set.
+      console.log(`The admin ${cnd.AdminID} has successfully set new Control Panel info!`);
+    });
+  } else {
+    // If the admin information is found, updates the existing document.
+    await updateDoc(doc(db, "ControlPanelSetting", AdminID), {
+      SetThreshold: SetThreshold,
+      WindowSize: WindowSize
+    }).then(() => {
+      // Logs a success message to the console after the document is updated.
+      console.log(`The admin ${AdminID} has successfully updated existing Control Panel info!`);
+    });
+  }
+
+
+}
+async function searchControlPanelinfo(id) {
+  try {
+    // Create a reference to the document
+    const docRef = doc(db, 'ControlPanelSetting', id);
+
+    // Fetch the document data
+    const docSnapshot = await getDoc(docRef);
+
+    if (docSnapshot.exists()) {
+
+      let cnd = docSnapshot.data()
+      return cnd;
+
+    } else {
+      console.log('No such document!');
+      return null;
+    }
+  } catch (error) {
+    console.error('Error fetching document:', error);
+    throw error;  // Re-throw the error to handle it outside if necessary
+  }
+}
+module.exports = { addDetectCorr, updateCorrleationData, CorrelationSearch, addCorrData, getAllCorrelation, addControlPanelInfo }
 
