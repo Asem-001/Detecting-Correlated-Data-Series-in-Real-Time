@@ -106,7 +106,7 @@ module.exports = {
     });
   },
 
-  dashboard: async (req, res) => {
+  dashboard: async (req, res) => { 
     try {
       const users = await getAllUsers();
       // console.log(users)
@@ -136,18 +136,17 @@ module.exports = {
         let AdminID = req.body.AdminID;
         let Fname = req.body.Fname;
         let Lname = req.body.Lname;
-        let Email = req.body.email;
-        let password = await bcrypt.hash(req.body.password,6);
-        let IsAdmin = req.body.isAdmin;
-        if(IsAdmin != Boolean){
-          console.log('the IsAdmin var must!!!!!! be boolean ');
-          // res.redirect("/dashboard");
-          return
-        }
+        let Email = req.body.Email;  // Corrected property name
+        let password = await bcrypt.hash(req.body.password, 6);
+        let Admin = req.body.IsAdmin;
 
-       
-        await addUser(Fname,Lname, Email , password, IsAdmin, AdminID);
-        console.log('User added successfuly')
+        let IsAdmin = Admin === 'admin';
+        if(IsAdmin) AdminID = null
+
+        console.log('Admin variable:', IsAdmin);
+
+        await addUser(Fname,Lname, Email ,password, IsAdmin, AdminID);
+        console.log('User added successfully');
         res.redirect("/dashboard");
     } catch (error) {
         console.error('Error adding user:', error);
@@ -156,30 +155,33 @@ module.exports = {
 },
 
 
-  updateUser: async (req, res) => {
-    try {
-      // Extract user data from request body
-      let id = req.params.id;
+updateUser: async (req, res) => {
+  try {
+    // Extract user data from request body
+    let id = req.params.id;
+    let AdminID = req.body.AdminID;
+    let Fname = req.body.Fname;
+    let Lname = req.body.Lname;
+    let Email = req.body.Email;
+    let password = await bcrypt.hash(req.body.password, 6);
+    let IsAdmin = req.body.IsAdmin === 'admin';
+    if(IsAdmin) AdminID = null
+    console.log('Admin variable:', IsAdmin);
+    let user = {
+      AdminID, Fname, Lname, Email, password, IsAdmin // Use IsAdmin instead of Admin
+    };
 
-      let user = {
-       AdminID : req.body.AdminID,
-       name : req.body.name,
-       Email : req.body.email,
-       password : await bcrypt.hash(req.body.password,6),
-       IsAdmin : req.body.isAdmin,
-       date : req.body.date
-      }
-      console.log(id , user)
-      // Edit user in the database
-      await updateUser(id , user);
+    // Edit user in the database
+    await updateUser(id, user);
 
-      // Send success response
-      res.redirect("/dashboard")
-    } catch (error) {
-      console.error('Error editing user:', error);
-      res.status(500).json({ success: false, error: 'Internal Server Error' });
-    }
-  },
+    // Send success response
+    res.redirect("/dashboard");
+  } catch (error) {
+    console.error('Error editing user:', error);
+    res.status(500).json({ success: false, error: 'Internal Server Error' });
+  }
+},
+
 
   editUser: async (req, res) => {
     const id = req.params.id;

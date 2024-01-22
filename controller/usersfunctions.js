@@ -8,14 +8,15 @@ bcrypt = require('bcrypt')
 
 
 
-async function addUser(Fname,Lname, Email ,password, IsAdmin, adminID) {
+async function addUser(Fname,Lname, Email ,password, IsAdmin, AdminID) {
     const date = new Date
     const id = date.getFullYear().toString().slice(-2)+date.getTime()% 100000
     //  password = await bcrypt.hash(password,6);
-    const user = new userclass(id,Fname,Lname, Email,password, IsAdmin, adminID)
-  
+    console.log("id before constructor" , id)
+    const user = new userclass(id,Fname,Lname, Email,password, IsAdmin, AdminID)
+    console.log(console.log("id after constructor" , id))
     const docRef = await setDoc(doc(db, "Users", "" + id), user).then(() => {
-      console.log(`The user ${user.name} successfully added !`+ user)
+      console.log(`The user ${user.Fname} successfully added !`+ user)
     });
   
   }
@@ -25,7 +26,7 @@ async function addUser(Fname,Lname, Email ,password, IsAdmin, adminID) {
       await updateDoc(doc(db, "Users", id), newdata);;
       console.log(`Successfully updated user with ID: ${id}`);
     } catch (error) {
-      console.error(`Error deleting user with ID ${id}:`, error);
+      console.error(`Error Updating user with ID ${id}:`, error);
     }
   }
   

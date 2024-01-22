@@ -54,25 +54,27 @@
                   <table class="table datatable">
                     <thead>
                       <tr>
+                        
                         <th>User ID</th>
-                        <th>Name</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
                         <th>Email</th>
                         <th>Password</th>
-                        <th>Permission</th>
-                        <th data-type="date" data-format="YYYY/DD/MM">Account Date</th>
-                        <th></th>
-                        <th></th>
+                        <th>IsAdmin</th>
+                        <th>Admin ID</th> 
                       </tr>
                     </thead>
                     <tbody>
                       <% users.forEach(function(user) { %>
                         <tr>
-                          <td><%= user.AdminID %></td>
-                          <td><%= user.name %></td>
+                          
+                          <td><%= user.id %></td>
+                          <td><%= user.Fname %></td>
+                          <td><%= user.Lname %></td>
                           <td><%= user.Email %></td>
                           <td><%= user.password %></td>
                           <td><%= user.IsAdmin %></td>
-                          <td><%= user.Created %></td>
+                          <td><%= user.AdminID %></td>
                           <!-- EDIT DELETE buttons -->
                           <td>
                             <a style="text-decoration: none;" href="editUser/<%= user.id%>" >
@@ -117,28 +119,29 @@
           <div class="modal-body">
             <!-- Custom Styled Validation -->
             <form id="addUserForm" class="row g-3 needs-validation" novalidate method="post" action="/addUser">
+              <input type="hidden" name="AdminID" value="<%= user.ID %>">
               <div class="col-md-4">
-                <label for="validationCustom01" class="form-label">ID</label>
-                <input type="text" class="form-control" name="AdminID" required>
+                <label for="validationCustom02" class="form-label">First Name</label>
+                <input type="text" class="form-control" name="Fname">
               </div>
               <div class="col-md-4">
-                <label for="validationCustom02" class="form-label">Name</label>
-                <input type="text" class="form-control" name="name">
+                <label for="validationCustom02" class="form-label">Last Name</label>
+                <input type="text" class="form-control" name="Lname">
               </div>
               <div class="col-md-4">
                 <label for="validationCustom04" class="form-label">Email</label>
-                <input type="email" class="form-control" name="email" required>
+                <input type="email" class="form-control" name="Email" required>
               </div>
               <div class="col-md-4">
                 <label for="validationCustom03" class="form-label">Password</label>
                 <input type="password" class="form-control" name="password" required>
               </div>
               <div class="col-md-4">
-                <label for="validationCustom06" class="form-label">isAdmin</label>
-                <select class="form-select" id="validationCustom06" value= "isAdmin"  name="isAdmin" required>
-                    <option value="admin">Admin</option>
-                    <option value="user">User</option>
-                </select>
+                <label for="validationCustom06" class="form-label">IsAdmin</label>
+                <select class="form-select" id="validationCustom06" name="IsAdmin" required>
+                  <option value="admin">Admin</option>
+                  <option value="user">User</option>
+              </select>              
               </div>
               <div class="col-12">
               </div>
