@@ -15,13 +15,13 @@
 
           <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
             <img src="../public/img/profile.jpg" alt="Profile" class="rounded-circle">
-            <span class="d-none d-md-block dropdown-toggle ps-2">Aziz Fahad</span>
+            <span class="d-none d-md-block dropdown-toggle ps-2"><%= user.Fname %> <%=user.Lname %></span>
           </a>
 
           <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
             <li class="dropdown-header">
-              <h6>Aziz Fahad</h6>
-              <span>Administrator</span>
+              <h6><%= user.Fname %> <%=user.Lname %></h6>
+              <span><%= user.IsAdmin ? "admin":"user" %></span>
             </li>
             <li>
               <hr class="dropdown-divider">
@@ -39,7 +39,7 @@
             </li>
 
             <li>
-              <a class="dropdown-item d-flex align-items-center" href="#">
+              <a class="dropdown-item d-flex align-items-center" href="/logout?_method=DELETE">
                 <i class="bi bi-box-arrow-right"></i>
                 <span>Sign Out</span>
               </a>

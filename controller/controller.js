@@ -1,20 +1,21 @@
 const { searchUser, searchUserID, getAllUsers, deleteUser, updateUser, addUser } = require('./usersfunctions')
 const { addDetectCorr, addCorrData, CorrelationSearch, updateCorrleationData } = require('./correlationFunctions')
-
-
+bcrypt = require('bcrypt')
 
 let IDforEndDate = []
 
 module.exports = {
 
-  home: (req, res) => {
+  index: (req, res) => {
+    
     res.redirect('/home')
+    
   },
 
-  index: async (req, res) => {
-
+  home: async (req, res) => {
     res.render("index", {
-      title: "Home page"
+      title: "Home page",
+      user: req.user
 
     });
   },
@@ -71,19 +72,29 @@ module.exports = {
   },
 
   login: (req,res) =>{
+    // addUser('ahmed','ali', 'ahmed@hotmail.com','123321', true, null)
     res.render("login",{
       title: 'login page',
+      user: req.user
     })
   },
 
-  postLogin: (req,res) =>{
-    console.log('t')
-  },
+  postLogin: async(req,res) =>{},
 
   reports: (req, res) => {
 
     res.render("reports", {
       title: "Reports",
+      user: req.user
+    });
+  },
+
+  logout:(req, res,next) => {
+    req.logOut((err) => {
+      if (err) {
+        return next(err);
+      }
+      res.redirect('/login');
     });
   },
 
@@ -91,15 +102,17 @@ module.exports = {
 
     res.render("detailedReport", {
       title: "Report Details",
+      user: req.user
     });
   },
 
-  dashboard: async (req, res) => {
+  dashboard: async (req, res) => { 
     try {
       const users = await getAllUsers();
       // console.log(users)
       res.render("dashboard", {
         title: "Dashboard",
+        user: req.user,
         users: users,
       });
     } catch (error) {
@@ -113,6 +126,7 @@ module.exports = {
 
     res.render("profile", {
       title: "Profile",
+      user: req.user
     });
   },
 
@@ -120,14 +134,19 @@ module.exports = {
     try {
         // Extract user data from request body
         let AdminID = req.body.AdminID;
-        let name = req.body.name;
-        let Email = req.body.email;
-        let password = req.body.password;
-        let IsAdmin = req.body.isAdmin;
+        let Fname = req.body.Fname;
+        let Lname = req.body.Lname;
+        let Email = req.body.Email;  // Corrected property name
+        let password = await bcrypt.hash(req.body.password, 6);
+        let Admin = req.body.IsAdmin;
 
-       
-        await addUser(name, Email , password, IsAdmin, AdminID);
-        console.log('User added successfuly')
+        let IsAdmin = Admin === 'admin';
+        if(IsAdmin) AdminID = null
+
+        console.log('Admin variable:', IsAdmin);
+
+        await addUser(Fname,Lname, Email ,password, IsAdmin, AdminID);
+        console.log('User added successfully');
         res.redirect("/dashboard");
     } catch (error) {
         console.error('Error adding user:', error);
@@ -136,30 +155,33 @@ module.exports = {
 },
 
 
-  updateUser: async (req, res) => {
-    try {
-      // Extract user data from request body
-      let id = req.params.id;
+updateUser: async (req, res) => {
+  try {
+    // Extract user data from request body
+    let id = req.params.id;
+    let AdminID = req.body.AdminID;
+    let Fname = req.body.Fname;
+    let Lname = req.body.Lname;
+    let Email = req.body.Email;
+    let password = await bcrypt.hash(req.body.password, 6);
+    let IsAdmin = req.body.IsAdmin === 'admin';
+    if(IsAdmin) AdminID = null
+    console.log('Admin variable:', IsAdmin);
+    let user = {
+      AdminID, Fname, Lname, Email, password, IsAdmin // Use IsAdmin instead of Admin
+    };
 
-      let user = {
-       AdminID : req.body.AdminID,
-       name : req.body.name,
-       Email : req.body.email,
-       password : req.body.password,
-       IsAdmin : req.body.isAdmin,
-       date : req.body.date
-      }
-      console.log(id , user)
-      // Edit user in the database
-      await updateUser(id , user);
+    // Edit user in the database
+    await updateUser(id, user);
 
-      // Send success response
-      res.redirect("/dashboard")
-    } catch (error) {
-      console.error('Error editing user:', error);
-      res.status(500).json({ success: false, error: 'Internal Server Error' });
-    }
-  },
+    // Send success response
+    res.redirect("/dashboard");
+  } catch (error) {
+    console.error('Error editing user:', error);
+    res.status(500).json({ success: false, error: 'Internal Server Error' });
+  }
+},
+
 
   editUser: async (req, res) => {
     const id = req.params.id;
@@ -168,6 +190,7 @@ module.exports = {
       console.log(users);
       res.render("editUser", {
         title: "editUser",
+        user: req.user,
         users: users,
         userId: id,
       });

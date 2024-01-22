@@ -40,8 +40,8 @@
               <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
   
                 <img src="../public/img/profile.jpg" alt="Profile" class="rounded-circle">
-                <h2>Aziz Fahad</h2>
-                <h3>Administrator</h3>
+                <h2><%= user.name %></h2>
+                <h3><%= user.IsAdmin%></h3>
               </div>
             </div>
   
@@ -78,7 +78,7 @@
   
                     <div class="row">
                       <div class="col-lg-3 col-md-4 label ">Full Name</div>
-                      <div class="col-lg-9 col-md-8">Aziz Fahad</div>
+                      <div class="col-lg-9 col-md-8"><%= user.Fname %> <%=user.Lname %></div>
                     </div>
   
                     <div class="row">
@@ -98,7 +98,7 @@
   
                     <div class="row">
                       <div class="col-lg-3 col-md-4 label">Email</div>
-                      <div class="col-lg-9 col-md-8">afbinsaif@sm.imamu.edu.sa</div>
+                      <div class="col-lg-9 col-md-8"><%= user.Email %></div>
                     </div>
   
                   </div>
@@ -106,21 +106,11 @@
                   <div class="tab-pane fade profile-edit pt-3" id="profile-edit">
   
                     <form>
-                      <div class="row mb-3">
-                        <label for="profileImage" class="col-md-4 col-lg-3 col-form-label">Profile Image</label>
-                        <div class="col-md-8 col-lg-9">
-                          <img src="assets/img/profile.jpg" alt="Profile">
-                          <div class="pt-2">
-                            <a href="#" class="btn btn-primary btn-sm" title="Upload new profile image"><i class="bi bi-upload"></i></a>
-                            <a href="#" class="btn btn-danger btn-sm" title="Remove my profile image"><i class="bi bi-trash"></i></a>
-                          </div>
-                        </div>
-                      </div>
-  
+                     
                       <div class="row mb-3">
                         <label for="fullName" class="col-md-4 col-lg-3 col-form-label">Full Name</label>
                         <div class="col-md-8 col-lg-9">
-                          <input name="fullName" type="text" class="form-control" id="fullName" value="Aziz Fahad">
+                          <input name="fullName" type="text" class="form-control" id="fullName" value="<%= user.Fname %> <%=user.Lname %>">
                         </div>
                       </div>
   
@@ -148,7 +138,7 @@
                       <div class="row mb-3">
                         <label for="Email" class="col-md-4 col-lg-3 col-form-label">Email</label>
                         <div class="col-md-8 col-lg-9">
-                          <input name="email" type="email" class="form-control" id="Email" value="afbinsaif@sm.imamu.edu.sa">
+                          <input name="email" type="email" class="form-control" id="Email" value="<%= user.Email %>">
                         </div>
                       </div>
   

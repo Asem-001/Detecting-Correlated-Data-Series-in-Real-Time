@@ -1,20 +1,22 @@
-const { CorrelationData, DetectedCorrelation } = require('../models/coreelation')
 const userclass = require("../models/users")
 const { doc, collection, addDoc, setDoc, getDoc, updateDoc, deleteDoc, deleteField, Timestamp, getDocs, query, where } = require("firebase/firestore");
 const db = require("../models/config")
 
+bcrypt = require('bcrypt')
 
 
 
 
 
-async function addUser(name, Email ,password, IsAdmin, adminID) {
+async function addUser(Fname,Lname, Email ,password, IsAdmin, AdminID) {
     const date = new Date
-  
-    const user = new userclass(name, Email,password, IsAdmin, adminID)
-  
-    const docRef = await setDoc(doc(db, "Users", "" + date.getTime()), user).then(() => {
-      console.log(`The user ${user.name} successfully added !`+ user)
+    const id = date.getFullYear().toString().slice(-2)+date.getTime()% 100000
+    //  password = await bcrypt.hash(password,6);
+    console.log("id before constructor" , id)
+    const user = new userclass(id,Fname,Lname, Email,password, IsAdmin, AdminID)
+    console.log(console.log("id after constructor" , id))
+    const docRef = await setDoc(doc(db, "Users", "" + id), user).then(() => {
+      console.log(`The user ${user.Fname} successfully added !`+ user)
     });
   
   }
@@ -24,7 +26,7 @@ async function addUser(name, Email ,password, IsAdmin, adminID) {
       await updateDoc(doc(db, "Users", id), newdata);;
       console.log(`Successfully updated user with ID: ${id}`);
     } catch (error) {
-      console.error(`Error deleting user with ID ${id}:`, error);
+      console.error(`Error Updating user with ID ${id}:`, error);
     }
   }
   
@@ -44,7 +46,7 @@ async function addUser(name, Email ,password, IsAdmin, adminID) {
           if (user.AdminID == id) {
             console.log(user.AdminID == id);
             const updatedUser = await searchUserID(user.name, user.password);
-            console.log(updatedUser, user.name, user.password);
+            console.log(updatedUser, user.Fname, user.password);
             await updateUser(updatedUser, { "AdminID": null });
           }
         }
@@ -115,7 +117,10 @@ async function searchUserID(Email, password) {
       const docSnapshot = await getDoc(docRef);
   
       if (docSnapshot.exists()) {
-        return docSnapshot.data();
+
+        let user = docSnapshot.data()
+        return user ;
+
       } else {
         console.log('No such document!');
         return null;
