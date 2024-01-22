@@ -163,9 +163,21 @@ function setupChart() {
 }
 //This function for update the threshold valus
 async function thresholdUpdate(){
-  let thresh = document.getElementById("range").value.split(",");
-  totalData.threshold[0] = parseFloat(thresh[0]);
-  totalData.threshold[1] = parseFloat(thresh[1]);
+  let isAdmin = document.getElementById("isAdmin").value
+  let thresh;
+
+  if(isAdmin){
+    thresh = document.getElementById("range").value.split(",");
+    console.log(thresh)
+    totalData.threshold[0] = parseFloat(thresh[0]);
+    totalData.threshold[1] = parseFloat(thresh[1]);
+  }else{
+    thresh = document.getElementById("user-range").value.split(",");
+    console.log(thresh)
+    totalData.threshold[0] = parseFloat(thresh[0]);
+    totalData.threshold[1] = parseFloat(thresh[1]);
+  }
+ 
   
   thresh = [];
 }
@@ -265,7 +277,7 @@ function calculateCorrelationMatrix(e) {
               pearsonData[j][i][2],  pearsonData[j][i][3], pearsonData[j][i][4], pearsonData[j][i][5], pearsonData[j][i][6],pearsonData[j][i][7]);
               
            
-              console.log('after the pearsonEnhanced', correlation);
+             // console.log('after the pearsonEnhanced', correlation);
             //  console.log(correlation, gx, gy, sx, sy, sxy, sxx, syy,n);
               
               pearsonData[j][i][0] = gx
