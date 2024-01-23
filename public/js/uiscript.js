@@ -126,45 +126,44 @@
   
   })();
 
-
-$(function() {
-  $("#slider-range").slider({
-    range: true,
-    min: -1,
-    max: 1,
-    step: 0.05,
-    values: [-1, 1], 
-    slide: function(event, ui) {
-      $("#range").val(ui.values[0] + " , " + ui.values[1]);
-    }
+let isAdmin = document.getElementById('isAdmin').value;
+console.log(isAdmin)
+if(!isAdmin){
+  console.log('admin here')
+  $(function() {
+    $("#slider-range").slider({
+      range: true,
+      min: -1,
+      max: 1,
+      step: 0.05,
+      values: [-1, 1], 
+      slide: function(event, ui) {
+        $("#range").val(ui.values[0] + " , " + ui.values[1]);
+      }
+    });
+    $("#range").val($("#slider-range").slider("values", 0) +
+      " , " + $("#slider-range").slider("values", 1));
   });
-  $("#range").val($("#slider-range").slider("values", 0) +
-    " , " + $("#slider-range").slider("values", 1));
-});
+}else{
+  console.log("hi")
+    let minValue = parseFloat(await $("#minValueInput").val()); 
+    let maxValue = parseFloat(await $("#maxValueInput").val()); 
+  $(function() {
 
-$(async function() {
-  let minValue = parseFloat(await $("#minValueInput").val()); 
-  let maxValue = parseFloat(await $("#maxValueInput").val()); 
-  $("#user-slider-range").slider({
-    range: true,
-    min: -1,
-    max: 1,
-    step: 0.05,
-    values: [minValue, maxValue],  
-    slide: function(event, ui) {
-      $("#user-range").val(ui.values[0] + " , " + ui.values[1]);
-    }
+    $("#slider-range").slider({
+      range: true,
+      min: -1,
+      max: 1,
+      step: 0.05,
+      values: [minValue, maxValue], 
+      slide: function(event, ui) {
+        $("#range").val(ui.values[0] + " , " + ui.values[1]);
+      }
+    });
+    $("#range").val($("#slider-range").slider("values", 0) +
+      " , " + $("#slider-range").slider("values", 1));
+
+      $("#slider-range").slider("option", "disabled", true);
   });
-
-  // Display initial range values
-  $("#user-range").val($("#user-slider-range").slider("values", 0) +
-    " , " + $("#user-slider-range").slider("values", 1));
-
-  // Disable the slider after it's initialized
-  $("#user-slider-range").slider("option", "disabled", true);
-
-  // Now, you can still read the values even though the slider is disabled
-  let disabledMinValue = $("#user-slider-range").slider("values", 0);
-  let disabledMaxValue = $("#user-slider-range").slider("values", 1);
-
-});
+}
+  

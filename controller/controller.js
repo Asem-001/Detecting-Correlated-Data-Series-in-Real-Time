@@ -24,19 +24,13 @@ module.exports = {
       title: "Home page",
       user: req.user,
       info: dumpInfo,
-      min: -1,
-      max: 1
     }); 
     }else{
-      let info = await searchControlPanelinfo(req.user.AdminID)
-      let min = info.SetThreshold[0];
-      let max = info.SetThreshold[1];
+      let info = await searchControlPanelinfo(req.user.AdminID);
       res.render("index", {
         title: "Home page",
         user: req.user,
         info: info,
-        min:min,
-        max: max
       });
     }
    

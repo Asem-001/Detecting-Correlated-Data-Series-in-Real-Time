@@ -163,22 +163,13 @@ function setupChart() {
 }
 //This function for update the threshold valus
 async function thresholdUpdate(){
-  let isAdmin = document.getElementById("isAdmin").value
   let thresh;
 
-  if(isAdmin){
     thresh = document.getElementById("range").value.split(",");
     console.log(thresh)
     totalData.threshold[0] = parseFloat(thresh[0]);
     totalData.threshold[1] = parseFloat(thresh[1]);
-  }else{
-    thresh = document.getElementById("user-range").value.split(",");
-    console.log(thresh)
-    totalData.threshold[0] = parseFloat(thresh[0]);
-    totalData.threshold[1] = parseFloat(thresh[1]);
-  }
- 
-  
+
   thresh = [];
 }
 
