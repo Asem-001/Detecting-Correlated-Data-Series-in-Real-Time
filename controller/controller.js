@@ -35,11 +35,13 @@ module.exports = {
     }
    
   },
+  setSettings: async (req,res)=>{
+    let data = req.body.parcel
+    addControlPanelInfo(data.AdminID,data.SetThreshold,data.WindowSize)
+  },
   addCorrelationData: async (req, res) => {
     // Extract parcel data from request body
     let data = req.body.parcel;
-
-
 
     // Loop over each name in the data.names array
     for (let i = 0; i < data.names.length; i++) {

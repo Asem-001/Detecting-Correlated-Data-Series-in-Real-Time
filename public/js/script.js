@@ -1,7 +1,7 @@
 import { pearsonCorrelation ,pearsonEnhanced} from "./pearson.js";
 import { selectOptions, removeSeriesFromSelected, selectedSeries } from "./controlPanel.js";
 import { fetchData } from "./ApiHandler.js";
-import { sendTotalDataToBackend ,sendDetectdDataToBackend} from "./sendToBackend.js";
+import { sendTotalDataToBackend ,sendDetectdDataToBackend,sendAdminSettingsToUser} from "./sendToBackend.js";
 
 let datasets = []; // Array to store data series
 let time = []; // Array to store timestamps
@@ -463,8 +463,21 @@ document.getElementById("startButton").addEventListener("click", function(event)
   startDataUpdates(e);
 });
 
+function setSettings(){
+  let id = document.getElementById('userID').value.trim();
+
+  let temp = document.getElementById("range").value.split(",");
+  let threshold = [];
+  threshold[0] = parseFloat(temp[0]);
+  threshold[1] = parseFloat(temp[1]);
+
+  let window = document.getElementById('sliceSizeSelect').value;
+  sendAdminSettingsToUser(id,threshold,window);
+}
+
 
   document.getElementById("stopButton").addEventListener("click", stopDataUpdates);
   document.getElementById("addSeriesButton").addEventListener("click", addSeries);
   document.getElementById("deleteSeriesButton").addEventListener("click", deleteSeries);
+  document.getElementById('setButton').addEventListener('click',setSettings)
 });
