@@ -126,10 +126,10 @@
   
   })();
 
-let isAdmin = document.getElementById('isAdmin').value;
-console.log(isAdmin)
-if(!isAdmin){
-  console.log('admin here')
+let isAdmin = document.getElementById('isAdmin').value.trim();
+
+if(isAdmin == "true"){
+
   $(function() {
     $("#slider-range").slider({
       range: true,
@@ -145,7 +145,7 @@ if(!isAdmin){
       " , " + $("#slider-range").slider("values", 1));
   });
 }else{
-  console.log("hi")
+
     let minValue = parseFloat(await $("#minValueInput").val()); 
     let maxValue = parseFloat(await $("#maxValueInput").val()); 
   $(function() {
