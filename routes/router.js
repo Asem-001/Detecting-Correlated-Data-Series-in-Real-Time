@@ -8,65 +8,69 @@ const initializePassport = require('../passport-config');
 
 initializePassport(passport)
 
-router.get('/',controller.index)
+router.get('/', controller.index)
 
-router.get('/home',checkAuthentication, Controller.home);
+router.get('/home', checkAuthentication, Controller.home);
 
-router.get('/reports',checkAuthentication, Controller.reports);
+router.get('/reports', checkAuthentication, Controller.reports);
+router.get('/reports', checkAuthentication, Controller.reports);
+router.get('/getReportData', checkAuthentication, Controller.getReportData);
 
-router.get('/detailedReport',checkAuthentication, Controller.detailedReport);
+router.get('/login', checkNotAuthentication, controller.login);
 
-router.get('/login',checkNotAuthentication, controller.login);
-
-router.post('/login',checkNotAuthentication, passport.authenticate('local',{
-    successRedirect: '/home',
-    failureRedirect: '/login',
-    failureFlash: true
+router.post('/login', checkNotAuthentication, passport.authenticate('local', {
+  successRedirect: '/home',
+  failureRedirect: '/login',
+  failureFlash: true
 }));
 
 router.delete('/logout', controller.logout)
 
-router.get('/dashboard',isAdmin, Controller.dashboard);
+router.get('/dashboard', isAdmin, Controller.dashboard);
 
-router.get('/profile', checkAuthentication,Controller.profile);
+router.get('/profile', checkAuthentication, Controller.profile);
 
 
-router.post('/sendbackend',checkAuthentication, Controller.addCorrelationData)
+router.post('/sendbackend', checkAuthentication, Controller.addCorrelationData)
 
 router.post('/detectddatadackend',checkAuthentication, Controller.addDetectCorrelation)
 
 router.post('/sendAdminSettings',isAdmin, Controller.setSettings)
 
-router.post('/addUser', isAdmin,Controller.addUser);
+router.get('/sendReportDataToBackend/:date', checkAuthentication, Controller.reportssendData)
 
-router.put('/updateUser/:id',isAdmin, Controller.updateUser);
+router.get('/detailedreport', checkAuthentication, Controller.detailedReport)
 
-router.get('/editUser/:id', isAdmin,Controller.editUser);
+router.post('/addUser', isAdmin, Controller.addUser);
 
-router.delete('/delete/:id' ,isAdmin, Controller.deleteUser)
+router.put('/updateUser/:id', isAdmin, Controller.updateUser);
+
+router.get('/editUser/:id', isAdmin, Controller.editUser);
+
+router.delete('/delete/:id', isAdmin, Controller.deleteUser)
 
 
-function checkAuthentication(req,res,next){
-    if(req.isAuthenticated()){
-      return next()
-    }
-    res.redirect('/login')
+function checkAuthentication(req, res, next) {
+  if (req.isAuthenticated()) {
+    return next()
   }
-  
-function checkNotAuthentication(req,res,next){
-    if(!req.isAuthenticated()){
-      return next()
-    }
-    res.redirect('/home')
+  res.redirect('/login')
+}
+
+function checkNotAuthentication(req, res, next) {
+  if (!req.isAuthenticated()) {
+    return next()
   }
-function isAdmin(req,res,next){
-    if(req.isAuthenticated() && req.user.IsAdmin){
-        return next()
-    }
-    res.redirect('/home')
+  res.redirect('/home')
+}
+function isAdmin(req, res, next) {
+  if (req.isAuthenticated() && req.user.IsAdmin) {
+    return next()
+  }
+  res.redirect('/home')
 }
 
 
-  
+
 
 module.exports = router;

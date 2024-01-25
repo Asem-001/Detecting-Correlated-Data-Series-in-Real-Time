@@ -43,5 +43,18 @@ export async function sendAdminSettingsToUser(id,threshold,windowSize){
         })
     });
 }
+export async function sendReportData(e,ReportData){ // The totalData dic will be sended to the backend server
+    
+    e.preventDefault() // Stop refreshing the page 
+    let res = await fetch('/sendReportDataToBackend/'+ ReportData  , { // Send the data to the router in JSON file 
+        method:'GET',
+        
+    } )
+    const data = await res.json() 
+    
+     return data.ReportDataByDate
+
+
+}
 
 

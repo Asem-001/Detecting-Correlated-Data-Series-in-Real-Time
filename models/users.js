@@ -8,7 +8,7 @@ class Users {
             "Lname":Lname,
             "Email":Email,
             "password":password,
-            'Created': date.toLocaleString(),
+            'Created': date.toLocaleString('en-US'),
             'IsAdmin':IsAdmin,
             "AdminID": adminID,
         

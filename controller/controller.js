@@ -1,16 +1,21 @@
 const { searchUser, searchUserID, getAllUsers, deleteUser, updateUser, addUser } = require('./usersfunctions')
-const { addDetectCorr, addCorrData, CorrelationSearch, updateCorrleationData,addControlPanelInfo,searchControlPanelinfo } = require('./correlationFunctions')
+const { addDetectCorr, addCorrData, CorrelationSearch, updateCorrleationData, addControlPanelInfo, SearchDetectedCorrelations, SearchCorrelationsByRangeDate } = require('./correlationFunctions')
+const e = require('method-override')
 bcrypt = require('bcrypt')
 
 let IDforEndDate = []
 
+
 module.exports = {
 
   index: (req, res) => {
-    
+
     // addControlPanelInfo('2455763',[0.9,1],90)
+    // SearchDetectedCorrelations("N225")
+
+
     res.redirect('/home')
-    
+
   },
 
   home: async (req, res) => {
@@ -51,19 +56,29 @@ module.exports = {
 
 
       // If the document doesn't exist and there's no end date, add correlation data
+      let date_time_add;
+      let date_time_end;
       if (!doc & data.endDate.length == 0) {
-        IDforEndDate.push(await addCorrData(data.names[i], data.threshold, data.addDate[i], '', 0));
+
+        date_time_add = data.addDate[i].split('-')
+        // date_time_end[0] = data.endDate[0].split('-')
+        IDforEndDate.push(await addCorrData(data.names[i], data.threshold, date_time_add, '', 0));
       }
       // If the document doesn't exist and there is an end date, add correlation data with the end date
       else if (!doc & data.endDate.length > 0) {
-        IDforEndDate.push(await addCorrData(data.names[i], data.threshold, data.addDate[i], data.endDate[0], 0));
+        date_time_add = data.addDate[i].split('-')
+        date_time_end = data.endDate[0].split('-')
+
+
+        IDforEndDate.push(await addCorrData(data.names[i], data.threshold, date_time_add, date_time_end, 0));
       }
       // If the document exists, update the correlation data
-      else {
-
+      else if (data.endDate.length > 0) {
+        date_time_end = data.endDate[0].split('-')
         updateCorrleationData(data.names[i], {
           SetThreshold: data.threshold,
-          CorrDateEnded: data.endDate[0]
+          CorrDateEnded: date_time_end,
+
         });
       }
     }
@@ -89,34 +104,50 @@ module.exports = {
 
   },
 
-  login: (req,res) =>{
+  login: (req, res) => {
     // addUser('ahmed','ali', 'ahmed@hotmail.com','123321', true, null)
-    res.render("login",{
+    res.render("login", {
       title: 'login page',
       user: req.user
     })
   },
 
-  postLogin: async(req,res) =>{},
+  postLogin: async (req, res) => { },
 
-  reports: (req, res) => {
 
+
+  reports: async(req, res) => {
+   
     res.render("reports", {
-      title: "Reports",
-      user: req.user
-    });
+      title: "detailedReport",
+      user: req.user,
+   
+    })
   },
 
-  logout:(req, res,next) => {
-    req.logOut((err) => {
-      if (err) {
-        return next(err);
-      }
-      res.redirect('/login');
-    });
+  reportssendData: async (req, res) => {
+
+    let date = req.params.date.split(',')
+    let start = date[0].split('-')
+    let end = date[1].split('-')
+    console.log(start, end);
+    const data =  await SearchCorrelationsByRangeDate(start, end)
+
+    // for(let i=0 ;i<data.length; i++){
+    //   console.log(data[i]);
+    // }
+    res.status(200).json({
+    ReportDataByDate: data})
+
+   
+    res.render('reports')
   },
 
+  getReportData: (req, res) => {
+
+  },
   detailedReport: (req, res) => {
+
 
     res.render("detailedReport", {
       title: "Report Details",
@@ -124,7 +155,15 @@ module.exports = {
     });
   },
 
-  dashboard: async (req, res) => { 
+  logout: (req, res, next) => {
+    req.logOut((err) => {
+      if (err) {
+        return next(err);
+      }
+      res.redirect('/login');
+    });
+  },
+  dashboard: async (req, res) => {
     try {
       const users = await getAllUsers();
       // console.log(users)
@@ -138,7 +177,7 @@ module.exports = {
       res.status(500).send('Internal Server Error');
     }
   },
-  
+
 
   profile: (req, res) => {
 
@@ -150,55 +189,55 @@ module.exports = {
 
   addUser: async (req, res) => {
     try {
-        // Extract user data from request body
-        let AdminID = req.body.AdminID;
-        let Fname = req.body.Fname;
-        let Lname = req.body.Lname;
-        let Email = req.body.Email;  // Corrected property name
-        let password = await bcrypt.hash(req.body.password, 6);
-        let Admin = req.body.IsAdmin;
+      // Extract user data from request body
+      let AdminID = req.body.AdminID;
+      let Fname = req.body.Fname;
+      let Lname = req.body.Lname;
+      let Email = req.body.Email;  // Corrected property name
+      let password = await bcrypt.hash(req.body.password, 6);
+      let Admin = req.body.IsAdmin;
 
-        let IsAdmin = Admin === 'admin';
-        if(IsAdmin) AdminID = null
+      let IsAdmin = Admin === 'admin';
+      if (IsAdmin) AdminID = null
 
-        console.log('Admin variable:', IsAdmin);
+      console.log('Admin variable:', IsAdmin);
 
-        await addUser(Fname,Lname, Email ,password, IsAdmin, AdminID);
-        console.log('User added successfully');
-        res.redirect("/dashboard");
+      await addUser(Fname, Lname, Email, password, IsAdmin, AdminID);
+      console.log('User added successfully');
+      res.redirect("/dashboard");
     } catch (error) {
-        console.error('Error adding user:', error);
-        res.status(500).json({ success: false, error: 'Internal Server Error' });
+      console.error('Error adding user:', error);
+      res.status(500).json({ success: false, error: 'Internal Server Error' });
     }
-},
+  },
 
 
-updateUser: async (req, res) => {
-  try {
-    // Extract user data from request body
-    let id = req.params.id;
-    let AdminID = req.body.AdminID;
-    let Fname = req.body.Fname;
-    let Lname = req.body.Lname;
-    let Email = req.body.Email;
-    let password = await bcrypt.hash(req.body.password, 6);
-    let IsAdmin = req.body.IsAdmin === 'admin';
-    if(IsAdmin) AdminID = null
-    console.log('Admin variable:', IsAdmin);
-    let user = {
-      AdminID, Fname, Lname, Email, password, IsAdmin // Use IsAdmin instead of Admin
-    };
+  updateUser: async (req, res) => {
+    try {
+      // Extract user data from request body
+      let id = req.params.id;
+      let AdminID = req.body.AdminID;
+      let Fname = req.body.Fname;
+      let Lname = req.body.Lname;
+      let Email = req.body.Email;
+      let password = await bcrypt.hash(req.body.password, 6);
+      let IsAdmin = req.body.IsAdmin === 'admin';
+      if (IsAdmin) AdminID = null
+      console.log('Admin variable:', IsAdmin);
+      let user = {
+        AdminID, Fname, Lname, Email, password, IsAdmin // Use IsAdmin instead of Admin
+      };
 
-    // Edit user in the database
-    await updateUser(id, user);
+      // Edit user in the database
+      await updateUser(id, user);
 
-    // Send success response
-    res.redirect("/dashboard");
-  } catch (error) {
-    console.error('Error editing user:', error);
-    res.status(500).json({ success: false, error: 'Internal Server Error' });
-  }
-},
+      // Send success response
+      res.redirect("/dashboard");
+    } catch (error) {
+      console.error('Error editing user:', error);
+      res.status(500).json({ success: false, error: 'Internal Server Error' });
+    }
+  },
 
 
   editUser: async (req, res) => {
@@ -231,23 +270,23 @@ updateUser: async (req, res) => {
 },
 
 
-async function testdb() {
+  async function testdb() {
 
-  // add admin
-  addUser('ahmed', 'khaled', 'ahmed@hotmail.com', true, null)
-  //add user with his admin
-  addUser("ali", 'mohammed', 'ali@hotmail.com', false, await searchUserID('ahmed', 'khaled'))
+    // add admin
+    addUser('ahmed', 'khaled', 'ahmed@hotmail.com', true, null)
+    //add user with his admin
+    addUser("ali", 'mohammed', 'ali@hotmail.com', false, await searchUserID('ahmed', 'khaled'))
 
-  // add corr data
-  addCorrData('youtube', 0.79, '2023/28/12', '2023,/29/12', 0)
+    // add corr data
+    addCorrData('youtube', 0.79, '2023/28/12', '2023,/29/12', 0)
 
-  //update admin last name
-  updateUser(await searchUserID('ahmed', 'khaled'), { password: 'saleh' })
-  // search for user by his id 
-  console.log(await searchUser('1703788699748'))
+    //update admin last name
+    updateUser(await searchUserID('ahmed', 'khaled'), { password: 'saleh' })
+    // search for user by his id 
+    console.log(await searchUser('1703788699748'))
 
-  // delete admin 
-  //  await deleteUser(await searchUserID('ahmed','saleh'))
-}
+    // delete admin 
+    //  await deleteUser(await searchUserID('ahmed','saleh'))
+  }
 
 

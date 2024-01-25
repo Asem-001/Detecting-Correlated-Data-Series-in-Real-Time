@@ -1,11 +1,11 @@
 class CorrelationData {
-    constructor( CorrName,SetThreshold,CorrDateStart,CorrDateEnd,NoOfCorr) {
+    constructor( CorrName,SetThreshold,CorrTimeAdded,CorrDateEnd,NoOfCorr) {
         
         return {
             "CorrName":CorrName,
             "SetThreshold":SetThreshold,
-            "CorrDateAdded":CorrDateStart,
-            'CorrDateEnded': CorrDateEnd,
+            "CorrDateAdded":CorrTimeAdded,
+            "CorrDateEnded":CorrDateEnd,
             "NoOfCorr": NoOfCorr,
         }
     }

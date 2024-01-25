@@ -19,6 +19,16 @@ let windowSize = 0
 function getCurrentTime() {
   return new Date().toLocaleTimeString();
 }
+function getTimeDate() {
+  let date = new Date()
+  let year = date.getFullYear();
+  let month = String(date.getMonth() + 1).padStart(2, '0'); // months are 0-indexed
+  let day = String(date.getDate()).padStart(2, '0');
+
+  return `${year}-${month}-${day}`;
+}
+
+
 
 // Updates the chart with new datasets
 function updateChart(chart) {
@@ -67,7 +77,7 @@ function addSeries() {
   if (!totalData.names.includes(newDataset.label)) {
     totalData.names.push(newDataset.label);
      // add the time that user add series
-    totalData.addDate.push(new Date().toDateString() + " " + new Date().toLocaleTimeString());
+    totalData.addDate.push( getTimeDate());
   }
 
   datasets.push(newDataset); // Add new dataset to the array
@@ -203,7 +213,7 @@ function stopDataUpdates(e) {
   enableControls();
   // e.preventDefault(); // Stop refreshing the page
 
-  totalData.endDate[0] = new Date().toDateString() + " " + new Date().toLocaleTimeString(); // Add the time that user end
+  totalData.endDate[0] =  getTimeDate(); // Add the time that user end
   thresholdUpdate()
   // After the user stop the program the data will be sended to the backend
 
@@ -293,14 +303,14 @@ function calculateCorrelationMatrix(e) {
         
             if (!correlationObject.correlatedSeries.includes(string)){
                 correlationObject.correlatedSeries.push(string);
-                correlationObject.startTime.push(new Date().toDateString() + " " + new Date().toLocaleTimeString());
-                correlationObject.endTime.push(new Date().toDateString() + " " + new Date().toLocaleTimeString());
+                correlationObject.startTime.push( getTimeDate());
+                correlationObject.endTime.push( getTimeDate());
                 correlationObject.threshold.push([parseFloat(correlation)]);
                
 
             }else{
                 let index = correlationObject.correlatedSeries.indexOf(string);
-                correlationObject.endTime[index]= new Date().toDateString() + " " + new Date().toLocaleTimeString()
+                correlationObject.endTime[index]= getTimeDate()
                 correlationObject.threshold[index].push(parseFloat(correlation))
                
             }   
