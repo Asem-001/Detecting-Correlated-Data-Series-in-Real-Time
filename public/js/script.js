@@ -180,6 +180,7 @@ let intervalId = null; // Holds the interval reference for data updates
 function startDataUpdates(e) {
 
   disableControls();
+  setSettings()
   
   if (intervalId === null) {
     thresholdUpdate()
