@@ -35,6 +35,8 @@ router.post('/sendbackend',checkAuthentication, Controller.addCorrelationData)
 
 router.post('/detectddatadackend',checkAuthentication, Controller.addDetectCorrelation)
 
+router.post('/sendAdminSettings',isAdmin, Controller.setSettings)
+
 router.post('/addUser', isAdmin,Controller.addUser);
 
 router.put('/updateUser/:id',isAdmin, Controller.updateUser);

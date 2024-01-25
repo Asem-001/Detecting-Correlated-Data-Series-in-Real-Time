@@ -1,7 +1,7 @@
 import { pearsonCorrelation ,pearsonEnhanced} from "./pearson.js";
 import { selectOptions, removeSeriesFromSelected, selectedSeries } from "./controlPanel.js";
 import { fetchData } from "./ApiHandler.js";
-import { sendTotalDataToBackend ,sendDetectdDataToBackend} from "./sendToBackend.js";
+import { sendTotalDataToBackend ,sendDetectdDataToBackend,sendAdminSettingsToUser} from "./sendToBackend.js";
 
 let datasets = []; // Array to store data series
 let time = []; // Array to store timestamps
@@ -163,10 +163,13 @@ function setupChart() {
 }
 //This function for update the threshold valus
 async function thresholdUpdate(){
-  let thresh = document.getElementById("range").value.split(",");
-  totalData.threshold[0] = parseFloat(thresh[0]);
-  totalData.threshold[1] = parseFloat(thresh[1]);
-  
+  let thresh;
+
+    thresh = document.getElementById("range").value.split(",");
+    console.log(thresh)
+    totalData.threshold[0] = parseFloat(thresh[0]);
+    totalData.threshold[1] = parseFloat(thresh[1]);
+
   thresh = [];
 }
 
@@ -177,6 +180,7 @@ let intervalId = null; // Holds the interval reference for data updates
 function startDataUpdates(e) {
 
   disableControls();
+  setSettings()
   
   if (intervalId === null) {
     thresholdUpdate()
@@ -265,7 +269,7 @@ function calculateCorrelationMatrix(e) {
               pearsonData[j][i][2],  pearsonData[j][i][3], pearsonData[j][i][4], pearsonData[j][i][5], pearsonData[j][i][6],pearsonData[j][i][7]);
               
            
-              console.log('after the pearsonEnhanced', correlation);
+             // console.log('after the pearsonEnhanced', correlation);
             //  console.log(correlation, gx, gy, sx, sy, sxy, sxx, syy,n);
               
               pearsonData[j][i][0] = gx
@@ -460,8 +464,21 @@ document.getElementById("startButton").addEventListener("click", function(event)
   startDataUpdates(e);
 });
 
+function setSettings(){
+  let id = document.getElementById('userID').value.trim();
+
+  let temp = document.getElementById("range").value.split(",");
+  let threshold = [];
+  threshold[0] = parseFloat(temp[0]);
+  threshold[1] = parseFloat(temp[1]);
+
+  let window = document.getElementById('sliceSizeSelect').value;
+  sendAdminSettingsToUser(id,threshold,window);
+}
+
 
   document.getElementById("stopButton").addEventListener("click", stopDataUpdates);
   document.getElementById("addSeriesButton").addEventListener("click", addSeries);
   document.getElementById("deleteSeriesButton").addEventListener("click", deleteSeries);
+  document.getElementById('setButton').addEventListener('click',setSettings)
 });

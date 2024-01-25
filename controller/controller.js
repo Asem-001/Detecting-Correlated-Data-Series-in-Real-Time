@@ -1,5 +1,5 @@
 const { searchUser, searchUserID, getAllUsers, deleteUser, updateUser, addUser } = require('./usersfunctions')
-const { addDetectCorr, addCorrData, CorrelationSearch, updateCorrleationData,addControlPanelInfo } = require('./correlationFunctions')
+const { addDetectCorr, addCorrData, CorrelationSearch, updateCorrleationData,addControlPanelInfo,searchControlPanelinfo } = require('./correlationFunctions')
 bcrypt = require('bcrypt')
 
 let IDforEndDate = []
@@ -14,17 +14,34 @@ module.exports = {
   },
 
   home: async (req, res) => {
-    res.render("index", {
+    let dumpInfo = {
+      AdminID: 123123,
+      SetThreshold:[-1,1],
+      WindowSize: 100
+    }
+    if(req.user.IsAdmin){
+      res.render("index", {
       title: "Home page",
-      user: req.user
-
-    });
+      user: req.user,
+      info: dumpInfo,
+    }); 
+    }else{
+      let info = await searchControlPanelinfo(req.user.AdminID);
+      res.render("index", {
+        title: "Home page",
+        user: req.user,
+        info: info,
+      });
+    }
+   
+  },
+  setSettings: async (req,res)=>{
+    let data = req.body.parcel
+    addControlPanelInfo(data.AdminID,data.SetThreshold,data.WindowSize)
   },
   addCorrelationData: async (req, res) => {
     // Extract parcel data from request body
     let data = req.body.parcel;
-
-
 
     // Loop over each name in the data.names array
     for (let i = 0; i < data.names.length; i++) {

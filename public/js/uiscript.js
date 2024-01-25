@@ -126,18 +126,44 @@
   
   })();
 
+let isAdmin = document.getElementById('isAdmin').value.trim();
 
-$(function() {
-  $("#slider-range").slider({
-    range: true,
-    min: -1,
-    max: 1,
-    step: 0.05,
-    values: [-1, 1], 
-    slide: function(event, ui) {
-      $("#range").val(ui.values[0] + " , " + ui.values[1]);
-    }
+if(isAdmin == "true"){
+
+  $(function() {
+    $("#slider-range").slider({
+      range: true,
+      min: -1,
+      max: 1,
+      step: 0.05,
+      values: [-1, 1], 
+      slide: function(event, ui) {
+        $("#range").val(ui.values[0] + " , " + ui.values[1]);
+      }
+    });
+    $("#range").val($("#slider-range").slider("values", 0) +
+      " , " + $("#slider-range").slider("values", 1));
   });
-  $("#range").val($("#slider-range").slider("values", 0) +
-    " , " + $("#slider-range").slider("values", 1));
-});
+}else{
+
+    let minValue = parseFloat(await $("#minValueInput").val()); 
+    let maxValue = parseFloat(await $("#maxValueInput").val()); 
+  $(function() {
+
+    $("#slider-range").slider({
+      range: true,
+      min: -1,
+      max: 1,
+      step: 0.05,
+      values: [minValue, maxValue], 
+      slide: function(event, ui) {
+        $("#range").val(ui.values[0] + " , " + ui.values[1]);
+      }
+    });
+    $("#range").val($("#slider-range").slider("values", 0) +
+      " , " + $("#slider-range").slider("values", 1));
+
+      $("#slider-range").slider("option", "disabled", true);
+  });
+}
+  

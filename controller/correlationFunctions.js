@@ -163,5 +163,5 @@ async function searchControlPanelinfo(id) {
     throw error;  // Re-throw the error to handle it outside if necessary
   }
 }
-module.exports = { addDetectCorr, updateCorrleationData, CorrelationSearch, addCorrData, getAllCorrelation, addControlPanelInfo }
+module.exports = { addDetectCorr, updateCorrleationData, CorrelationSearch, addCorrData, getAllCorrelation, addControlPanelInfo,searchControlPanelinfo }
 

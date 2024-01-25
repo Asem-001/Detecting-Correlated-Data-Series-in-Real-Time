@@ -61,24 +61,20 @@ export function pearsonCorrelation(x, y) {
 
 export function pearsonEnhanced(x, y, Gx, Gy, Sx, Sy, Sxy, Sxx, Syy,windowSize) {
   let computationCounter = 0;
-  // console.log('Gx, Gy, Sx, Sy, Sxy', Gx, Gy, Sx, Sy, Sxy, Sxx, Syy);
   let [Vx, Vy, c, correlation] = [0.0, 0.0, 0.0, 0.0];
-  // console.log('inside the function x', x);
-  // console.log('inside the function  y ', y);
-  // console.log(Sxy, Sxx, Syy, Vx, Vy, c);
+
   const n = x.length
-  console.log(windowSize,n);
-  console.log(windowSize !=n);
+//  console.log(windowSize,n);
+ // console.log(windowSize !=n);
    
   if( windowSize !=n){
      [Gx, Gy, Sx, Sy, Sxy, Sxx, Syy] = [0,0,0,0,0,0,0]
-       console.log('Innnnn',Gx, Gy, Sx, Sy, Sxy, Sxx, Syy);
+    //   console.log('Innnnn',Gx, Gy, Sx, Sy, Sxy, Sxx, Syy);
     windowSize = n
   }
 
   if ((Sx == 0  && Sy ==0 )) {
-       console.log(windowSize,n);
-
+     //  console.log(windowSize,n);
       for (let i = 0; i <x.length; i++) {
        
           Sx += x[i];
@@ -99,47 +95,24 @@ export function pearsonEnhanced(x, y, Gx, Gy, Sx, Sy, Sxy, Sxx, Syy,windowSize) 
       // console.log('Sx, Sxx, Sy, Syy, Sxy',Sx, Sxx, Sy, Syy, Sxy);
   }
   else {
-      console.log('iam here in Gx');
 
-      // // console.log(x[x.length - 1] != Gx);
-      // console.log('test x y',x[0],y[0]);
+    
       Sx =Sx - Gx + x[0]
       computationCounter += 2;
-      // Sx =Sx+x[0];
+ 
       Sy =Sy - Gy + y[0];
       computationCounter += 2;
-      // Sy =Sy+y[0];
 
       Sxy =Sxy - (Gx * Gy) + (x[0] * y[0]);
       computationCounter += 4;
-      // Sxy =Sxy+ (x[0] * y[0]);
-      // console.log('---------------------------------------');
-
-     
+ 
       Sxx = Sxx - (Gx ** 2) + (x[0]) ** 2;
       computationCounter += 4;
-      // Sxx = Sxx+ (x[0]) ** 2;
-
+   
       Syy = Syy - (Gy ** 2) + (y[0]) ** 2;
       computationCounter += 4;
-      // Syy = Syy+ (y[0])**2;
-      
-      // console.log('---------------------------------------');
     
-
   }
-
-
-
-  // console.log('Sx, Sxx, Sy, Syy, Sxy',Sx, Sxx, Sy, Syy, Sxy);
-
-  // console.log('Gx,', Gx);
-  // console.log('Gy,', Gy);
-  // console.log('Sx,', Sx);
-  // console.log('Sy,',Sy);
-  // console.log('Sxy,', Sxy);
-  // console.log('Sxx,',  Sxx);
-  // console.log('Syy,', Syy);
 
 // calculating the variance 
   Vx = Sxx - ((Sx ** 2) / n);
@@ -156,23 +129,16 @@ export function pearsonEnhanced(x, y, Gx, Gy, Sx, Sy, Sxy, Sxx, Syy,windowSize) 
 
   correlation = (c / V);
   computationCounter++;
-  // console.log('corr:',correlation, Vx, Vy, c, n);
-  // console.log( (c / V));
-
 
   Gx = x[x.length - 1];
   Gy = y[y.length - 1];
   
   document.getElementById("computation").innerText = " "+computationCounter;
 
-
   if (isNaN(correlation)) {
     
       correlation = 0
   }
-
    
   return [correlation, Gx, Gy, Sx, Sy, Sxy, Sxx, Syy,windowSize];
-
-
 }
