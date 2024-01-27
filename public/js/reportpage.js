@@ -14,10 +14,8 @@ document.getElementById('searchButton').addEventListener('click', async function
     const selectElement = document.getElementById('timeSeriesSelect');
     const selectedOptions = Array.from(selectElement.selectedOptions).map(option => option.value);
     let data = await sendReportData(e, [startDate, endDate, selectedOptions])
-    console.log("Selected Start Date:", startDate);
-    console.log("Selected End Date:", endDate);
-    console.log("Selected Series:", selectedOptions);
-    console.log(data);
+   
+    document.getElementById('dataDisplaySection').style.display = 'block';
 
     // Assuming 'data' is your array
     for (let i = 0; i < data.length; i++) {
@@ -36,15 +34,28 @@ document.getElementById('searchButton').addEventListener('click', async function
                         <p><strong>Number of Detected correlation: </strong>${data[i].NoOfCorr}</p>
                         <p><strong>Added at :</strong> ${data[i].CorrDateAdded[2] + '/' + data[i].CorrDateAdded[1] + '/' + data[i].CorrDateAdded[0]}</p>
                         <p><strong>Last Search at :</strong> ${data[i].CorrDateEnded[2] + '/' + data[i].CorrDateEnded[1] + '/' + data[i].CorrDateEnded[0]}</p>
-                        <a href="/detailedreport" class="card-link">Show more</a>
+                        <a href="/detailedreport" class="card-link" data-id="${i}">Show more</a>
+
                     </div>
                 </div>
             </div>`;
-        
+
         document.getElementById('accordionFlushExample').insertAdjacentHTML("afterbegin", htmlContent);
     }
+
+    const showMoreLinks = document.querySelectorAll('.card-link');
+    // localStorage.setItem('allData', JSON.stringify(data));
+
+    showMoreLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault(); // Prevent the default link behavior
+            const dataIndex = this.getAttribute('data-id');
+            localStorage.setItem('selectedData', JSON.stringify(data[dataIndex]));
+            window.location.href = '/detailedreport';
+        });
+    });
     
 
 
-    document.getElementById('dataDisplaySection').style.display = 'block';
 });
+

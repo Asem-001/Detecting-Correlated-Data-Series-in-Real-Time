@@ -58,3 +58,17 @@ export async function sendReportData(e,ReportData){ // The totalData dic will be
 }
 
 
+export async function sendDetailsReportData(e,ReportData){ // The totalData dic will be sended to the backend server
+    
+    e.preventDefault() // Stop refreshing the page 
+    console.log('ima in func');
+    let res = await fetch('/sendDetailsReportDataToBackend/'+ ReportData  , { // Send the data to the router in JSON file 
+        method:'GET',
+        
+    } )
+    const data = await res.json() 
+            console.log(data);
+     return data
+
+
+}
