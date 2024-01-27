@@ -1,5 +1,5 @@
 const { searchUser, searchUserID, getAllUsers, deleteUser, updateUser, addUser } = require('./usersfunctions')
-const { addDetectCorr, addCorrData, CorrelationSearch, updateCorrleationData, addControlPanelInfo, SearchDetectedCorrelations, SearchCorrelationsByRangeDate } = require('./correlationFunctions')
+const { addDetectCorr, addCorrData, CorrelationSearch, updateCorrleationData, addControlPanelInfo, SearchDetectedCorrelations, SearchCorrelationsByRangeDate,calculateCorrelationFrequencies, getAllCorrelation } = require('./correlationFunctions')
 const e = require('method-override')
 bcrypt = require('bcrypt')
 
@@ -8,12 +8,12 @@ let IDforEndDate = []
 
 module.exports = {
 
-  index: (req, res) => {
-
+  index:  (req, res) => {
+    
     // addControlPanelInfo('2455763',[0.9,1],90)
     // SearchDetectedCorrelations("N225")
-
-
+   
+      
     res.redirect('/home')
 
   },
@@ -21,16 +21,16 @@ module.exports = {
   home: async (req, res) => {
     let dumpInfo = {
       AdminID: 123123,
-      SetThreshold:[-1,1],
+      SetThreshold: [-1, 1],
       WindowSize: 100
     }
-    if(req.user.IsAdmin){
+    if (req.user.IsAdmin) {
       res.render("index", {
-      title: "Home page",
-      user: req.user,
-      info: dumpInfo,
-    }); 
-    }else{
+        title: "Home page",
+        user: req.user,
+        info: dumpInfo,
+      });
+    } else {
       let info = await searchControlPanelinfo(req.user.AdminID);
       res.render("index", {
         title: "Home page",
@@ -38,11 +38,11 @@ module.exports = {
         info: info,
       });
     }
-   
+
   },
-  setSettings: async (req,res)=>{
+  setSettings: async (req, res) => {
     let data = req.body.parcel
-    addControlPanelInfo(data.AdminID,data.SetThreshold,data.WindowSize)
+    addControlPanelInfo(data.AdminID, data.SetThreshold, data.WindowSize)
   },
   addCorrelationData: async (req, res) => {
     // Extract parcel data from request body
@@ -94,11 +94,11 @@ module.exports = {
 
     let data = req.body.parcel;
     console.log(data);
-
+    let date= data.Date.split('-')
     // Assuming addDetectCorr is a function that needs to be implemented
     let name = data.correlatedSeries[0].split(',')
     console.log(name);
-    addDetectCorr(name[0], name[1], data.threshold, data.startTime[0], data.endTime[0]);
+    addDetectCorr(name[0], name[1], data.threshold, data.startTime[0], data.endTime[0],date,data.Windowsize);
 
     res.redirect('/home')
 
@@ -116,35 +116,59 @@ module.exports = {
 
 
 
-  reports: async(req, res) => {
-   
+  reports: async (req, res) => {
+
     res.render("reports", {
       title: "detailedReport",
       user: req.user,
-   
+
     })
   },
 
   reportssendData: async (req, res) => {
-
-    let date = req.params.date.split(',')
-    let start = date[0].split('-')
-    let end = date[1].split('-')
-    console.log(start, end);
-    const data =  await SearchCorrelationsByRangeDate(start, end)
-
-    // for(let i=0 ;i<data.length; i++){
-    //   console.log(data[i]);
-    // }
-    res.status(200).json({
-    ReportDataByDate: data})
+    let data;
+    let date = req.params.date.split(',');
+      
+    // Check if both start and end dates are provided
+    if (date.length >= 2 && date[0] && date[1]) {
+      data  = []
+        let start = date[0].split('-');
+        let end = date[1].split('-');
+        data = await SearchCorrelationsByRangeDate(start, end, date[2]);
+    } 
+    // Check if the third parameter is provided
+    else if (date.length > 2 && date[2]) {
+      
+        data  = []
+        for(let i =2; i<date.length;i++)
+        data.push(await CorrelationSearch(date[i]));
+    } 
+    // Default case
+    else {
+        data = await getAllCorrelation();
+    }
 
    
-    res.render('reports')
-  },
+    res.status(200).json({
+        ReportDataByDate: data
+    });
+},
 
-  getReportData: (req, res) => {
 
+  //This function return all data that ouccr correlation between the corrname and others data (detectedData)
+  // and return  Calculates the frequencies of correlation for a given corrname (numberOfFreq).
+  getDetectedCorrelations: async(req, res) => {
+      
+    let corrname = req.params.corrname
+
+    const detectedData = await SearchDetectedCorrelations(corrname)
+    const numberOfFreq = await calculateCorrelationFrequencies(corrname)
+;
+    res.status(200).json({
+      detectedData: detectedData,
+      numberOfFreq: numberOfFreq
+
+    })
   },
   detailedReport: (req, res) => {
 

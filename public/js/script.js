@@ -12,12 +12,14 @@ let totalData = {'names': [],
 let correlationObject = {'correlatedSeries': [],
                          'startTime': [],
                          'endTime': [],
-                         'threshold': [] } 
+                         'threshold': [], 
+                         'Date': [],
+                        'Windowsize':[] }
 let pearsonData =[[]]
 let windowSize = 0
 // Returns current time as a string
 function getCurrentTime() {
-  return new Date().toLocaleTimeString();
+  return new Date().toLocaleTimeString('en-eu');
 }
 function getTimeDate() {
   let date = new Date()
@@ -233,6 +235,7 @@ function stopDataUpdates(e) {
         correlationObject.startTime = [];
         correlationObject.endTime = [];
         correlationObject.threshold = [];
+        correlationObject.Date = [];
 
     }
     
@@ -302,17 +305,20 @@ function calculateCorrelationMatrix(e) {
           if (correlation >= totalData.threshold[0] && correlation <= totalData.threshold[1]) {
         
             if (!correlationObject.correlatedSeries.includes(string)){
+              let sliceSize = parseInt(document.getElementById("sliceSizeSelect").value,10);
                 correlationObject.correlatedSeries.push(string);
-                correlationObject.startTime.push( getTimeDate());
-                correlationObject.endTime.push( getTimeDate());
+                correlationObject.startTime.push( getCurrentTime());
+                correlationObject.endTime.push( getCurrentTime());
                 correlationObject.threshold.push([parseFloat(correlation)]);
-               
+                correlationObject.Date.push(getTimeDate());
+                correlationObject.Windowsize.push(sliceSize);
+
 
             }else{
                 let index = correlationObject.correlatedSeries.indexOf(string);
-                correlationObject.endTime[index]= getTimeDate()
+                correlationObject.endTime[index]= getCurrentTime()
                 correlationObject.threshold[index].push(parseFloat(correlation))
-               
+                correlationObject.Windowsize[index] =(sliceSize);
             }   
           }else{
               if(correlationObject.correlatedSeries.indexOf(string) != -1){
@@ -326,7 +332,9 @@ function calculateCorrelationMatrix(e) {
                     'correlatedSeries': [correlationObject.correlatedSeries[index]],
                   'startTime':  [ correlationObject.startTime[index]],
                   'endTime':  [correlationObject.endTime[index]],
-                  'threshold':  correlationObject.threshold[index]
+                  'threshold':  correlationObject.threshold[index],
+                   "Date":  correlationObject.Date[index],
+                   "Windowsize": correlationObject.Windowsize[index]
                 } 
                 
                   sendDetectdDataToBackend(objectToBeSent)
@@ -335,7 +343,7 @@ function calculateCorrelationMatrix(e) {
                   correlationObject.startTime.splice(index,1);
                   correlationObject.endTime.splice(index,1);
                   correlationObject.threshold.splice(index,1);
-
+                  correlationObject.Date.splice(index,1);
               }
             }  
           row.push(correlation);

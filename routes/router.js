@@ -14,7 +14,7 @@ router.get('/home', checkAuthentication, Controller.home);
 
 router.get('/reports', checkAuthentication, Controller.reports);
 router.get('/reports', checkAuthentication, Controller.reports);
-router.get('/getReportData', checkAuthentication, Controller.getReportData);
+router.get('/sendDetailsReportDataToBackend/:corrname', checkAuthentication, Controller.getDetectedCorrelations)
 
 router.get('/login', checkNotAuthentication, controller.login);
 
@@ -40,6 +40,8 @@ router.post('/sendAdminSettings',isAdmin, Controller.setSettings)
 router.get('/sendReportDataToBackend/:date', checkAuthentication, Controller.reportssendData)
 
 router.get('/detailedreport', checkAuthentication, Controller.detailedReport)
+
+
 
 router.post('/addUser', isAdmin, Controller.addUser);
 

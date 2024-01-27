@@ -1,10 +1,10 @@
 class CorrelationData {
-    constructor( CorrName,SetThreshold,CorrTimeAdded,CorrDateEnd,NoOfCorr) {
+    constructor( CorrName,SetThreshold,CorrDateAdded,CorrDateEnd,NoOfCorr) {
         
         return {
             "CorrName":CorrName,
             "SetThreshold":SetThreshold,
-            "CorrDateAdded":CorrTimeAdded,
+            "CorrDateAdded":CorrDateAdded,
             "CorrDateEnded":CorrDateEnd,
             "NoOfCorr": NoOfCorr,
         }
@@ -18,7 +18,7 @@ class CorrelationData {
 
 }
 class DetectedCorrelation{
-    constructor(FirstDataID,SecondDataID,DetcThreshold,CorrTimeStart,CorrTimeEnd) {
+    constructor(FirstDataID,SecondDataID,DetcThreshold,CorrTimeStart,CorrTimeEnd,DateDetected,WindowSize) {
         
         return {
              'FirstNameID':FirstDataID,
@@ -26,6 +26,8 @@ class DetectedCorrelation{
             'DetcThreshold':DetcThreshold,
             'CorrTimeStart': CorrTimeStart,
             'CorrTimeEnd':CorrTimeEnd,
+            "DateDetected":DateDetected,
+            "WindowSize": WindowSize
         }
     }
 // Meta data

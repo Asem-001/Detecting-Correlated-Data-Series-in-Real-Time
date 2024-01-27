@@ -37,14 +37,14 @@ async function CorrelationSearch(data) {
 }
 // search for correaltion data by corrName in data base
 async function SearchDetectedCorrelations(data) {
-  let d;
+  let d = [];
 
   const q = await query(collection(db, 'DetectedCorrelation'), or(where("FirstNameID", "==", data), where("SecondNameID", "==", data)));
   const querySnapshot = await getDocs(q);
 
   querySnapshot.forEach((doc) => {
-    d = doc.data();
-    console.log(d);
+    d.push(doc.data());
+    // console.log(d);
   });
 
   //check if doc is exist
@@ -56,7 +56,72 @@ async function SearchDetectedCorrelations(data) {
     return undefined
   }
 }
-async function SearchCorrelationsByRangeDate(startRange, endRange) {
+/**
+ * Calculates the frequencies of correlation for a given name.
+ * It tallies occurrences of FirstNameID and SecondNameID in the data.
+ * 
+ * @param {string} Name - The name for which correlations are to be calculated.
+ * @returns {Object} An object containing the tallied correlation frequencies.
+ */
+async function calculateCorrelationFrequencies(Name) {
+
+  // Initialize an object to store the correlation frequencies
+  let detectCounter = { 'CorrName': {} };
+  let detectCounterbyyear = { 'months': {} };
+  let detectCounterbymonth = { 'week': {} };
+  let detectCounterbyweek = { 'days': {} };
+
+  // Retrieve the dataset based on the specified name
+  const redata = await SearchDetectedCorrelations(Name);
+  // Iterate over each data item
+  redata.forEach(d => {
+    // Check if the FirstNameID matches the specified name
+    if (d.FirstNameID == Name) {
+      // If SecondNameID is not already a key in detectCounter, initialize it with 1
+      if (!(d.SecondNameID in detectCounter.CorrName)) {
+        detectCounter.CorrName[d.SecondNameID] = 1;
+      } else {
+        // If it already exists, increment its count
+        detectCounter.CorrName[d.SecondNameID] += 1;
+      }
+    } else {
+      // If FirstNameID is not the specified name, do the same for FirstNameID
+      if (!(d.FirstNameID in detectCounter.CorrName)) {
+        detectCounter.CorrName[d.FirstNameID] = 1;
+      } else {
+        // Increment the count of FirstNameID
+        detectCounter.CorrName[d.FirstNameID] += 1;
+      }
+    }
+    if (!(d.DateDetected[1] in detectCounterbyyear.months)) {
+      detectCounterbyyear.months[numberToMonth(parseFloat(d.DateDetected[1]))] = 1
+    }
+    else { detectCounterbyyear.months[d.DateDetected[1]] += 1 }
+
+    let week = getWeekNumberByDay(parseFloat(d.DateDetected[2]))
+    if (!(week in detectCounterbymonth.week)) {
+      detectCounterbymonth.week[week] = 1
+    }
+    else { detectCounterbymonth.week[week] += 1 }
+
+
+  });
+
+  // Log the final tally of correlation frequencies
+  console.log(detectCounter);
+
+  // Return the detectCounter object
+  return [detectCounter, detectCounterbyyear, detectCounterbymonth];
+}
+function numberToMonth(num) {
+  return new Date(0, num - 1).toLocaleString('en-US', { month: 'long' });
+}
+function getWeekNumberByDay(dayOfYear) {
+  const startOfYear = new Date(new Date().getFullYear(), 0, 1);
+  const pastDaysOfYear = dayOfYear - 1; // Subtract 1 because January 1st is day 1
+  return Math.ceil((pastDaysOfYear + startOfYear.getDay()) / 7);
+}
+async function SearchCorrelationsByRangeDate(startRange, endRange, corname) {
   let dates = [];
   console.log(startRange, endRange);
 
@@ -65,23 +130,31 @@ async function SearchCorrelationsByRangeDate(startRange, endRange) {
 
 
   const querySnapshot = await getDocs(q);
-  
+
   querySnapshot.forEach((doc) => {
     const corrDateAdded = doc.data().CorrDateAdded; // Assuming format [year, month, day]
     const corrDateEnded = doc.data().CorrDateEnded; // Assuming format [year, month, day]
-
+    const fname = doc.data().CorrName
+    // console.log(fname);
+    // console.log(corname != '');
     // Create Date objects for comparison
-    const addedDateObj = new Date(corrDateAdded[0], corrDateAdded[1] , corrDateAdded[2]); // months are 0-indexed in JS
-    const endedDateObj = new Date(corrDateEnded[0], corrDateEnded[1] , corrDateEnded[2]);
+    const addedDateObj = new Date(corrDateAdded[0], corrDateAdded[1], corrDateAdded[2]); // months are 0-indexed in JS
+    const endedDateObj = new Date(corrDateEnded[0], corrDateEnded[1], corrDateEnded[2]);
     const comparisonDateObj = new Date(startRange[0], startRange[1], startRange[2]); // started range
     const comparisonDateObj2 = new Date(endRange[0], endRange[1], endRange[2]); // ended range
 
     // Check if CorrDateAdded is after or on the comparison date AND CorrDateEnded is before or on the comparison date
-    if (addedDateObj >= comparisonDateObj && endedDateObj <= comparisonDateObj2) {
+    if (corname != '') {
+      if ((addedDateObj >= comparisonDateObj && endedDateObj <= comparisonDateObj2) && (fname == corname)) {
+        dates.push(doc.data());
+      }
+    }
+    else if (addedDateObj >= comparisonDateObj && endedDateObj <= comparisonDateObj2) {
+      
       dates.push(doc.data());
     }
-});
-  
+  });
+
   // console.log(dates);
   //check if doc is exist
   if (dates.length != 0) {
@@ -104,10 +177,10 @@ async function updateCorrleationData(id, newdata) {
   }
 }
 
-async function addDetectCorr(FirstCorrName, SecondCorrName, Threshold, CorrTimeStart, CorrTimeEnd) {
+async function addDetectCorr(FirstCorrName, SecondCorrName, Threshold, CorrTimeStart, CorrTimeEnd, DateDetected, WindowSize) {
   const date = new Date
   // Create a new correlation object with given parameters
-  const corr = new DetectedCorrelation(FirstCorrName, SecondCorrName, Threshold, CorrTimeStart, CorrTimeEnd)
+  const corr = new DetectedCorrelation(FirstCorrName, SecondCorrName, Threshold, CorrTimeStart, CorrTimeEnd, DateDetected, WindowSize)
 
   // Search for the ID name of the first correlation
   const firstID = await CorrelationSearch(FirstCorrName)
@@ -144,12 +217,13 @@ async function addDetectCorr(FirstCorrName, SecondCorrName, Threshold, CorrTimeS
 async function getAllCorrelation() {
   try {
     const usersSnapshot = await getDocs(collection(db, 'Correlation'));
+    let alldata = []
+    usersSnapshot.forEach((doc) => {
 
-    // usersSnapshot.forEach((doc) => {
-
-    //     console.log(doc.id, " => ", doc.data());
-    //   });
-    return usersSnapshot
+      // console.log(doc.id, " => ", doc.data());
+      alldata.push(doc.data())
+    });
+    return alldata
   } catch (error) {
     console.error('Error fetching users:', error);
     throw error;  // Re-throw the error if you want to handle it outside this function
@@ -225,5 +299,8 @@ async function searchControlPanelinfo(id) {
 
 
 
-module.exports = { addDetectCorr, updateCorrleationData, CorrelationSearch, addCorrData, getAllCorrelation, addControlPanelInfo, SearchDetectedCorrelations, SearchCorrelationsByRangeDate }
+module.exports = {
+  addDetectCorr, updateCorrleationData, CorrelationSearch, addCorrData, getAllCorrelation, addControlPanelInfo, SearchDetectedCorrelations,
+  SearchCorrelationsByRangeDate, calculateCorrelationFrequencies
+}
 
