@@ -44,6 +44,7 @@ module.exports = {
     let data = req.body.parcel
     addControlPanelInfo(data.AdminID, data.SetThreshold, data.WindowSize)
   },
+  
   addCorrelationData: async (req, res) => {
     // Extract parcel data from request body
     let data = req.body.parcel;
