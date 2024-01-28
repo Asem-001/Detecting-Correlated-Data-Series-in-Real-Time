@@ -38,15 +38,15 @@ async function CorrelationSearch(data) {
 // search for correaltion data by corrName in data base
 async function SearchDetectedCorrelations(data) {
   let d = [];
-
+  
   const q = await query(collection(db, 'DetectedCorrelation'), or(where("FirstNameID", "==", data), where("SecondNameID", "==", data)));
   const querySnapshot = await getDocs(q);
-
+  
   querySnapshot.forEach((doc) => {
     d.push(doc.data());
     // console.log(d);
   });
-
+  
   //check if doc is exist
   if (d) {
     return d;
@@ -62,65 +62,103 @@ async function SearchDetectedCorrelations(data) {
  * 
  * @param {string} Name - The name for which correlations are to be calculated.
  * @returns {Object} An object containing the tallied correlation frequencies.
- */
-async function calculateCorrelationFrequencies(Name) {
+*/
+function incrementCount(obj, key) {
+  if (!(key in obj)) {
+    obj[key] = 1;
+  } else {
+    obj[key] += 1;
+  }
+}
 
+async function calculateCorrelationFrequencies(Name) {
+  
   // Initialize an object to store the correlation frequencies
-  let detectCounter = { 'CorrName': {} };
   let detectCounterbyyear = { 'months': {} };
   let detectCounterbymonth = { 'week': {} };
-  let detectCounterbyweek = { 'days': {} };
+  // Initialize an object to store the correlation frequencies
+  let detectCounter = { 'CorrName': {} };
+  let AvgThresoldForEachDetect = { 'thresoldavg': {} };
+  let AgvWindowSizeForEachDetect = { 'windowsizwavg': {} };
+  // Initialize an object to store the the average of window size and thresold
+  let avgResults = {};
 
   // Retrieve the dataset based on the specified name
   const redata = await SearchDetectedCorrelations(Name);
+  
   // Iterate over each data item
   redata.forEach(d => {
-    // Check if the FirstNameID matches the specified name
-    if (d.FirstNameID == Name) {
-      // If SecondNameID is not already a key in detectCounter, initialize it with 1
-      if (!(d.SecondNameID in detectCounter.CorrName)) {
-        detectCounter.CorrName[d.SecondNameID] = 1;
-      } else {
-        // If it already exists, increment its count
-        detectCounter.CorrName[d.SecondNameID] += 1;
-      }
-    } else {
-      // If FirstNameID is not the specified name, do the same for FirstNameID
-      if (!(d.FirstNameID in detectCounter.CorrName)) {
-        detectCounter.CorrName[d.FirstNameID] = 1;
-      } else {
-        // Increment the count of FirstNameID
-        detectCounter.CorrName[d.FirstNameID] += 1;
-      }
-    }
-    if (!(d.DateDetected[1] in detectCounterbyyear.months)) {
-      detectCounterbyyear.months[numberToMonth(parseFloat(d.DateDetected[1]))] = 1
-    }
-    else { detectCounterbyyear.months[d.DateDetected[1]] += 1 }
+    const id = d.FirstNameID === Name ? d.SecondNameID : d.FirstNameID;
 
-    let week = getWeekNumberByDay(parseFloat(d.DateDetected[2]))
-    if (!(week in detectCounterbymonth.week)) {
-      detectCounterbymonth.week[week] = 1
+    // Initialize if this is the first occurrence
+    if (!(id in detectCounter.CorrName)) {
+      detectCounter.CorrName[id] = 1;
+      AvgThresoldForEachDetect.thresoldavg[id] = [...d.DetcThreshold];
+      AgvWindowSizeForEachDetect.windowsizwavg[id] = [d.WindowSize];
+    } else {
+      // Increment count and append data for subsequent occurrences
+      detectCounter.CorrName[id] += 1;
+      AvgThresoldForEachDetect.thresoldavg[id].push(...d.DetcThreshold);
+      AgvWindowSizeForEachDetect.windowsizwavg[id].push(d.WindowSize);
     }
-    else { detectCounterbymonth.week[week] += 1 }
+
+    // At this point, you will need to process AvgThresoldForEachDetect and AgvWindowSizeForEachDetect
+    // to calculate the actual averages.
+
+    let month = numberToMonth(d.DateDetected[1]);
+    let week = getWeekNumberByDay(d.DateDetected[2]);
+    //  this function take chaeck if this object is there increment 1 if not create new and asign 1 
+    incrementCount(detectCounterbyyear.months, month);
+    incrementCount(detectCounterbymonth.week, week);
 
 
   });
 
-  // Log the final tally of correlation frequencies
-  console.log(detectCounter);
 
-  // Return the detectCounter object
-  return [detectCounter, detectCounterbyyear, detectCounterbymonth];
+  for (let id in AgvWindowSizeForEachDetect.windowsizwavg) {
+    // Initialize the result object for this ID
+    if (!avgResults[id]) {
+      avgResults[id] = { avgWindowSize: 0, avgThreshold: 0 };
+    }
+
+    // Calculate average window size
+    let totalWindowSize = AgvWindowSizeForEachDetect.windowsizwavg[id].reduce((a, b) => a + b, 0);
+    avgResults[id].avgWindowSize = (totalWindowSize / AgvWindowSizeForEachDetect.windowsizwavg[id].length).toFixed(2);
+
+    // Calculate average threshold
+    let totalThreshold = AvgThresoldForEachDetect.thresoldavg[id].reduce((a, b) => a + b, 0);
+    avgResults[id].avgThreshold = (totalThreshold / AvgThresoldForEachDetect.thresoldavg[id].length).toFixed(2)
+  }
+
+
+  // Return the  objects
+  return [detectCounter, detectCounterbyyear, detectCounterbymonth, avgResults];
 }
+
+// Converts a numeric month value to its corresponding month name.
 function numberToMonth(num) {
   return new Date(0, num - 1).toLocaleString('en-US', { month: 'long' });
 }
-function getWeekNumberByDay(dayOfYear) {
-  const startOfYear = new Date(new Date().getFullYear(), 0, 1);
-  const pastDaysOfYear = dayOfYear - 1; // Subtract 1 because January 1st is day 1
-  return Math.ceil((pastDaysOfYear + startOfYear.getDay()) / 7);
+//Returns the ordinal suffix for a given number.
+function getOrdinalSuffix(number) {
+
+  switch (number) {
+      case 1: return 'st';
+      case 2: return 'nd';
+      case 3: return 'rd';
+      default: return 'th';
+  }
 }
+
+//Calculates the week number of the year for a given day.
+function getWeekNumberByDay(dayOfYear) {
+const startOfYear = new Date(new Date().getFullYear(), 0, 1);
+const pastDaysOfYear = dayOfYear - 1; // Subtract 1 because January 1st is day 1
+const weekNumber = Math.ceil((pastDaysOfYear + startOfYear.getDay()) / 7);
+
+return weekNumber + getOrdinalSuffix(weekNumber);
+}
+
 async function SearchCorrelationsByRangeDate(startRange, endRange, corname) {
   let dates = [];
   console.log(startRange, endRange);
@@ -135,9 +173,7 @@ async function SearchCorrelationsByRangeDate(startRange, endRange, corname) {
     const corrDateAdded = doc.data().CorrDateAdded; // Assuming format [year, month, day]
     const corrDateEnded = doc.data().CorrDateEnded; // Assuming format [year, month, day]
     const fname = doc.data().CorrName
-    // console.log(fname);
-    // console.log(corname != '');
-    // Create Date objects for comparison
+
     const addedDateObj = new Date(corrDateAdded[0], corrDateAdded[1], corrDateAdded[2]); // months are 0-indexed in JS
     const endedDateObj = new Date(corrDateEnded[0], corrDateEnded[1], corrDateEnded[2]);
     const comparisonDateObj = new Date(startRange[0], startRange[1], startRange[2]); // started range
@@ -150,7 +186,7 @@ async function SearchCorrelationsByRangeDate(startRange, endRange, corname) {
       }
     }
     else if (addedDateObj >= comparisonDateObj && endedDateObj <= comparisonDateObj2) {
-      
+
       dates.push(doc.data());
     }
   });

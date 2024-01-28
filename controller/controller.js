@@ -93,11 +93,9 @@ module.exports = {
 
 
     let data = req.body.parcel;
-    console.log(data);
     let date= data.Date.split('-')
     // Assuming addDetectCorr is a function that needs to be implemented
     let name = data.correlatedSeries[0].split(',')
-    console.log(name);
     addDetectCorr(name[0], name[1], data.threshold, data.startTime[0], data.endTime[0],date,data.Windowsize);
 
     res.redirect('/home')
@@ -291,26 +289,26 @@ module.exports = {
       res.status(500).send('Internal Server Error');
     }
   },
-},
+}
 
 
-  async function testdb() {
+  // async function testdb() {
 
-    // add admin
-    addUser('ahmed', 'khaled', 'ahmed@hotmail.com', true, null)
-    //add user with his admin
-    addUser("ali", 'mohammed', 'ali@hotmail.com', false, await searchUserID('ahmed', 'khaled'))
+  //   // add admin
+  //   addUser('ahmed', 'khaled', 'ahmed@hotmail.com', true, null)
+  //   //add user with his admin
+  //   addUser("ali", 'mohammed', 'ali@hotmail.com', false, await searchUserID('ahmed', 'khaled'))
 
-    // add corr data
-    addCorrData('youtube', 0.79, '2023/28/12', '2023,/29/12', 0)
+  //   // add corr data
+  //   addCorrData('youtube', 0.79, '2023/28/12', '2023,/29/12', 0)
 
-    //update admin last name
-    updateUser(await searchUserID('ahmed', 'khaled'), { password: 'saleh' })
-    // search for user by his id 
-    console.log(await searchUser('1703788699748'))
+  //   //update admin last name
+  //   updateUser(await searchUserID('ahmed', 'khaled'), { password: 'saleh' })
+  //   // search for user by his id 
+  //   console.log(await searchUser('1703788699748'))
 
-    // delete admin 
-    //  await deleteUser(await searchUserID('ahmed','saleh'))
-  }
+  //   // delete admin 
+  //   //  await deleteUser(await searchUserID('ahmed','saleh'))
+  // }
 
 

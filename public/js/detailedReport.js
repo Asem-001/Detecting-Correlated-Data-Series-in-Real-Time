@@ -1,11 +1,14 @@
 
 import { sendDetailsReportData } from './sendToBackend.js';
-let selectedData,detectedData
+
+
+let selectedData, detectedData, myBarChart;
+
+
 document.addEventListener("DOMContentLoaded", async (e) => {
     const selectedDataString = localStorage.getItem('selectedData');
-    const allData = localStorage.getItem('allData')
-//    console.log(allData);
-   
+  
+
     if (!selectedDataString) {
         console.log('No selected data available');
         return;
@@ -13,52 +16,72 @@ document.addEventListener("DOMContentLoaded", async (e) => {
 
 
     selectedData = JSON.parse(selectedDataString);
-    console.log('Selected Data:', selectedData);
 
     detectedData = await sendDetailsReportData(e, selectedData.CorrName);
-    console.log('From JS page:', detectedData);
 
-    // Rest of your code...
+    let data_avg = detectedData.numberOfFreq[3]
+    let data_number_freq = detectedData.numberOfFreq[0]
 
+ // show information about the data   it in front end
     let htmlInfoContent = `
                         <h6 class="card-title-small">Data Name: <b>${selectedData.CorrName}</b> </h6>
                         <h6 class="card-title-small">Added Date: <b> ${selectedData.CorrDateAdded[2] + '/' + selectedData.CorrDateAdded[1] + '/' + selectedData.CorrDateAdded[0]}</b></h6>
                         <h6 class="card-title-small">Last Search Date: <b>${selectedData.CorrDateEnded[2] + '/' + selectedData.CorrDateEnded[1] + '/' + selectedData.CorrDateEnded[0]}</b></h6>
                         <h6 class="card-title-small">Maximum Threshold: <b>${Math.max(...selectedData.SetThreshold)}</b></h6>
-                        <h6 class="card-title-small">Minimum Threshold: <b>${Math.min(...selectedData.SetThreshold)}</b></h6>
+                        <h6 class="card-title-small">Minimum Threshold: <b>${Math.min(...selectedData.SetThreshold)}</b></h6>                    
 `
-    document.getElementById('infoContainer').innerHTML = htmlInfoContent
-    document.getElementById('totalDetected').innerText = selectedData.NoOfCorr
-    
-    document.getElementById('barchart_id').innerText = 'Bar Chart: All detected data wth '+selectedData.CorrName +" by Time "
-    document.getElementById('piechart_id').innerText = 'Pie Chart: Distribution of Detected Data Correlated with '+selectedData.CorrName 
 
-    let dD = detectedData.numberOfFreq[0]
-    let topThree = Object.entries(dD.CorrName)
+    // Get the top three entries from dD.CorrName
+    let topThree = Object.entries(data_number_freq.CorrName)
         .sort((a, b) => b[1] - a[1])
         .slice(0, 3);
 
-    console.log(topThree);
+
+    // take the top 3 data then show it in front end
     for (let i = 0; i < topThree.length; i++) {
         let elementId = `TotalDeteNumber-top${i + 1}`;
         let element = document.getElementById(elementId);
-    
+
         if (element) {
             element.innerHTML = `${topThree[i][0]}<b> detected ${topThree[i][1]}</b> times.`;
         }
     }
-    
-     const colorArray = Object.values(dD.CorrName).map(() => getRandomColor());
-     let color = Object.keys(dD.CorrName).map(() => getRandomColor())
-    console.log(colorArray);
+
+
+
+    // create the bar chart and pie chart 
+    createPieChart(Object.keys(data_number_freq.CorrName), Object.values(data_number_freq.CorrName))
+    // send the year as defualt value for first time 
+    BarChart(detectedData.numberOfFreq[1].months, 'year')
+
+
+    //avgResults
+    for (const [key, value] of Object.entries(data_avg)) {
+
+        let htmlAvgContent = ` 
+        <h6 class="card-title-small">Average of <b>${key} </b> Thresold : <b>${value.avgThreshold} and </b> Window Size :<b>${value.avgWindowSize}</b></h6>
+        
+        
+        `
+        document.getElementById('avgContainer').insertAdjacentHTML("afterbegin", htmlAvgContent);
+    }
+
+    document.getElementById('infoContainer').insertAdjacentHTML("afterbegin", htmlInfoContent);
+    document.getElementById('totalDetected').innerText = selectedData.NoOfCorr
+    document.getElementById('barchart_id').innerText = 'Bar Chart: All detected data wth ' + selectedData.CorrName + " by Time "
+    document.getElementById('piechart_id').innerText = 'Pie Chart: Distribution of Detected Data Correlated with ' + selectedData.CorrName
+});
+
+function createPieChart(dataLabels, dataValues) {
+    let color = dataLabels.map(() => getRandomColor());
+
     new Chart(document.querySelector('#pieChart'), {
         type: 'pie',
         data: {
-            labels: Object.keys(dD.CorrName),
+            labels: dataLabels,
             datasets: [{
-                data: Object.values(dD.CorrName),
+                data: dataValues,
                 backgroundColor: color,
-               
                 hoverOffset: 4
             }]
         },
@@ -78,11 +101,10 @@ document.addEventListener("DOMContentLoaded", async (e) => {
                 }
             }
         }
-
     });
+}
 
-    BarChart(detectedData.numberOfFreq[1].months,'year')
-});
+//crate random colors 
 function getRandomColor() {
     const r = Math.floor(Math.random() * 256);
     const g = Math.floor(Math.random() * 256);
@@ -91,27 +113,25 @@ function getRandomColor() {
 }
 
 
-document.getElementById('timeframeSelect').addEventListener('change', function() {
+document.getElementById('timeframeSelect').addEventListener('change', function () {
     let selectedValue = this.value;
-    
-    console.log('Selected value:', selectedValue); // This will log 'year', 'month', or 'week' depending on the selection
-     
-      if(selectedValue === 'year'){
-        BarChart(detectedData.numberOfFreq[1].months,selectedValue)
-        console.log(detectedData.numberOfFreq[1].months);
-        
-      }
-      else {
-        BarChart(detectedData.numberOfFreq[2].week,selectedValue)
-        console.log(detectedData.numberOfFreq[2].week);
 
-      }
-     
-    
+   // This will log 'year', 'month' depending on the selection
+
+    if (selectedValue === 'year') {
+        BarChart(detectedData.numberOfFreq[1].months, 'months')
+
+    }
+    else {
+        BarChart(detectedData.numberOfFreq[2].week, 'number of weeks in a month')
+
+    }
+
+
 });
 
-let myBarChart;
-function BarChart(data,name) {
+
+function BarChart(data, name) {
     let color = Object.keys(data).map(() => getRandomColor())
 
     if (myBarChart) {
@@ -123,7 +143,7 @@ function BarChart(data,name) {
         data: {
             labels: Object.keys(data), // Assuming these are your month labels
             datasets: [{
-                
+
                 data: Object.values(data),
                 backgroundColor: color,
                 borderWidth: 1
@@ -159,6 +179,6 @@ function BarChart(data,name) {
             }
         }
     });
-    
-    
+
+
 }
