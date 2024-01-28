@@ -73,17 +73,17 @@
                           <td><%= user.Fname %></td>
                           <td><%= user.Lname %></td>
                           <td><%= user.Email %></td>
-                          <td><%= user.password %></td>
+                          <td>●●●●●●●</td>
                           <td><%= user.IsAdmin %></td>
                           <td><%= user.AdminID %></td>
                           <!-- EDIT DELETE buttons -->
                           <td>
                             <a style="text-decoration: none;" href="editUser/<%= user.id%>" >
-                              <i class="bi bi-pencil-fill" style="color: rgba(90, 90, 90, 0.884);"></i>
+                              <button class="btn btn-primary btn-sm bi bi-pen" ></button>
                             </a>
                          
                             <a style="text-decoration: none;" href="/delete/<%= user.id%>?_method=delete"><i class="fas fa-edit" style="margin-right: 5px;">
-                              <i class="bi bi-trash-fill" style="color: rgba(148, 0, 0, 0.884); "></i>
+                              <button class="btn btn-primary btn-sm bi bi-trash" ></button>
                             </a>
                           </td>
               
@@ -94,7 +94,7 @@
 
                   <!-- Add button -->
                   <div class="row justify-content-center">
-                    <div class="col-auto">
+                    <div class="d-grid gap-2 mt-3">
                       <button class="btn btn-primary btn-lg bi bi-person-add" type="button" data-bs-toggle="modal" data-bs-target="#addUserModal"></button>
                     </div>
                   </div>
