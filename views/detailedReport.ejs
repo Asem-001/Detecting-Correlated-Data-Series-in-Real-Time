@@ -40,7 +40,7 @@
             <h1>Reports</h1>
             <nav>
               <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/reports">Reports</a></li>
+                <li class="breadcrumb-item"><a href="/reports">Analytics</a></li>
                 <li class="breadcrumb-item active">Details</li>
               </ol>
             </nav>
@@ -49,6 +49,7 @@
 
 
           <div class="row">
+            <!-- Bar Chart -->
             <div class="col-lg-3">
               <div class="card">
                 <div class="card-body">
@@ -63,106 +64,98 @@
                 </div>
               </div>
             </div>
+
+
+            <!-- Total Detected Correlation -->
             <div class="col-lg-3">
-              <div class="card">
-                <div class="card-body">
-                  <h2 class="card-title">Information</h2>
-
-                  <div style="margin-left: 25px;">
-                    <h6 class="card-title-small">FirstNameID:</h6>
-                    <h6 class="card-title-small">SecondNameID:</h6>
-                    <h6 class="card-title-small">DetcThreshold:</h6>
-                    <h6 class="card-title-small">CorrTimeStart:</h6>
-                    <h6 class="card-title-small">CorrTimeEnd:</h6>
-                  </div>
-
-
-
-
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-3">
-              <div class="card">
-                <div class="card-body " style="height:260px;  width: auto;">
-                  <h2 class="card-title">Top 3 highest-correlated data sets</h2>
-                
-                  <div class="d-flex flex-column align-items-left gap-2">
-                    <div class="border p-2 rounded text-left w-100">
-                      <h3 class="m-0" style="font-size:  1.2rem;"><b>1st:</b> <span style="font-size: 1.2rem;" id="TotalDeteNumber-top1"></span></h3>
-                    </div>
-                    <div class="border p-2 rounded text-left w-100">
-                      <h3 class="m-0" style="font-size: 1.2rem;"><b>2st: </b><span  style="font-size: 1.2rem;"id="TotalDeteNumber-top2"></span></h3>
-                    </div>
-                    <div class="border p-2 rounded text-left w-100">
-                      <h3 class="m-0" style="font-size: 1.2rem;"><b>3st:</b> <span style="font-size: 1.2rem;" id="TotalDeteNumber-top3"></span></h3>
-                    </div>
-                  </div>
-                </div>
-                
-              </div>
-
-
-            </div>
-            <div class="col-lg-3">
-              
-              <div class="card "  style="height:auto; max-width: 300px; margin: auto;" >
-                
+              <div class="card" style="height:auto; max-width: 300px; margin: auto;">
                 <div class="card-body pb-0">
                   <h2 class="card-title">Total Detected Correlation</h2>
                   <div style="display: flex; justify-content: center; align-items: center;">
                     <h3 id="totalDetected" class="card-title-large" style="font-size: 3.5rem">6</h3>
                   </div>
                 </div>
-                 
-                <div class="card-body  pb-3">
-                  <h2 class="card-title">Select Timeframe</h2>
+                <div class="card-body  pb-4">
+                  <h2 class="card-title">Select Timeframe for Bar Chart</h2>
                   <select class="form-select" id="timeframeSelect">
                     <option value="year"> 12 months</option>
                     <option value="month"> 4 week</option>
-                    
+
                   </select>
-                  
+
                 </div>
               </div>
-              
+
             </div>
+            <div class="col-lg-6">
+              <div class="card">
+                <div class="card-body">
+                  <h6 class="card-title" id="barchart_id">Bar Chart</h6>
+                  <canvas id="barChart" style="max-height: 200px;"></canvas>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+
           </div>
           </div>
           </div>
 
           <div class="row">
-            <div class="col-lg-6">
+            <div class="col-lg-3">
               <div class="card">
                 <div class="card-body">
-                  <h6 class="card-title" id="barchart_id">Bar CHart</h6>
-
-                  <!-- Bar Chart -->
-                  <canvas id="barChart" style="max-height: 300px;"></canvas>
-
-                  <!-- End Bar CHart -->
-
+                  <h2 class="card-title">Average of detected</h2>
+                  <div style="margin-left: 25px; overflow-y: auto; max-height: 200px;" id="avgContainer">
+                    <!-- Content goes here. Needs to be enough to require scrolling -->
+                  </div>
                 </div>
               </div>
+              
             </div>
 
+            <div class="col-lg-3">
+              <div class="card">
+                <div class="card-body " style="height:auto;  width: auto;">
+                  <h2 class="card-title">Top 3 highest-correlated data sets</h2>
+
+                  <div class="d-flex flex-column align-items-left gap-2">
+                    <div class="border p-2 rounded text-left w-100">
+                      <h3 class="m-0" style="font-size:  1.2rem;"><b>1st:</b> <span style="font-size: 1.2rem;"
+                          id="TotalDeteNumber-top1"></span></h3>
+                    </div>
+                    <div class="border p-2 rounded text-left w-100">
+                      <h3 class="m-0" style="font-size: 1.2rem;"><b>2st: </b><span style="font-size: 1.2rem;"
+                          id="TotalDeteNumber-top2"></span></h3>
+                    </div>
+                    <div class="border p-2 rounded text-left w-100">
+                      <h3 class="m-0" style="font-size: 1.2rem;"><b>3st:</b> <span style="font-size: 1.2rem;"
+                          id="TotalDeteNumber-top3"></span></h3>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+
+            </div>
             <div class="col-lg-6">
               <div class="card">
                 <div class="card-body">
                   <h5 class="card-title" id="piechart_id">Pie Chart</h5>
 
                   <!-- Pie Chart -->
-                  <canvas id="pieChart" style="max-height: 300px;"></canvas>
+                  <canvas id="pieChart" style="max-height: 200px;"></canvas>
 
                   <!-- End Pie CHart -->
 
                 </div>
               </div>
             </div>
-
-
           </div>
-
+      
 
         </section>
       </main>

@@ -14,7 +14,7 @@ document.getElementById('searchButton').addEventListener('click', async function
     const selectElement = document.getElementById('timeSeriesSelect');
     const selectedOptions = Array.from(selectElement.selectedOptions).map(option => option.value);
     let data = await sendReportData(e, [startDate, endDate, selectedOptions])
-   
+
     document.getElementById('dataDisplaySection').style.display = 'block';
 
     // Assuming 'data' is your array
@@ -44,17 +44,16 @@ document.getElementById('searchButton').addEventListener('click', async function
     }
 
     const showMoreLinks = document.querySelectorAll('.card-link');
-    // localStorage.setItem('allData', JSON.stringify(data));
 
     showMoreLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
+        link.addEventListener('click', function (e) {
             e.preventDefault(); // Prevent the default link behavior
             const dataIndex = this.getAttribute('data-id');
             localStorage.setItem('selectedData', JSON.stringify(data[dataIndex]));
             window.location.href = '/detailedreport';
         });
     });
-    
+
 
 
 });
