@@ -252,10 +252,10 @@ function calculateCorrelationMatrix(e) {
         
         if (array1.length == array2.length && array1.length == sliceSize) {
         
-          // if(typeOfFunction == "pearson"){
+          if(typeOfFunction == "pearson"){
             console.log(datasets[i].label, datasets[j].label, i,j);
-            let correlationn = pearsonCorrelation(array1, array2);
-            // }else{
+            correlation = pearsonCorrelation(array1, array2);
+            }else{
               // console.log(windowSize,sliceSize);
               //console.log(pearsonData[j][i]);
               if (pearsonData[j] === undefined || pearsonData[j][i] === undefined ) {
@@ -269,7 +269,7 @@ function calculateCorrelationMatrix(e) {
                 pearsonData[j][i][2],  pearsonData[j][i][3], pearsonData[j][i][4], pearsonData[j][i][5], pearsonData[j][i][6],pearsonData[j][i][7]);
                 
                 
-                console.log('after person ', correlationn);
+                // console.log('after person ', correlationn);
              console.log('after the pearsonEnhanced', correlation);
              console.log(correlation, gx, gy, sx, sy, sxy, sxx, syy,n);
               
@@ -283,7 +283,7 @@ function calculateCorrelationMatrix(e) {
               pearsonData[j][i][7]= n
 
     
-            // }
+            }
 
             correlation = correlation.toFixed(2);
 
