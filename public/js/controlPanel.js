@@ -6,12 +6,24 @@ export function removeSeriesFromSelected(seriesName) {
     selectedSeries = selectedSeries.filter(series => series !== seriesName);
 }
 
+function appendLocalStorageToSelected(){
+    if(JSON.parse(localStorage.getItem('datasets')) != null){
+        JSON.parse(localStorage.getItem('datasets')).forEach((item) =>{
+            if (!selectedSeries.includes(item.label)) {
+            selectedSeries.push(item.label)  
+            }   
+        })
+    }
+}
+
 export async function selectOptions() {
+   appendLocalStorageToSelected()
     const collections = await fetchData('http://localhost:3000/api/collections');
     const select = document.getElementById('timeSeriesSelect');
     select.innerHTML = '<option disabled selected value="">Select time Series</option>';
     
     collections.forEach((collection, index) => {
+      
         if (!selectedSeries.includes(collection)) {
             const option = document.createElement('option');
             option.value = collection;
@@ -19,6 +31,18 @@ export async function selectOptions() {
             select.appendChild(option);
         }
     });
+}
+
+export function setControlPanelLocal(){
+    if(localStorage.getItem('threshold') != null){
+     document.getElementById("range").value =  localStorage.getItem('threshold');
+    }
+    if(localStorage.getItem('window') != null){
+     document.getElementById('sliceSizeSelect').value = localStorage.getItem('window');
+    }
+    if(localStorage.getItem('function') != null){
+     document.getElementById('functionSelect').value = localStorage.getItem('function');
+    }
 }
 
 export async function populateSelectDropdown() {

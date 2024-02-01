@@ -1,5 +1,5 @@
 import { pearsonCorrelation, pearsonEnhanced} from "./pearson.js";
-import { selectOptions, removeSeriesFromSelected, selectedSeries } from "./controlPanel.js";
+import { selectOptions, removeSeriesFromSelected, selectedSeries,setControlPanelLocal } from "./controlPanel.js";
 import { fetchData } from "./ApiHandler.js";
 import { sendTotalDataToBackend, sendDetectdDataToBackend, sendAdminSettingsToUser} from "./sendToBackend.js";
 import { getCurrentTime, getTimeDate } from './dates.js'
@@ -171,7 +171,7 @@ async function thresholdUpdate(){
   let thresh;
 
     thresh = document.getElementById("range").value.split(",");
-    console.log(thresh)
+    localStorage.setItem('threshold',thresh)
     totalData.threshold[0] = parseFloat(thresh[0]);
     totalData.threshold[1] = parseFloat(thresh[1]);
 
@@ -183,6 +183,12 @@ let intervalId = null; // Holds the interval reference for data updates
 
 // Starts periodic data updates
 function startDataUpdates(e) {
+
+  //these 4 lines to save the window size and the function type in the local sotrage
+  let window = document.getElementById('sliceSizeSelect').value
+  localStorage.setItem('window',window)
+  let functionName = document.getElementById('functionSelect').value
+  localStorage.setItem('function',functionName);
 
   disableControls();
  // setSettings()
@@ -448,6 +454,8 @@ function enableControls() {
 document.addEventListener("DOMContentLoaded", async (e) => {
   chart = setupChart();
   await selectOptions();
+  updateDatasetSelectOptions()
+  setControlPanelLocal()
 
 // Event listener for the start button
 document.getElementById("startButton").addEventListener("click", function(event) {
