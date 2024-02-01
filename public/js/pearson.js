@@ -95,8 +95,6 @@ export function pearsonEnhanced(x, y, Gx, Gy, Sx, Sy, Sxy, Sxx, Syy,windowSize) 
       // console.log('Sx, Sxx, Sy, Syy, Sxy',Sx, Sxx, Sy, Syy, Sxy);
   }
   else {
-      console.log('iam here in Gx');
-
       // // console.log(x[x.length - 1] != Gx);
       // console.log('test x y',x[0],y[0]);
       Sx =Sx - Gx + x[0]

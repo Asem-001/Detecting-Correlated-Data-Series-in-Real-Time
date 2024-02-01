@@ -1,4 +1,3 @@
-
 import { sendDetailsReportData } from './sendToBackend.js';
 
 
@@ -152,13 +151,13 @@ function BarChart(data, name) {
         options: {
             scales: {
                 y: {
-                    beginAtZero: true,
+                    beginAtZero: false,
                     title: {
                         display: true,
                         text: 'Number of detected'
                     },
                     ticks: {
-                        stepSize: 1, // Ensure y-axis values are integers
+                        stepSize: 5, // Ensure y-axis values are integers
                         precision: 0  // No decimal places
                     }
                 },
