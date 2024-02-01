@@ -35,7 +35,11 @@ export async function selectOptions() {
 
 export function setControlPanelLocal(){
     if(localStorage.getItem('threshold') != null){
-     document.getElementById("range").value =  localStorage.getItem('threshold');
+        let thresh = JSON.parse(localStorage.getItem('threshold'));
+
+        $("#slider-range").slider("values", [thresh[0], thresh[1]]);
+        //document.getElementById('range').value = `${thresh[0]} , ${thresh[1]}`
+        
     }
     if(localStorage.getItem('window') != null){
      document.getElementById('sliceSizeSelect').value = localStorage.getItem('window');

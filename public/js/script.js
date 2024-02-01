@@ -170,8 +170,8 @@ function setupChart() {
 async function thresholdUpdate(){
   let thresh;
 
-    thresh = document.getElementById("range").value.split(",");
-    localStorage.setItem('threshold',thresh)
+    thresh = $("#slider-range").slider("values");
+    localStorage.setItem('threshold',JSON.stringify(thresh))
     totalData.threshold[0] = parseFloat(thresh[0]);
     totalData.threshold[1] = parseFloat(thresh[1]);
 
@@ -486,7 +486,7 @@ document.getElementById("startButton").addEventListener("click", function(event)
 function setSettings(){
   let id = document.getElementById('userID').value.trim();
 
-  let temp = document.getElementById("range").value.split(",");
+  let temp = $("#slider-range").slider("values");
   let threshold = [];
   threshold[0] = parseFloat(temp[0]);
   threshold[1] = parseFloat(temp[1]);
