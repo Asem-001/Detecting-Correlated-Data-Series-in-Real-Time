@@ -821,35 +821,11 @@
 /* This styles the scrollable area */
 .scrollable-content {
   height: auto;
-  max-height: 400px; /* Adjust the max-height as needed */
+  max-height: 470px; /* Adjust the max-height as needed */
   overflow-y: auto;
 }
 
-/* This will style the scrollbar track */
-.scrollable-content::-webkit-scrollbar-track {
-  background: #f1f1f1; /* Light grey track */
-}
 
-/* This will style the actual scrollbar itself */
-.scrollable-content::-webkit-scrollbar {
-  width: 5px; /* Makes the scrollbar 5 pixels wide */
-  border-radius: 10px; /* Adds rounded corners to the track */
-
-}
-
-/* This will style the handle */
-.scrollable-content::-webkit-scrollbar-thumb {
-  background: #012970; /* Here you can use any color you prefer */
-  border-radius: 10px; /* Adds rounded corners to the track */
-
-}
-
-/* Handle on hover */
-.scrollable-content::-webkit-scrollbar-thumb:hover {
-  background: darkblue; /* Darken the color a bit when hovering */
-  border-radius: 10px; /* Adds rounded corners to the track */
-
-}
 
 #correlationDisplay {
   width: 100%;
@@ -881,20 +857,6 @@
   z-index: 1; /* Ensure the header is above other elements */
 }
 
-#correlationDisplay::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
-}
-
-#correlationDisplay::-webkit-scrollbar-thumb {
-  background: darkblue;
-  border-radius: 5px;
-}
-
-#correlationDisplay::-webkit-scrollbar-thumb:hover {
-  background: darkblue;
-  border-radius: 5px;
-}
 
 
 
