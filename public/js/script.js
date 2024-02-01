@@ -1,11 +1,11 @@
 import { pearsonCorrelation, pearsonEnhanced} from "./pearson.js";
-import { selectOptions, removeSeriesFromSelected, selectedSeries } from "./controlPanel.js";
+import { selectOptions, removeSeriesFromSelected, selectedSeries,setControlPanelLocal } from "./controlPanel.js";
 import { fetchData } from "./ApiHandler.js";
 import { sendTotalDataToBackend, sendDetectdDataToBackend, sendAdminSettingsToUser} from "./sendToBackend.js";
 import { getCurrentTime, getTimeDate } from './dates.js'
 
-let datasets = []; // Array to store data series
-let time = []; // Array to store timestamps
+let datasets =JSON.parse(localStorage.getItem('datasets')) ||  []  // Array to store data series
+let time = JSON.parse(localStorage.getItem('time')) || []; // Array to store timestamps
 let totalData = {'names': [], 
                 'addDate': [], 
                 'endDate': [], 
@@ -27,6 +27,7 @@ function updateChart(chart) {
 }
 
 async function updateData() {
+  console.log(JSON.parse(localStorage.getItem('time')))
   for (const dataset of datasets) {
     if (dataset.data.length >= 120) dataset.data.pop(); // Remove oldest data point from the end
     let x = parseFloat(
@@ -34,9 +35,11 @@ async function updateData() {
     );
     dataset.data.unshift(x); // Add new data point to the beginning
   }
+  localStorage.setItem('datasets',JSON.stringify(datasets))
 
   if (time.length >= 120) time.pop(); // Remove oldest time point from the end
   time.unshift(getCurrentTime()); // Add current time to the beginning
+  localStorage.setItem('time',JSON.stringify(time))
 }
 
 function addSeries() {
@@ -71,6 +74,7 @@ function addSeries() {
   }
 
   datasets.push(newDataset); // Add new dataset to the array
+  localStorage.setItem('datasets',JSON.stringify(datasets))
   document.getElementById("seriesCount").innerText = datasets.length;
   updateChart(chart);
   updateDatasetSelectOptions();
@@ -97,6 +101,7 @@ function deleteSeries() {
 
         // Remove the selected dataset
         datasets.splice(selectedIndex, 1); 
+        localStorage.setItem('datasets',JSON.stringify(datasets))
 
         // Use the imported function to remove the deleted series from selectedSeries
         removeSeriesFromSelected(deletedSeries);
@@ -165,8 +170,8 @@ function setupChart() {
 async function thresholdUpdate(){
   let thresh;
 
-    thresh = document.getElementById("range").value.split(",");
-    console.log(thresh)
+    thresh = $("#slider-range").slider("values");
+    localStorage.setItem('threshold',JSON.stringify(thresh))
     totalData.threshold[0] = parseFloat(thresh[0]);
     totalData.threshold[1] = parseFloat(thresh[1]);
 
@@ -178,6 +183,12 @@ let intervalId = null; // Holds the interval reference for data updates
 
 // Starts periodic data updates
 function startDataUpdates(e) {
+
+  //these 4 lines to save the window size and the function type in the local sotrage
+  let window = document.getElementById('sliceSizeSelect').value
+  localStorage.setItem('window',window)
+  let functionName = document.getElementById('functionSelect').value
+  localStorage.setItem('function',functionName);
 
   disableControls();
  // setSettings()
@@ -443,6 +454,8 @@ function enableControls() {
 document.addEventListener("DOMContentLoaded", async (e) => {
   chart = setupChart();
   await selectOptions();
+  updateDatasetSelectOptions()
+  setControlPanelLocal()
 
 // Event listener for the start button
 document.getElementById("startButton").addEventListener("click", function(event) {
@@ -473,7 +486,7 @@ document.getElementById("startButton").addEventListener("click", function(event)
 function setSettings(){
   let id = document.getElementById('userID').value.trim();
 
-  let temp = document.getElementById("range").value.split(",");
+  let temp = $("#slider-range").slider("values");
   let threshold = [];
   threshold[0] = parseFloat(temp[0]);
   threshold[1] = parseFloat(temp[1]);
