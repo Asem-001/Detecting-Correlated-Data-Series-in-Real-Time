@@ -39,9 +39,8 @@
             <div class="card">
               <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
   
-                <img src="../public/img/profile.jpg" alt="Profile" class="rounded-circle">
-                <h2><%= user.name %></h2>
-                <h3><%= user.IsAdmin%></h3>
+                <img src="../public/img/pfp.png" alt="Profile" class="rounded-circle">
+                <h2><%= user.Fname%> <%= user.Lname%></h2>
               </div>
             </div>
   
@@ -57,97 +56,35 @@
                     <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-overview">Overview</button>
                   </li>
   
-                  <li class="nav-item">
-                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-edit">Edit Profile</button>
-                  </li>
-  
-                  <li class="nav-item">
-                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-settings">Settings</button>
-                  </li>
-  
-                  <li class="nav-item">
-                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-change-password">Change Password</button>
-                  </li>
-  
                 </ul>
                 <div class="tab-content pt-2">
   
                   <div class="tab-pane fade show active profile-overview" id="profile-overview">
   
-                    <h5 class="card-title">Profile Details</h5>
+                    <h5 class="card-title">User Details</h5>
   
+                    <div class="row">
+                      <div class="col-lg-3 col-md-4 label">ID</div>
+                      <div class="col-lg-9 col-md-8"><%= user.ID%></div>
+                    </div>
+
                     <div class="row">
                       <div class="col-lg-3 col-md-4 label ">Full Name</div>
                       <div class="col-lg-9 col-md-8"><%= user.Fname %> <%=user.Lname %></div>
                     </div>
-  
-                    <div class="row">
-                      <div class="col-lg-3 col-md-4 label">Country</div>
-                      <div class="col-lg-9 col-md-8">KSA</div>
-                    </div>
-  
-                    <div class="row">
-                      <div class="col-lg-3 col-md-4 label">Address</div>
-                      <div class="col-lg-9 col-md-8">Imamu, Riyadh, Saudi Arabia</div>
-                    </div>
-  
-                    <div class="row">
-                      <div class="col-lg-3 col-md-4 label">Phone</div>
-                      <div class="col-lg-9 col-md-8">+966 5XXXXXXXX</div>
-                    </div>
-  
+
                     <div class="row">
                       <div class="col-lg-3 col-md-4 label">Email</div>
                       <div class="col-lg-9 col-md-8"><%= user.Email %></div>
                     </div>
   
-                  </div>
-  
-                  <div class="tab-pane fade profile-edit pt-3" id="profile-edit">
-  
-                    <form>
-                     
-                      <div class="row mb-3">
-                        <label for="fullName" class="col-md-4 col-lg-3 col-form-label">Full Name</label>
-                        <div class="col-md-8 col-lg-9">
-                          <input name="fullName" type="text" class="form-control" id="fullName" value="<%= user.Fname %> <%=user.Lname %>">
-                        </div>
-                      </div>
-  
-                      <div class="row mb-3">
-                        <label for="Country" class="col-md-4 col-lg-3 col-form-label">Country</label>
-                        <div class="col-md-8 col-lg-9">
-                          <input name="country" type="text" class="form-control" id="Country" value="KSA">
-                        </div>
-                      </div>
-  
-                      <div class="row mb-3">
-                        <label for="Address" class="col-md-4 col-lg-3 col-form-label">Address</label>
-                        <div class="col-md-8 col-lg-9">
-                          <input name="address" type="text" class="form-control" id="Address" value="Imamu, Riyadh, Saudi Arabia">
-                        </div>
-                      </div>
-  
-                      <div class="row mb-3">
-                        <label for="Phone" class="col-md-4 col-lg-3 col-form-label">Phone</label>
-                        <div class="col-md-8 col-lg-9">
-                          <input name="phone" type="text" class="form-control" id="Phone" value="+966 5XXXXXXXX">
-                        </div>
-                      </div>
-  
-                      <div class="row mb-3">
-                        <label for="Email" class="col-md-4 col-lg-3 col-form-label">Email</label>
-                        <div class="col-md-8 col-lg-9">
-                          <input name="email" type="email" class="form-control" id="Email" value="<%= user.Email %>">
-                        </div>
-                      </div>
-  
-                      <div class="text-center">
-                        <button type="submit" class="btn btn-primary">Save Changes</button>
-                      </div>
-                    </form>
+                    <div class="row">
+                      <div class="col-lg-3 col-md-4 label">Date of creation</div>
+                      <div class="col-lg-9 col-md-8"><%= user.Created%></div>
+                    </div>
   
                   </div>
+  
   
                   <div class="tab-pane fade pt-3" id="profile-settings">
   
@@ -229,7 +166,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
   <script src="../public/js/script.js"></script>
-  <script src="../public/js/uiscript.js"></script>
+  <script type="module" src="../public/js/uiscript.js"></script>
 
 
 </body>
