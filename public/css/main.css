@@ -975,3 +975,18 @@
   color: #012970;
   font-family: "Poppins", sans-serif;
 }
+
+@keyframes fadeInFromLeft {
+  from { 
+    opacity: 0; 
+    transform: translateX(-100px);  /* Move element 100px to the left */
+  }
+  to { 
+    opacity: 1; 
+    transform: translateX(0); 
+  }
+}
+
+.fade-in {
+  animation: fadeInFromLeft 0.5s ease-out;
+}

@@ -359,17 +359,37 @@ function calculateCorrelationMatrix(e) {
   return correlationMatrix;
 }
 
-function printNotification(index,correlatedNames) {
-  let appendedCode = `
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    Correlation detected from ${correlationObject.startTime[index]} to ${correlationObject.endTime[index]}
-                    between ${correlatedNames[0]} and ${correlatedNames[1]} !
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                    `; 
+function printNotification(index, correlatedNames) {
+  let notificationContainer = document.getElementById("notificationContent");
 
-                  document.getElementById("notificationContent").insertAdjacentHTML("afterbegin", appendedCode);
+  // Remove the oldest notification if there are already 6 notifications
+  if (notificationContainer.children.length >= 6) {
+      notificationContainer.removeChild(notificationContainer.children[5]);
+  }
+
+  let notificationId = 'notification-' + Date.now();
+
+  let appendedCode = `
+      <div id="${notificationId}" class="alert alert-success alert-dismissible fade show fade-in" role="alert">
+      Correlation detected from ${correlationObject.startTime[index]} to ${correlationObject.endTime[index]}
+      between ${correlatedNames[0]} and ${correlatedNames[1]} !
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+  `;
+
+  notificationContainer.insertAdjacentHTML("afterbegin", appendedCode);
+
+  let specificNotification = document.getElementById(notificationId);
+
+  // Set a timeout for this specific notification
+  specificNotification.timeout = setTimeout(function() {
+      if (specificNotification) {
+          specificNotification.classList.remove('alert-success');
+          specificNotification.classList.add('alert-secondary');
+      }
+  }, 3000);
 }
+
 
 // Updates the display to show the current correlation matrix
 function updateCorrelationDisplay(e) {
