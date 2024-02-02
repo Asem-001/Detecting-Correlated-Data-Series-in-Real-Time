@@ -337,6 +337,6 @@ async function searchControlPanelinfo(id) {
 
 module.exports = {
   addDetectCorr, updateCorrleationData, CorrelationSearch, addCorrData, getAllCorrelation, addControlPanelInfo, SearchDetectedCorrelations,
-  SearchCorrelationsByRangeDate, calculateCorrelationFrequencies
+  SearchCorrelationsByRangeDate, calculateCorrelationFrequencies,searchControlPanelinfo
 }
 

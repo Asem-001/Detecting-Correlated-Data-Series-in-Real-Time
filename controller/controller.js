@@ -1,5 +1,5 @@
 const { searchUser, searchUserID, getAllUsers, deleteUser, updateUser, addUser } = require('./usersfunctions')
-const { addDetectCorr, addCorrData, CorrelationSearch, updateCorrleationData, addControlPanelInfo, SearchDetectedCorrelations, SearchCorrelationsByRangeDate,calculateCorrelationFrequencies, getAllCorrelation } = require('./correlationFunctions')
+const { addDetectCorr, addCorrData, CorrelationSearch, updateCorrleationData,searchControlPanelinfo, addControlPanelInfo, SearchDetectedCorrelations, SearchCorrelationsByRangeDate,calculateCorrelationFrequencies, getAllCorrelation } = require('./correlationFunctions')
 const e = require('method-override')
 bcrypt = require('bcrypt')
 
@@ -9,11 +9,7 @@ let IDforEndDate = []
 module.exports = {
 
   index:  (req, res) => {
-    
-    // addControlPanelInfo('2455763',[0.9,1],90)
-    // SearchDetectedCorrelations("N225")
    
-      
     res.redirect('/home')
 
   },
@@ -70,7 +66,6 @@ module.exports = {
         date_time_add = data.addDate[i].split('-')
         date_time_end = data.endDate[0].split('-')
 
-
         IDforEndDate.push(await addCorrData(data.names[i], data.threshold, date_time_add, date_time_end, 0));
       }
       // If the document exists, update the correlation data
@@ -85,13 +80,10 @@ module.exports = {
     }
 
     // Redirect to the home page after processing all names
-    res.redirect('/home')
-
-
+    res.redirect('/home');
   },
   //This fucntion add the detected information that occur between two time series
   addDetectCorrelation: async (req, res) => {
-
 
     let data = req.body.parcel;
     let date= data.Date.split('-')
@@ -104,16 +96,11 @@ module.exports = {
   },
 
   login: (req, res) => {
-    // addUser('ahmed','ali', 'ahmed@hotmail.com','123321', true, null)
     res.render("login", {
       title: 'login page',
       user: req.user
     })
   },
-
-  postLogin: async (req, res) => { },
-
-
 
   reports: async (req, res) => {
 
@@ -246,7 +233,6 @@ module.exports = {
       let password = await bcrypt.hash(req.body.password, 6);
       let IsAdmin = req.body.IsAdmin === 'admin';
       if (IsAdmin) AdminID = null
-      console.log('Admin variable:', IsAdmin);
       let user = {
         AdminID, Fname, Lname, Email, password, IsAdmin // Use IsAdmin instead of Admin
       };
@@ -291,25 +277,3 @@ module.exports = {
     }
   },
 }
-
-
-  // async function testdb() {
-
-  //   // add admin
-  //   addUser('ahmed', 'khaled', 'ahmed@hotmail.com', true, null)
-  //   //add user with his admin
-  //   addUser("ali", 'mohammed', 'ali@hotmail.com', false, await searchUserID('ahmed', 'khaled'))
-
-  //   // add corr data
-  //   addCorrData('youtube', 0.79, '2023/28/12', '2023,/29/12', 0)
-
-  //   //update admin last name
-  //   updateUser(await searchUserID('ahmed', 'khaled'), { password: 'saleh' })
-  //   // search for user by his id 
-  //   console.log(await searchUser('1703788699748'))
-
-  //   // delete admin 
-  //   //  await deleteUser(await searchUserID('ahmed','saleh'))
-  // }
-
-
