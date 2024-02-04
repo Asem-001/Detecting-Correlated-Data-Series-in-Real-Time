@@ -1,8 +1,6 @@
-# Detecting-Correlated-Data-Series-in-Real-Time
+# Detecting-Correlated-Data-Series-in-Real-Time <a href="http://localhost:1234/"> <img src="https://github.com/Sbinsuwaylih/Detecting-Correlated-Data-Series-in-Real-Time/assets/117676731/b45cdfbf-6420-49cc-ae9b-789fb91c7d54" alt="logo2" width="50"/></a>
 
-<a href="http://localhost:1234/">
-  <img src="https://github.com/Sbinsuwaylih/Detecting-Correlated-Data-Series-in-Real-Time/assets/117676731/b45cdfbf-6420-49cc-ae9b-789fb91c7d54" alt="logo2" width="200"/>
-</a>
+
 
 
 ## Prerequisites
