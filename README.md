@@ -1,5 +1,10 @@
 # Detecting-Correlated-Data-Series-in-Real-Time
 
+<a href="http://localhost:1234/">
+  <img src="https://github.com/Sbinsuwaylih/Detecting-Correlated-Data-Series-in-Real-Time/assets/117676731/b45cdfbf-6420-49cc-ae9b-789fb91c7d54" alt="logo2" width="200"/>
+</a>
+
+
 ## Prerequisites
 Before you begin, ensure you have the following installed:
 - **Node.js**
@@ -12,8 +17,9 @@ Before you begin, ensure you have the following installed:
 ## 1. API Server Setup
 
 1. **Download the API Server Code**: Clone or download the code from the `API-Server` branch, which simulates a real API server.
-2. **Install Dependencies**: Run the following command in  `create_db.py` terminal to install the necessary Python packages.
+2. **Install Dependencies**: Run the following command in  `create_db.py` run `npm install` terminal to install the necessary Python packages.
 
+then
  ```sh
    pip install pymongo pandas
  ```
