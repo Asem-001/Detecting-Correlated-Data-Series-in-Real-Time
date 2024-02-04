@@ -20,7 +20,7 @@ Before you begin, ensure you have the following installed:
 
 ## Configure the Database:
 1. **Open the `create_db.py` file.**
-2. **Update the `folder_path` variable** to your dataset's path, which should be `dataste_stocks`.
+2. **Update the `folder_path` variable** to your dataset's path, which should be `dataset_stocks`.
 3. **Execute the script** by running:
    
    ```sh
