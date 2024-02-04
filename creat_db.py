@@ -9,7 +9,7 @@ database_name = 'Stocks'  # Update with your database name
 # Set the folder path 
 
 # folder_path for download the data in mongo
-# edit here ex: 'C:/user/'
+# edit here ex: 'C:/user/##################/data'
 folder_path = 'Write here the path file for ready_to_push the dataset'
 
 
