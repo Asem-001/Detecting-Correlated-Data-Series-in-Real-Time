@@ -9,7 +9,7 @@ Before you begin, ensure you have the following installed:
 
 ## Setup Instructions
 
-### API Server Setup
+## 1. API Server Setup
 
 1. **Download the API Server Code**: Clone or download the code from the `API-Server` branch, which simulates a real API server.
 2. **Install Dependencies**: Run the following command in  `create_db.py` terminal to install the necessary Python packages.
@@ -27,12 +27,16 @@ Before you begin, ensure you have the following installed:
    python create_db.py
 
 - **Verify Database Creation**: Check MongoDB to ensure that the database has been created successfully.
-- **Start the Server**: Navigate to the `test.js` file in your terminal and start the API server with:
+- **Start the Server**: Navigate to the `app.js` file in your terminal and start the API server with:
   
   ```sh
   npm start
 
-## Access the Website: Open your web browser and go to [http://localhost:1234/](http://localhost:1234/) to view the website.
+## 2. Website Launch
+1. **Download the Main Branch Code**: Obtain the code from the main branch.
+2. **Install Dependencies**: In the terminal of `app.js`, run `npm install` to install necessary dependencies. After completion, execute `npm start` to run the website.
+3. **Access the Website**: Navigate to [http://localhost:1234/](http://localhost:1234/) to view the website.
+
 
 ### Signing In
 Use the following credentials to sign in with different levels of access:
