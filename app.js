@@ -12,7 +12,7 @@ app.use(bodyParser.json());
 // Enable CORS for all routes
 app.use(cors());
 
-const mongoUri = 'mongodb://127.0.0.1:27017/sensors'; // Using "sensors" as the database name
+const mongoUri = 'mongodb://127.0.0.1:27017/Stocks'; // Using "sensors" as the database name
 
 // Connect to MongoDB using Mongoose
 mongoose.connect(mongoUri)
@@ -26,11 +26,25 @@ mongoose.connect(mongoUri)
 // Create a Mongoose models for the existing collections
 const createModel = (collectionName) => mongoose.model(collectionName, {}, collectionName); // <-- Explicitly setting the collection name
 
-const PM25Model = createModel('pm_25');
-const humidityModel = createModel('humidity');
-const pressureModel = createModel('pressure');
-const tempModel = createModel('temp');
-const windSpeedModel = createModel('wind_speed');
+
+const AAPLModel = createModel('AAPL');
+const AEHRModel = createModel('AEHR');
+const AMDModel = createModel('AMD');
+const AMZNModel = createModel('AMZN');
+const BACModel = createModel('BAC');
+const CCJModel = createModel('CCJ');
+const DISModel = createModel('DIS');
+const FModel = createModel('F');
+const ILMNModel = createModel('ILMN');
+const INOModel = createModel('INO');
+const ISRModel = createModel('ISRG');
+const JNPRModel = createModel('JNPR');
+const NVAXModel = createModel('NVAX');
+const PFEModel = createModel('PFE');
+const SRPTModel = createModel('SRPT');
+const SWNModel = createModel('SWN');
+const TDModel = createModel('TDTO'); // Assuming 'TD.TO' is a valid collection name
+const N225Model = createModel('N225');
 
 // Generic function to retrieve data from a collection based on the provided index
 const getData = async (model, index, res) => {
@@ -71,29 +85,95 @@ app.get('/api/collections', async (req, res) => {
 });
 
 // Define API routes
-app.get('/api/pm_25/:index', async (req, res) => {
+
+app.get('/api/AAPL/:index', async (req, res) => {
     const index = parseInt(req.params.index);
-    await getData(PM25Model, index, res);
+    await getData(AAPLModel, index, res);
 });
 
-app.get('/api/humidity/:index', async (req, res) => {
+app.get('/api/AEHR/:index', async (req, res) => {
     const index = parseInt(req.params.index);
-    await getData(humidityModel, index, res);
+    await getData(AEHRModel, index, res);
 });
 
-app.get('/api/pressure/:index', async (req, res) => {
+app.get('/api/AMD/:index', async (req, res) => {
     const index = parseInt(req.params.index);
-    await getData(pressureModel, index, res);
+    await getData(AMDModel, index, res);
 });
 
-app.get('/api/temp/:index', async (req, res) => {
+app.get('/api/AMZN/:index', async (req, res) => {
     const index = parseInt(req.params.index);
-    await getData(tempModel, index, res);
+    await getData(AMZNModel, index, res);
 });
 
-app.get('/api/wind_speed/:index', async (req, res) => {
+app.get('/api/BAC/:index', async (req, res) => {
     const index = parseInt(req.params.index);
-    await getData(windSpeedModel, index, res);
+    await getData(BACModel, index, res);
+});
+
+app.get('/api/CCJ/:index', async (req, res) => {
+    const index = parseInt(req.params.index);
+    await getData(CCJModel, index, res);
+});
+
+app.get('/api/DIS/:index', async (req, res) => {
+    const index = parseInt(req.params.index);
+    await getData(DISModel, index, res);
+});
+
+app.get('/api/F/:index', async (req, res) => {
+    const index = parseInt(req.params.index);
+    await getData(FModel, index, res);
+});
+
+app.get('/api/ILMN/:index', async (req, res) => {
+    const index = parseInt(req.params.index);
+    await getData(ILMNModel, index, res);
+});
+
+app.get('/api/INO/:index', async (req, res) => {
+    const index = parseInt(req.params.index);
+    await getData(INOModel, index, res);
+});
+
+app.get('/api/ISRG/:index', async (req, res) => {
+    const index = parseInt(req.params.index);
+    await getData(ISRModel, index, res);
+});
+
+app.get('/api/JNPR/:index', async (req, res) => {
+    const index = parseInt(req.params.index);
+    await getData(JNPRModel, index, res);
+});
+
+app.get('/api/NVAX/:index', async (req, res) => {
+    const index = parseInt(req.params.index);
+    await getData(NVAXModel, index, res);
+});
+
+app.get('/api/PFE/:index', async (req, res) => {
+    const index = parseInt(req.params.index);
+    await getData(PFEModel, index, res);
+});
+
+app.get('/api/SRPT/:index', async (req, res) => {
+    const index = parseInt(req.params.index);
+    await getData(SRPTModel, index, res);
+});
+
+app.get('/api/SWN/:index', async (req, res) => {
+    const index = parseInt(req.params.index);
+    await getData(SWNModel, index, res);
+});
+
+app.get('/api/TDTO/:index', async (req, res) => {
+    const index = parseInt(req.params.index);
+    await getData(TDModel, index, res);
+});
+
+app.get('/api/N225/:index', async (req, res) => {
+    const index = parseInt(req.params.index);
+    await getData(N225Model, index, res);
 });
 
 // Connect to the database when the server starts

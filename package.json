@@ -4,7 +4,6 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "node ./stocks.js",
     "start": "node ./app.js"
   },
   "author": "",
