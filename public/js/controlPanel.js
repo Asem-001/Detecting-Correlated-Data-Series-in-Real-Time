@@ -38,7 +38,7 @@ export function setControlPanelLocal(){
         let thresh = JSON.parse(localStorage.getItem('threshold'));
 
         $("#slider-range").slider("values", [thresh[0], thresh[1]]);
-        //document.getElementById('range').value = `${thresh[0]} , ${thresh[1]}`
+        document.getElementById('range').value = `${thresh[0]} , ${thresh[1]}`
         
     }
     if(localStorage.getItem('window') != null){
