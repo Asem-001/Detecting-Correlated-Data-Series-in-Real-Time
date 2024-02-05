@@ -7,7 +7,7 @@
 Before you begin, ensure you have the following installed:
 - **Node.js**
 - **MongoDB** for simulating the API server
-
+-  **pip**
 - **Firebase Firestore** for app data storage (no need to install its online) 
 
 # Setup Instructions
