@@ -39,7 +39,7 @@ then
 ## 2. Website Launch
 1. **Download the Main Branch Code**: Obtain the code from the main branch.
 2. **Install Dependencies**: In the terminal of `app.js`, run `npm install` to install necessary dependencies. After completion, execute `npm start` to run the website.
-3. **Access the Website**: Navigate to to view [![Corel8](https://img.shields.io/badge/Visit-Corel8-blue)](http://localhost:1234/) .
+3. **Access the Website**: Navigate to to view [![Corel8](https://img.shields.io/badge/Visit-Corel8-blue)](http://localhost:1234/) 
 
 
 
