@@ -10,7 +10,7 @@ Before you begin, ensure you have the following installed:
 
 - **Firebase Firestore** for app data storage (no need to install its online) 
 
-## Setup Instructions
+# Setup Instructions
 
 ## 1. API Server Setup
 
