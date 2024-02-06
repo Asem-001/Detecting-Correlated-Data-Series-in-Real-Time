@@ -8,14 +8,21 @@ const getFirestore  = require("firebase/firestore");
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+// Import the functions you need from the SDKs you need
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyDysLL8ZT3mwmwpgnnLdgBAkzp_HEHXVRw",
-  authDomain: "detecting-correlation-da-1b6c4.firebaseapp.com",
-  projectId: "detecting-correlation-da-1b6c4",
-  storageBucket: "detecting-correlation-da-1b6c4.appspot.com",
-  messagingSenderId: "37732512616",
-  appId: "1:37732512616:web:a9cd065ba2c44c17305cdd"
+  apiKey: "AIzaSyBhJPLk8dBGPZczj_SSxYvf-so5jIECKII",
+  authDomain: "detecting-correlation.firebaseapp.com",
+  projectId: "detecting-correlation",
+  storageBucket: "detecting-correlation.appspot.com",
+  messagingSenderId: "1020973538487",
+  appId: "1:1020973538487:web:ad946a5d394cb5628b0132"
 };
+
+// Initialize Firebase
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);

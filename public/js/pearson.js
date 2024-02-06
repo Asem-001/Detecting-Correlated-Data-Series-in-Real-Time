@@ -121,12 +121,14 @@ export function pearsonEnhanced(x, y, Gx, Gy, Sx, Sy, Sxy, Sxx, Syy,windowSize) 
   Vy = Syy - ((Sy ** 2) / n);
   computationCounter += 3;
 
+// calculating the covariance 
   c = Sxy - ((Sx * Sy) / n);
   computationCounter += 3;
 
   let V = Math.sqrt(Vx * Vy);
   computationCounter += 2;
 
+// calculating the covariance 
   correlation = (c / V);
   computationCounter++;
 

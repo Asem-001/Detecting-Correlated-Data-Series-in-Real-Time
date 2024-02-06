@@ -9,7 +9,7 @@ let IDforEndDate = []
 module.exports = {
 
   index:  (req, res) => {
-   
+      
     res.redirect('/home')
 
   },
@@ -96,6 +96,8 @@ module.exports = {
   },
 
   login: (req, res) => {
+
+    // addUser('saleh','mohammed','saleh@hotmail.com','123',true,null)
     res.render("login", {
       title: 'login page',
       user: req.user
